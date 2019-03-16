@@ -1,0 +1,8 @@
+{
+  "name": "@2-game/workspace",
+  "version": "1.0.0",
+  "license": "MIT",
+  "workspaces": [
+    "./packages/*"
+  ]
+}
