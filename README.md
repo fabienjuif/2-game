@@ -10,3 +10,6 @@ Just for fun and to try react-pixi from inlet.
 - beta2: https://fabienjuif.github.io/2-game/beta2/
   * Trying to add tiles, and add a color transition for each
   * This works not that great, I have to batch modifications I guess
+
+- beta3: https://fabienjuif.github.io/2-game/beta3/
+  * beta2 optimisation

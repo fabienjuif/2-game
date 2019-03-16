@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react'
-import { ParticleContainer } from '@inlet/react-pixi'
-import { random } from '@2-game/utils'
+import React, { useState } from 'react'
+import { ParticleContainer, useTick } from '@inlet/react-pixi'
+import { random, easing, hexRgb, rgbHex } from '@2-game/utils'
 import Tile from './tile'
 
 const getTint = (player) => {
@@ -15,13 +15,13 @@ const getTiles = (width, height) => {
   const tiles = []
 
   const player1 = {
-    x: Math.round(random(0, Math.floor(width / 20))),
-    y: Math.round(random(0, Math.floor(height / 15))),
+    x: Math.round(random(0, Math.ceil(width / 20))),
+    y: Math.round(random(0, Math.ceil(height / 15))),
   }
 
   const player2 = {
-    x: Math.round(random(0, Math.floor(width / 20))),
-    y: Math.round(random(0, Math.floor(height / 15))),
+    x: Math.round(random(0, Math.ceil(width / 20))),
+    y: Math.round(random(0, Math.ceil(height / 15))),
   }
 
   while (player2.x === player1.x) player2.x = random(0, Math.floor(width / 20))
@@ -40,6 +40,7 @@ const getTiles = (width, height) => {
         x: i * 20 + (j % 2 * 10),
         y: j * 15,
         player,
+        tint: getTint(player),
       })
     }
   }
@@ -47,43 +48,89 @@ const getTiles = (width, height) => {
   return tiles
 }
 
+const nextTurn = (tiles, time, setTime) => {
+  if (Date.now() - time < 500) return tiles
+  setTime(Date.now())
+
+  return tiles
+    .map((line, x) => line.map((tile, y) => {
+      const getPlayer = () => {
+        if (tile.player) return tile.player
+        if (tiles[x - 1] && tiles[x - 1][y] && tiles[x - 1][y].player) return tiles[x - 1][y].player
+        if (tiles[x + 1] && tiles[x + 1][y] && tiles[x + 1][y].player) return tiles[x + 1][y].player
+        if (line[y - 1] && line[y - 1].player) return line[y - 1].player
+        if (line[y + 1] && line[y + 1].player) return line[y + 1].player
+
+        return undefined
+      }
+
+      const newPlayer = getPlayer()
+      const newTile = { ...tile }
+      if (tile.player !== newPlayer) {
+        const tint = getTint(newPlayer)
+        const [r, g, b] = hexRgb(tint)
+
+        newTile.player = newPlayer
+        newTile.currentFrame = 0
+        newTile.targetFrame = 20
+        newTile.previousTint = tile.tint || 0xffffff
+        newTile.targetTint = tint
+        newTile.targetR = r
+        newTile.targetG = g
+        newTile.targetB = b
+        newTile.tint = 0xffffff
+      }
+
+      return newTile
+    }))
+}
+
 const Tiles = ({ width, height }) => {
-  const [tiles, setTiles] = useState([])
+  const [tiles, setTiles] = useState(getTiles(width, height))
+  const [time, setTime] = useState(Date.now())
 
-  useEffect(() => {
-    setTiles(getTiles(width, height))
-  }, [])
+  useTick((delta) => {
+    setTiles(nextTurn(tiles, time, setTime).map((line, x) => line.map((tile, y) => {
+      if (tile.targetFrame === undefined) return tile
+      if (tile.currentFrame >= tile.targetFrame) return tile
 
-  useEffect(() => {
-    if (tiles.length === 0) return
+      const nextFramePercent = (tile.currentFrame + delta) / tile.targetFrame
+      const easeNextFramePercent = Math.min(1, easing.linear(nextFramePercent))
 
-    setTimeout(
-      () => {
-        setTiles(tiles.map((line, x) => line.map((tile, y) => {
-          const getPlayer = () => {
-            if (tile.player) return tile.player
-            if (tiles[x - 1] && tiles[x - 1][y] && tiles[x - 1][y].player) return tiles[x - 1][y].player
-            if (tiles[x + 1] && tiles[x + 1][y] && tiles[x + 1][y].player) return tiles[x + 1][y].player
-            if (line[y - 1] && line[y - 1].player) return line[y - 1].player
-            if (line[y + 1] && line[y + 1].player) return line[y + 1].player
+      const [prevR, prevG, prevB] = hexRgb(tile.previousTint)
 
-            return undefined
-          }
+      const nextValue = (value, targetValue) => {
+        const distance = targetValue - value
+        if (distance === 0) return value
 
-          return {
-            ...tile,
-            player: getPlayer(),
-          }
-        })))
-      },
-      500,
-    )
-  }, [tiles])
+        const nextDistance = easeNextFramePercent * distance
+        const newValue = nextDistance + value
 
-  return [].concat(...tiles.map(line => line.map(({ player, ...tile }) => (
+        return Math.round(newValue)
+      }
+
+      const newTint = rgbHex(
+        nextValue(prevR, tile.targetR),
+        nextValue(prevG, tile.targetG),
+        nextValue(prevB, tile.targetB),
+      )
+
+      const newTile = {
+        ...tile,
+        tint: newTint,
+        currentFrame: tile.currentFrame + delta,
+      }
+
+      return newTile
+    })))
+  })
+
+  return [].concat(...tiles.map(line => line.map(({ key, x, y, tint }) => (
     <Tile
-      {...tile}
-      tint={getTint(player)}
+      key={key}
+      x={x}
+      y={y}
+      tint={tint}
     />
   ))))
 }
@@ -91,10 +138,8 @@ const Tiles = ({ width, height }) => {
 const Wrapper = (props) => (
   <ParticleContainer {...props}>
     <Tiles
-      width={300}
-      height={300}
-    // width={780}
-    // height={580}
+      width={780}
+      height={580}
     />
   </ParticleContainer>
 )
