@@ -23,6 +23,8 @@ const getBunnys = (count) => Array
       targetX: random(50, 750),
       targetY: random(50, 550),
       speed: random(100, 200),
+      scale: random(0.5, 2),
+      tint: random(0x555555, 0xffffff),
       easeTime: 'easeOutCubic',
       easeX: 'easeInCubic',
       easeY: 'easeInQuint',
@@ -68,12 +70,12 @@ const App = () => (
       interactive={false}
     />
 
-    <Container
+    <ParticleContainer
       interactive={false}
       interactiveChildren={false}
     >
       <Bunnys count={100} />
-    </Container>
+    </ParticleContainer>
   </Stage >
 )
 

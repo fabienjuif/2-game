@@ -54,6 +54,7 @@ const Bunny = ({
   easeTime = 'linear',
   easeX = 'linear',
   easeY = 'linear',
+  ...props,
 }) => {
   const [currentFrame, setCurrentFrame] = useState(0)
   const [target, setTarget] = useState({
@@ -113,9 +114,10 @@ const Bunny = ({
 
   return (
     <Sprite
-      texture={texture}
-      // image={bunny}
-      cacheAsBitmap={true}
+      {...props}
+      // texture={texture}
+      image={bunny}
+      // cacheAsBitmap={true}
       x={position.x}
       y={position.y}
       interactive={false}
