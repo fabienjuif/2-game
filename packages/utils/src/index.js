@@ -1,10 +1,21 @@
-import React, { useState, useEffect, memo } from 'react'
-import { Sprite, useTick } from '@inlet/react-pixi'
-import * as PIXI from 'pixi.js'
-import bunny from './bunny.png'
+export const random = (x, y) => (Math.random() * (y - x)) + x
+
+export const hexRgb = value => {
+  var r = (value >> 16) & 255;
+  var g = (value >> 8) & 255;
+  var b = value & 255;
+
+  return [
+    r,
+    g,
+    b,
+  ]
+}
+
+export const rgbHex = (r, g, b) => b | (g << 8) | (r << 16)
 
 // source: https://gist.github.com/gre/1650294
-const easing = {
+export const easing = {
   // no easing, no acceleration
   linear: function (t) { return t },
   // accelerating from zero velocity
@@ -41,89 +52,3 @@ const easing = {
   easeOutSin: function (t) { return Math.sin(Math.PI / 2 * t); },
   easeInOutSin: function (t) { return (1 + Math.sin(Math.PI * t - Math.PI / 2)) / 2; },
 }
-
-const texture = new PIXI.Texture.fromImage(bunny)
-console.log(texture)
-
-const Bunny = ({
-  x,
-  y,
-  targetX,
-  targetY,
-  speed, // px per seconds
-  easeTime = 'linear',
-  easeX = 'linear',
-  easeY = 'linear',
-  ...props,
-}) => {
-  const [currentFrame, setCurrentFrame] = useState(0)
-  const [target, setTarget] = useState({
-    distance: 0,
-    frames: 0,
-    x: targetX,
-    y: targetY,
-  })
-  const [position, setPosition] = useState({
-    x: x,
-    y: y,
-  })
-
-  useEffect(
-    () => {
-      const distance = Math.sqrt((targetX - x) ** 2 + (targetY - y) ** 2)
-      const frames = distance / (speed / 60)
-
-      setTarget({
-        ...target,
-        distance,
-        frames,
-      })
-
-      setCurrentFrame(0)
-    },
-    [targetX, targetY, x, y, speed],
-  )
-
-  useEffect(
-    () => {
-      if (target.distance === 0) return
-
-      const nextFramePercent = (currentFrame / target.frames)
-      const easeNextFramePercent = easing[easeTime](nextFramePercent)
-      const nextDistance = easeNextFramePercent * target.distance
-
-      const percentDistance = nextDistance / target.distance
-
-      const nextX = ((target.x - x) * easing[easeX](percentDistance)) + x
-      const nextY = ((target.y - y) * easing[easeY](percentDistance)) + y
-
-      setPosition({
-        x: nextX,
-        y: nextY,
-      })
-    },
-    [currentFrame],
-  )
-
-  useTick((delta) => {
-    if (target.distance === 0) return
-    if (target.frames <= currentFrame) return
-
-    setCurrentFrame(currentFrame + delta)
-  })
-
-  return (
-    <Sprite
-      {...props}
-      // texture={texture}
-      image={bunny}
-      // cacheAsBitmap={true}
-      x={position.x}
-      y={position.y}
-      interactive={false}
-      anchor={0.5}
-    />
-  )
-}
-
-export default Bunny

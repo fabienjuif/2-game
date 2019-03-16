@@ -1,81 +1,34 @@
-import React, { useState, useEffect } from 'react'
-import { Stage, Container, Sprite, ParticleContainer } from '@inlet/react-pixi'
+import React from 'react'
+import { Stage } from '@inlet/react-pixi'
 import * as PIXI from 'pixi.js'
-import Bunny from './bunny'
-import bg from './bg.png'
+import Tiles from './tiles'
+import Bunnies from './bunnies'
 
 // PIXI.settings.RESOLUTION = window.devicePixelRatio;
 PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST;
 PIXI.settings.CAN_UPLOAD_SAME_BUFFER = true
-
-
-const random = (x, y) => (Math.random() * (y - x)) + x
-
-const getBunnys = (count) => Array
-  .from({ length: count })
-  .map((_, index) => {
-    const x = random(50, 750)
-    const y = random(50, 550)
-    return {
-      key: index,
-      x,
-      y,
-      targetX: random(50, 750),
-      targetY: random(50, 550),
-      speed: random(100, 200),
-      scale: random(0.5, 2),
-      tint: random(0x555555, 0xffffff),
-      easeTime: 'easeOutCubic',
-      easeX: 'easeInCubic',
-      easeY: 'easeInQuint',
-    }
-  })
-
-const Bunnys = ({ count }) => {
-  const [bunnys, setBunnys] = useState([])
-
-  useEffect(() => {
-    setBunnys(getBunnys(count))
-
-    setInterval(
-      () => {
-        setBunnys(getBunnys(count))
-      },
-      3000,
-    )
-  }, [])
-
-  return bunnys.map(bunny => React.createElement(Bunny, bunny))
-}
 
 const App = () => (
   <Stage
     width={800}
     height={600}
     options={{
-      backgroundColor: 0x07ff9c,
+      backgroundColor: 0xFFFFFF,
       antialias: false,
       roundPixel: false,
       clearBeforeRender: true,
       preserveDrawingBuffer: true,
     }}
   >
-    <Sprite
-      image={bg}
-      x={5}
-      y={5}
-      width={790}
-      height={590}
-      tint={0x505050}
-      interactive={false}
+    <Tiles
+      x={10}
+      y={10}
     />
 
-    <ParticleContainer
+    <Bunnies
       interactive={false}
       interactiveChildren={false}
-    >
-      <Bunnys count={100} />
-    </ParticleContainer>
+    />
   </Stage >
 )
 

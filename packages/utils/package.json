@@ -1,0 +1,7 @@
+{
+  "name": "@2-game/utils",
+  "version": "0.1.0",
+  "main": "src/index.js",
+  "license": "MIT",
+  "private": true
+}
