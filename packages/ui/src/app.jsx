@@ -1,35 +1,50 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { Stage } from '@inlet/react-pixi'
-import * as PIXI from 'pixi.js'
+import Camera from './camera'
 import Tiles from './tiles'
 import Bunnies from './bunnies'
 
-// PIXI.settings.RESOLUTION = window.devicePixelRatio;
-PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST;
-PIXI.settings.CAN_UPLOAD_SAME_BUFFER = true
+const App = () => {
+  const [[width, height], setSize] = useState([])
 
-const App = () => (
-  <Stage
-    width={800}
-    height={600}
-    options={{
-      backgroundColor: 0xFFFFFF,
-      antialias: false,
-      roundPixel: false,
-      clearBeforeRender: true,
-      preserveDrawingBuffer: true,
-    }}
-  >
-    <Tiles
-      x={10}
-      y={10}
-    />
+  useEffect(
+    () => {
+      setSize([
+        window.innerWidth - 20,
+        window.innerHeight - 20,
+      ])
+    },
+    []
+  )
 
-    <Bunnies
-      interactive={false}
-      interactiveChildren={false}
-    />
-  </Stage >
-)
+
+  if (!width || !height) return false
+  return (
+    <Stage
+      width={width}
+      height={height}
+      options={{
+        autoResize: true,
+        transparent: true,
+        forceFXAA: true,
+        resolution: window.devicePixelRatio,
+        autoDensity: true,
+        roundPixel: false,
+        resizeTo: window,
+      }}
+    >
+      <Bunnies />
+
+      <Camera
+        windowWidth={width}
+        windowHeight={height}
+        width={800}
+        height={600}
+      >
+        <Tiles />
+      </Camera>
+    </Stage >
+  )
+}
 
 export default App

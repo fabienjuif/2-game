@@ -41,7 +41,7 @@ const Bunnys = ({ count }) => {
 }
 
 const Wrapper = (props) => (
-  <ParticleContainer {...props}>
+  <ParticleContainer>
     <Bunnys count={10} />
   </ParticleContainer>
 )

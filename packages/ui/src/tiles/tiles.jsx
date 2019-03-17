@@ -15,13 +15,13 @@ const getTiles = (width, height) => {
   const tiles = []
 
   const player1 = {
-    x: Math.round(random(0, Math.ceil(width / 20))),
-    y: Math.round(random(0, Math.ceil(height / 15))),
+    x: Math.ceil(random(0, Math.ceil(width / 20))),
+    y: Math.ceil(random(0, Math.ceil(height / 15))),
   }
 
   const player2 = {
-    x: Math.round(random(0, Math.ceil(width / 20))),
-    y: Math.round(random(0, Math.ceil(height / 15))),
+    x: Math.ceil(random(0, Math.ceil(width / 20))),
+    y: Math.ceil(random(0, Math.ceil(height / 15))),
   }
 
   while (player2.x === player1.x) player2.x = random(0, Math.floor(width / 20))

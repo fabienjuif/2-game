@@ -13,3 +13,10 @@ Just for fun and to try react-pixi from inlet.
 
 - beta3: https://fabienjuif.github.io/2-game/beta3/
   * beta2 optimisation
+
+- beta4: https://fabienjuif.github.io/2-game/beta4/
+  * camera
+  * bunnies are behind the scene and not in the camera action
+  * you can zoom in / zoom out
+  * you can move the tiles
+  * works on phone
