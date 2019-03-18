@@ -1,0 +1,14 @@
+.ui {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  align-items: center;
+  height: 100%;
+}
+
+.ui button {
+  padding: 1em;
+  margin: 1em;
+  margin-top: auto;
+  margin-left: auto;
+}

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta name="theme-color" content="#000000" />
+  <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+  <title>2-game</title>
+
+  <style>
+    body {
+      background-color: #f1f1f1;
+    }
+
+    canvas {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      z-index: -10;
+    }
+
+    :root {
+      --app-height: 100%;
+    }
+
+    html,
+    body {
+      padding: 0;
+      margin: 0;
+      overflow: hidden;
+      width: 100vw;
+      height: 100vh;
+
+      @media not all and (hover: hover) {
+        height: var(--app-height);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <noscript>You need to enable JavaScript to run this app.</noscript>
+  <script>
+    const appHeight = () => {
+      const doc = document.documentElement
+      doc.style.setProperty('--app-height', `${window.innerHeight}px`)
+    }
+    window.addEventListener('resize', appHeight)
+    appHeight()
+  </script>
+</body>
+
+</html>

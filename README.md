@@ -20,3 +20,8 @@ Just for fun and to try react-pixi from inlet.
   * you can zoom in / zoom out
   * you can move the tiles
   * works on phone
+
+- beta5: https://fabienjuif.github.io/2-game/beta5/
+  * "next turn" button to trigger the next tiles turn
+  * uses a service (React Context)
+  * uses React DOM to build the UI

@@ -1,4 +1,4 @@
-export const random = (x, y) => (Math.random() * (y - x)) + x
+export const random = (x, y) => Math.round((Math.random() * (y - x)) + x)
 
 export const hexRgb = value => {
   var r = (value >> 16) & 255;
