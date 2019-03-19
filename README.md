@@ -33,3 +33,8 @@ Just for fun and to try react-pixi from inlet.
   * light
   * it uses a texture processed on the fly that draw a white circle in the black (with alpha) background
   * then this texture is used with a blendmode
+
+- beta8: https://fabienjuif.github.io/2-game/beta8/
+  * click on tile to own it
+  * each player can click on 2 tiles
+  * add "player turn"

@@ -1,9 +1,9 @@
 export const random = (x, y) => Math.round((Math.random() * (y - x)) + x)
 
-export const hexRgb = value => {
-  var r = (value >> 16) & 255;
-  var g = (value >> 8) & 255;
-  var b = value & 255;
+export const hexRgb = hex => {
+  var r = (hex >> 16) & 255;
+  var g = (hex >> 8) & 255;
+  var b = hex & 255;
 
   return [
     r,
@@ -13,6 +13,15 @@ export const hexRgb = value => {
 }
 
 export const rgbHex = (r, g, b) => b | (g << 8) | (r << 16)
+
+export const darker = (hex) => {
+  const [r, g, b] = hexRgb(hex)
+  return rgbHex(
+    r * 3 / 4,
+    g * 3 / 4,
+    b * 3 / 4,
+  )
+}
 
 // source: https://gist.github.com/gre/1650294
 export const easing = {

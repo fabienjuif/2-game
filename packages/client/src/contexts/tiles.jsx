@@ -30,8 +30,8 @@ const getTiles = (width, height) => {
 
       line.push({
         key: `${i}-${j}`,
-        x: i * 20 + (j % 2 * 10),
-        y: j * 15,
+        x: i,
+        y: j,
         player,
       })
     }
@@ -42,8 +42,15 @@ const getTiles = (width, height) => {
 
 const TilesProvider = ({ children, width, height }) => {
   const [tiles, setTiles] = useState(getTiles(width, height))
+  const [player, setPlayer] = useState('player1')
+  const [pieces, setPieces] = useState(2)
 
   const next = () => {
+    setPlayer(old => old === 'player1' ? 'player2' : 'player1')
+    setPieces(2)
+
+    if (player === 'player1') return
+
     setTiles(curr => curr
       .map((line, x) => line.map((tile, y) => {
         const getPlayer = () => {
@@ -69,11 +76,23 @@ const TilesProvider = ({ children, width, height }) => {
       })))
   }
 
+  const ownTile = (x, y) => {
+    if (pieces <= 0) return
+    setPieces(old => old - 1)
+
+    setTiles(tiles => tiles.map((line, tx) => line.map((tile, ty) => {
+      if (tx === x && ty === y) return { ...tile, player }
+      return tile
+    })))
+  }
+
   return (
     <Context.Provider
       value={{
         getData: () => tiles,
+        getPlayer: () => player,
         next,
+        ownTile,
       }}
     >
       {children}
