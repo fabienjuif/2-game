@@ -1,13 +1,17 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef, useLayoutEffect } from 'react'
 import { Stage } from '@inlet/react-pixi'
+import * as PIXI from 'pixi.js'
 import Camera from './camera'
 import Tiles from './tiles'
 import Bunnies from './bunnies'
 import TilesContext from '../contexts/tiles'
+import Light from './light'
 import './game.css'
 
 const Game = () => {
   const [[width, height], setSize] = useState([])
+  const [mask, setMask] = useState(null)
+  const maskRef = useRef(undefined)
 
   useEffect(
     () => {
@@ -18,6 +22,10 @@ const Game = () => {
     },
     []
   )
+
+  useLayoutEffect(() => {
+    if (mask !== maskRef.current) setMask(maskRef.current)
+  })
 
   if (!width || !height) return false
   return (
@@ -45,8 +53,14 @@ const Game = () => {
               width={800}
               height={600}
             >
-              <Tiles />
+              <Tiles  />
             </Camera>
+
+            <Light
+              width={width}
+              height={height}
+              blendMode={PIXI.BLEND_MODES.MULTIPLY}
+            />
           </TilesContext.Provider>
         </Stage >
       )}

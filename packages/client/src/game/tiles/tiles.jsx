@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react'
-import { ParticleContainer, useTick } from '@inlet/react-pixi'
+import { Container, useTick } from '@inlet/react-pixi'
 import { easing, hexRgb, rgbHex } from '@2-game/utils'
 import TilesContext from '../../contexts/tiles'
 import Tile from './tile'
@@ -12,7 +12,7 @@ const getTint = (player) => {
   }
 }
 
-const Tiles = ({ width, height }) => {
+const Tiles = () => {
   const [tiles, setTiles] = useState([])
   const { getData } = useContext(TilesContext) || {}
 
@@ -80,12 +80,9 @@ const Tiles = ({ width, height }) => {
 }
 
 const Wrapper = (props) => (
-  <ParticleContainer {...props}>
-    <Tiles
-      width={780}
-      height={580}
-    />
-  </ParticleContainer>
+  <Container {...props}>
+    <Tiles />
+  </Container>
 )
 
 export default Wrapper

@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react'
-import { Container, useApp } from '@inlet/react-pixi'
+import { Container } from '@inlet/react-pixi'
 import { Rectangle } from 'pixi.js'
 
 const Camera = ({
@@ -8,11 +8,11 @@ const Camera = ({
   height,
   windowWidth,
   windowHeight,
+  ...props,
 }) => {
   const [scale, setScale] = useState(0.4)
   const [[x, y], setPosition] = useState([(windowWidth - (width * scale)) / 2, (windowHeight - (height * scale)) / 2])
   const ref = useRef(null)
-  const app = useApp()
 
   useEffect(
     () => {
@@ -69,6 +69,7 @@ const Camera = ({
 
   return (
     <Container
+      {...props}
       ref={ref}
       x={x}
       y={y}

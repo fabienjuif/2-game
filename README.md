@@ -28,3 +28,8 @@ Just for fun and to try react-pixi from inlet.
 
 - beta6: https://fabienjuif.github.io/2-game/beta6/
   * fix canvas & UI on mobile
+
+- beta7: https://fabienjuif.github.io/2-game/beta7/
+  * light
+  * it uses a texture processed on the fly that draw a white circle in the black (with alpha) background
+  * then this texture is used with a blendmode
