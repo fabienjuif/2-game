@@ -25,3 +25,6 @@ Just for fun and to try react-pixi from inlet.
   * "next turn" button to trigger the next tiles turn
   * uses a service (React Context)
   * uses React DOM to build the UI
+
+- beta6: https://fabienjuif.github.io/2-game/beta6/
+  * fix canvas & UI on mobile

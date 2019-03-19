@@ -9,20 +9,20 @@
   <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
   <title>2-game</title>
 
+  <!-- From https://css-tricks.com/the-trick-to-viewport-units-on-mobile/ -->
+  <script>
+    const setMaxHeight = () => {
+      const vh = window.innerHeight * 0.01
+      document.documentElement.style.setProperty('--vh', `${vh}px`)
+    }
+
+    window.addEventListener('resize', setMaxHeight)
+    setMaxHeight()
+  </script>
+
   <style>
     body {
       background-color: #f1f1f1;
-    }
-
-    canvas {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      z-index: -10;
-    }
-
-    :root {
-      --app-height: 100%;
     }
 
     html,
@@ -30,12 +30,10 @@
       padding: 0;
       margin: 0;
       overflow: hidden;
-      width: 100vw;
+      /* from: https://css-tricks.com/the-trick-to-viewport-units-on-mobile/ */
+      /* Fallback for browsers that do not support Custom Properties */
       height: 100vh;
-
-      @media not all and (hover: hover) {
-        height: var(--app-height);
-      }
+      height: calc(var(--vh, 1vh) * 100);
     }
   </style>
 </head>

@@ -4,6 +4,7 @@ import Camera from './camera'
 import Tiles from './tiles'
 import Bunnies from './bunnies'
 import TilesContext from '../contexts/tiles'
+import './game.css'
 
 const Game = () => {
   const [[width, height], setSize] = useState([])
