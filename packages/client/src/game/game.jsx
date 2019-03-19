@@ -8,8 +8,8 @@ import TilesContext from '../contexts/tiles'
 import Light from './light'
 import './game.css'
 
-const Game = () => {
-  const [[width, height], setSize] = useState([])
+const Game = ({ width, height }) => {
+  const [[windowWidth, windowHeight], setSize] = useState([])
   const [mask, setMask] = useState(null)
   const maskRef = useRef(undefined)
 
@@ -27,13 +27,13 @@ const Game = () => {
     if (mask !== maskRef.current) setMask(maskRef.current)
   })
 
-  if (!width || !height) return false
+  if (!windowWidth || !windowHeight) return false
   return (
     <TilesContext.Consumer>
       {value => (
         <Stage
-          width={width}
-          height={height}
+          width={windowWidth}
+          height={windowHeight}
           options={{
             autoResize: true,
             transparent: true,
@@ -45,20 +45,23 @@ const Game = () => {
           }}
         >
           <TilesContext.Provider value={value}>
-            <Bunnies />
+            <Bunnies
+              windowWidth={windowWidth}
+              windowHeight={windowHeight}
+            />
 
             <Camera
-              windowWidth={width}
-              windowHeight={height}
-              width={800}
-              height={600}
+              windowWidth={windowWidth}
+              windowHeight={windowHeight}
+              width={width}
+              height={height}
             >
               <Tiles  />
             </Camera>
 
             <Light
-              width={width}
-              height={height}
+              windowWidth={windowWidth}
+              windowHeight={windowHeight}
               blendMode={PIXI.BLEND_MODES.MULTIPLY}
             />
           </TilesContext.Provider>

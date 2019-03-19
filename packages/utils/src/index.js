@@ -17,9 +17,9 @@ export const rgbHex = (r, g, b) => b | (g << 8) | (r << 16)
 export const darker = (hex) => {
   const [r, g, b] = hexRgb(hex)
   return rgbHex(
-    r * 3 / 4,
-    g * 3 / 4,
-    b * 3 / 4,
+    r * 0.75,
+    g * 0.75,
+    b * 0.75,
   )
 }
 

@@ -38,3 +38,8 @@ Just for fun and to try react-pixi from inlet.
   * click on tile to own it
   * each player can click on 2 tiles
   * add "player turn"
+
+- beta9: https://fabienjuif.github.io/2-game/beta9/
+  * first assets
+  * first rules
+  * gold

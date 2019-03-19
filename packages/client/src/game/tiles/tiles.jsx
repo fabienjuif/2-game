@@ -35,8 +35,8 @@ const Tiles = () => {
         }
       }
 
-      if (innerTile.targetFrame === undefined) return innerTile
-      if (innerTile.currentFrame >= innerTile.targetFrame) return innerTile
+      if (innerTile.targetFrame === undefined) return { ...innerTile, ...tile }
+      if (innerTile.currentFrame >= innerTile.targetFrame) return { ...innerTile, ...tile }
 
       const nextFramePercent = (innerTile.currentFrame + delta) / innerTile.targetFrame
       const easeNextFramePercent = Math.min(1, easing.linear(nextFramePercent))
@@ -61,6 +61,7 @@ const Tiles = () => {
 
       const newTile = {
         ...innerTile,
+        ...tile,
         tint: newTint,
         currentFrame: innerTile.currentFrame + delta,
       }
@@ -69,11 +70,13 @@ const Tiles = () => {
     })))
   })
 
-  return [].concat(...tiles.map(line => line.map(({ key, x, y, tint }) => (
+  return [].concat(...tiles.map(line => line.map(({ key, x, y, tint, empty, object }) => (
     <Tile
       key={key}
       x={x}
       y={y}
+      object={object}
+      empty={empty}
       tint={tint || 0xFFFFFF}
     />
   ))))

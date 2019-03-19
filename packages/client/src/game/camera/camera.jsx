@@ -10,7 +10,7 @@ const Camera = ({
   windowHeight,
   ...props,
 }) => {
-  const [scale, setScale] = useState(0.4)
+  const [scale, setScale] = useState(Math.min(windowWidth / (width + 100), windowHeight / (height + 100)))
   const [[x, y], setPosition] = useState([(windowWidth - (width * scale)) / 2, (windowHeight - (height * scale)) / 2])
   const ref = useRef(null)
 

@@ -1,18 +1,39 @@
-import React, { useContext, useRef, useState } from 'react'
-import { Sprite } from '@inlet/react-pixi'
-import { darker } from '@2-game/utils'
+import React, { useContext, useRef, useState, useEffect } from 'react'
+import { Sprite, Container } from '@inlet/react-pixi'
+import { darker } from '@2-game/utils'
 import TilesContext from '../../contexts/tiles'
+import Tree from './tree'
+import Villager from './villager'
+import Soldier from './soldier'
 import tile from './tile.png'
 
-const Tile = ({ x, y, tint, ...props }) => {
-  const { ownTile } = useContext(TilesContext)
-  const [shadow, setShadow] = useState(false)
+const Asset = ({ name, ...props }) => {
+  switch (name) {
+    case 'tree': return <Tree {...props} />
+    case 'villager': return <Villager {...props} />
+    case 'soldier': return <Soldier {...props} />
+    default: return null
+  }
+}
+
+const Tile = ({ x, y, tint, object, empty, ...props }) => {
+  if (empty) return null
+
+  const { action } = useContext(TilesContext)
+  const [innerTint, setInnerTint] = useState(tint)
   const click = useRef(undefined)
+
+  useEffect(
+    () => {
+      setInnerTint(tint)
+    },
+    [tint],
+  )
 
   const pointerup = (e) => {
     if (!click.current) return
     if (click.current > Date.now() - 200) {
-      ownTile(x, y)
+      action(x, y)
     }
     click.current = undefined
   }
@@ -22,27 +43,35 @@ const Tile = ({ x, y, tint, ...props }) => {
   }
 
   const pointerover = () => {
-    setShadow(true)
+    setInnerTint(darker(tint))
   }
 
   const pointerout = () => {
-    setShadow(false)
+    setInnerTint(tint)
   }
 
   return (
-    <Sprite
+    <Container
       {...props}
-      image={tile}
-      anchor={0.5}
-      interactive
       x={x * 20 + (y % 2 * 10)}
       y={y * 15}
-      tint={shadow ? darker(tint) : tint}
+      interactive
       pointerdown={pointerdown}
       pointerup={pointerup}
       pointerover={pointerover}
       pointerout={pointerout}
-    />
+    >
+      <Sprite
+        image={tile}
+        anchor={0.5}
+        x={0}
+        y={0}
+        tint={innerTint}
+      />
+      <Asset
+        name={object}
+      />
+    </Container>
   )
 }
 
