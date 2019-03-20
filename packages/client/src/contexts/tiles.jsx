@@ -2,12 +2,10 @@
 import React, { createContext, useState } from 'react'
 import PropTypes from 'prop-types'
 import { random } from '@2-game/utils'
+import BALANCES from './balances'
+import PRICES from './prices'
 
 const Context = createContext()
-
-const prices = new Map()
-prices.set('villager', 10)
-prices.set('soldier', 20)
 
 const giveTileToPlayer = tiles => (tile) => {
   const getPlayer = () => {
@@ -102,9 +100,8 @@ const TilesProvider = ({ children, width, height }) => {
       if (!tile.player) return
       if (tile.empty) return
 
-      if (tile.object !== 'tree') updateBalance(tile.player, 1)
-      if (tile.object === 'villager') updateBalance(tile.player, -2)
-      if (tile.object === 'soldier') updateBalance(tile.player, -5)
+      if (tile.object !== 'tree') updateBalance(tile.player, BALANCES.get('default'))
+      if (BALANCES.has(tile.object)) updateBalance(tile.player, BALANCES.get(tile.object))
     }))
 
     return balances
@@ -154,8 +151,8 @@ const TilesProvider = ({ children, width, height }) => {
 
   const placeNewAsset = (x, y) => {
     if (!newAsset) return
-    if (!prices.has(newAsset)) return
-    if (prices.get(newAsset) > gold[player]) return
+    if (!PRICES.has(newAsset)) return
+    if (PRICES.get(newAsset) > gold[player]) return
 
     // cell should be next to a player owned one
     // TODO: this code is duplicated
@@ -176,8 +173,12 @@ const TilesProvider = ({ children, width, height }) => {
 
     // some assets are stronger than other
     if (newAsset === 'villager' && tiles[x][y].object && tiles[x][y].object !== 'tree') return
+    if (newAsset === 'house' && tiles[x][y].object && tiles[x][y].object !== 'tree') return
 
-    gold[player] -= prices.get(newAsset)
+    // some assets can't be placed in a board that is not owned
+    if (newAsset === 'house' && tiles[x][y].player !== player) return
+
+    gold[player] -= PRICES.get(newAsset)
     setGold(gold)
 
     setTiles(tiles => tiles.map((line, tx) => line.map((tile, ty) => {

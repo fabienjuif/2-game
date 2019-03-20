@@ -32,14 +32,19 @@ const UI = () => {
 
       <div className="actions">
         <button
+          onClick={() => setNewAsset('house')}
+        >
+          House [10gold / +10gold per turn]
+        </button>
+        <button
           onClick={() => setNewAsset('villager')}
         >
-          Villager [10 gold / 2 gold per turn]
+          Villager [10 gold / -2 gold per turn]
         </button>
         <button
           onClick={() => setNewAsset('soldier')}
         >
-          Soldier [20 gold / 5 gold per turn]
+          Soldier [20 gold / -5 gold per turn]
         </button>
         <button
           onClick={next}
