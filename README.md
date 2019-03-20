@@ -43,3 +43,8 @@ Just for fun and to try react-pixi from inlet.
   * first assets
   * first rules
   * gold
+
+- beta10: https://fabienjuif.github.io/2-game/beta10/
+  * trees spawn each turn
+  * unit can be moved
+  * ui is better and shows balance

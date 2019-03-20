@@ -33,3 +33,28 @@
   margin: 1em;
   pointer-events: auto;
 }
+
+.ui .balances {
+  display: flex;
+  justify-content: center;
+  margin-top: 1em;
+}
+
+.ui .balance {
+  padding-right: 1em;
+  margin-left: .5em;
+  border-right: 1px solid white;
+}
+
+.ui .balance:last-child {
+  border: none;
+}
+
+.ui .player {
+  margin-left: 1em;
+}
+
+.ui .gold {
+  min-width: 2em;
+  text-align: right;
+}

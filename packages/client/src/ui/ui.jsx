@@ -1,26 +1,43 @@
-import React, { useContext } from 'react'
+import React, { useContext, Fragment } from 'react'
 import TilesContext from '../contexts/tiles'
 import './ui.css'
 
 const UI = () => {
-  const { next, getPlayer, getGold, setSelectedAsset } = useContext(TilesContext)
+  const {
+    getPlayer,
+    getGold,
+    getBalances,
+    next,
+    setNewAsset,
+  } = useContext(TilesContext)
+
+  const gold = getGold()
 
   return (
     <div className="ui">
       <div className="infos">
         <h1>2-game</h1>
         <h3>{`${getPlayer()} turn!`}</h3>
-        <span>You have {getGold()} golds</span>
+
+        <div className="balances">
+          {Object.entries(getBalances()).map(([player, balance]) => (
+            <Fragment>
+              <div className="player">{player}:</div>
+              <div className="gold">{gold[player]}</div>
+              <div className="balance">({balance >= 0 ? '+' : ''}{balance})</div>
+            </Fragment>
+          ))}
+        </div>
       </div>
 
       <div className="actions">
         <button
-          onClick={() => setSelectedAsset('villager')}
+          onClick={() => setNewAsset('villager')}
         >
           Villager [10 gold / 2 gold per turn]
         </button>
         <button
-          onClick={() => setSelectedAsset('soldier')}
+          onClick={() => setNewAsset('soldier')}
         >
           Soldier [20 gold / 5 gold per turn]
         </button>

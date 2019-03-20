@@ -1,6 +1,6 @@
 export const random = (x, y) => Math.round((Math.random() * (y - x)) + x)
 
-export const hexRgb = hex => {
+export const hexRgb = (hex) => {
   var r = (hex >> 16) & 255;
   var g = (hex >> 8) & 255;
   var b = hex & 255;
