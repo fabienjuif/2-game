@@ -180,24 +180,20 @@ const TilesProvider = ({ children, width, height }) => {
   useEffect(processBalances, [tiles])
 
   const next = () => {
-    setPlayer(old => old === 'player1' ? 'player2' : 'player1')
-    setNewAsset(null)
-    setSelectedUnit(null)
 
     // turn is not over yet
-    if (player === 'player1') return
+    // if (player === 'player1') return
 
     // turn is over
     // - count gold
-    const newGold = Object.entries(gold).reduce(
-      (acc, [player, gold]) => ({ ...acc, [player]: gold + balances[player] }),
-      {},
-    )
-    setGold(newGold)
-    // - after we do balances, if a player as no money left (<0) then, all its units are killed
-    Object.entries(newGold).forEach(([player, gold]) => {
-      if (gold >= 0) return
+    const newGold = gold[player] + balances[player]
+    setGold({
+      ...gold,
+      [player]: newGold,
+    })
 
+    // - after we do balances, if a player as no money left (<0) then, all its units are killed
+    if (newGold <= 0) { 
       setTiles(tiles => tiles.map(line => line.map((tile) => {
         if (tile.player !== player) return tile
         if (tile.object === 'tree') return tile
@@ -207,7 +203,12 @@ const TilesProvider = ({ children, width, height }) => {
           object: 'killed',
         }
       })))
-    })
+    }
+
+    setPlayer(old => old === 'player1' ? 'player2' : 'player1')
+    setNewAsset(null)
+    setSelectedUnit(null)
+
     // - plant some trees
     setTiles(tiles => tiles.map(line => line.map((tile) => {
       if (tile.object) return tile
