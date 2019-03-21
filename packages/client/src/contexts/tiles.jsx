@@ -88,25 +88,49 @@ const TilesProvider = ({ children, width, height }) => {
   const [newAsset, setNewAsset] = useState(null)
   const [selectedUnit, setSelectedUnit] = useState(null)
   const [player, setPlayer] = useState('player1')
+  const [balances, setBalances] = useState({ player1: 0, player2: 0 })
 
   const setAvailableTiles = () => {
     setTiles(tiles => {
       const isSamePlayer = (tx, ty) => tiles[tx] && tiles[tx][ty] && tiles[tx][ty].player === player
+      const isSamePlayerInArea = (array) => array.find(([x, y]) => isSamePlayer(x, y))
 
       return tiles.map(line => line.map((tile) => {
         if (!newAsset && !selectedUnit) return { ...tile, isAvailable: true }
 
         const { x, y } = tile
 
-        const isAvailable = (
-          tile.player === player
-          || isSamePlayer(x - 1, y)
-          || isSamePlayer(x + 1, y)
-          || isSamePlayer(y % 2 ? x : x - 1, y - 1)
-          || isSamePlayer(y % 2 ? x + 1 : x, y - 1)
-          || isSamePlayer(y % 2 ? x : x - 1, y + 1)
-          || isSamePlayer(y % 2 ? x + 1 : x, y + 1)
-        )
+        let isAvailable = false
+
+        if (['villager', 'soldier'].includes(newAsset)) {
+            isAvailable = isSamePlayerInArea([
+              [x, y],
+              [x - 1, y],
+              [x + 1, y],
+              [y % 2 ? x : x - 1, y - 1],
+              [y % 2 ? x + 1 : x, y - 1],
+              [y % 2 ? x : x - 1, y + 1],
+              [y % 2 ? x + 1 : x, y + 1],
+            ])
+        } else if (['house'].includes(newAsset)) {
+          isAvailable = isSamePlayerInArea([
+            [x, y],
+          ])
+        } else if (selectedUnit && ['villager', 'soldier'].includes(selectedUnit.object)) {
+          isAvailable = (
+            isSamePlayerInArea([
+              [x, y],
+              [x - 1, y],
+              [x + 1, y],
+              [y % 2 ? x : x - 1, y - 1],
+              [y % 2 ? x + 1 : x, y - 1],
+              [y % 2 ? x : x - 1, y + 1],
+              [y % 2 ? x + 1 : x, y + 1],
+            ])
+            // TODO: it should not be pythagore but a A*
+            && Math.sqrt((tile.x - selectedUnit.x) ** 2 + (tile.y - selectedUnit.y) ** 2) <= 4
+          )
+        }
 
         return {
           ...tile,
@@ -118,7 +142,7 @@ const TilesProvider = ({ children, width, height }) => {
 
   useEffect(setAvailableTiles, [player, newAsset, selectedUnit])
 
-  const getBalances = () => {
+  const processBalances = () => {
     const balances = Object.keys(gold).reduce((acc, player) => ({ ...acc, [player]: 0 }), {})
     const updateBalance = (player, g) => {
       if (!balances[player]) balances[player] = 0
@@ -133,9 +157,10 @@ const TilesProvider = ({ children, width, height }) => {
       if (BALANCES.has(tile.object)) updateBalance(tile.player, BALANCES.get(tile.object))
     }))
 
-    return balances
+    setBalances(balances)
   }
 
+  useEffect(processBalances, [tiles])
 
   const next = () => {
     setPlayer(old => old === 'player1' ? 'player2' : 'player1')
@@ -147,7 +172,6 @@ const TilesProvider = ({ children, width, height }) => {
 
     // turn is over
     // - count gold
-    const balances = getBalances()
     const newGold = Object.entries(gold).reduce(
       (acc, [player, gold]) => ({ ...acc, [player]: gold + balances[player] }),
       {},
@@ -182,29 +206,15 @@ const TilesProvider = ({ children, width, height }) => {
     if (!newAsset) return false
     if (!PRICES.has(newAsset)) return false
     if (PRICES.get(newAsset) > gold[player]) return false
+    if (!tiles[x][y].isAvailable) return false
 
-    // cell should be next to a player owned one
-    // TODO: this code is duplicated
-    const isSamePlayer = (tx, ty) => tiles[tx] && tiles[tx][ty] && tiles[tx][ty].player === player
-    if (
-      tiles[x][y].player !== player
-      && !(
-        isSamePlayer(x - 1, y)
-        || isSamePlayer(x + 1, y)
-        || isSamePlayer(y % 2 ? x : x - 1, y - 1)
-        || isSamePlayer(y % 2 ? x + 1 : x, y - 1)
-        || isSamePlayer(y % 2 ? x : x - 1, y + 1)
-        || isSamePlayer(y % 2 ? x + 1 : x, y + 1)
-      )
-    ) {
-      return false
-    }
-
+    // TODO: available tiles should take care of this
     // some assets are stronger than other
     if (newAsset === 'villager' && tiles[x][y].object && tiles[x][y].object !== 'tree') return false
     if (newAsset === 'house' && tiles[x][y].object && tiles[x][y].object !== 'tree') return false
 
     // some assets can't be placed in a board that is not owned
+    // TODO: available tiles should take care of this
     if (newAsset === 'house' && tiles[x][y].player !== player) return false
 
     gold[player] -= PRICES.get(newAsset)
@@ -227,26 +237,7 @@ const TilesProvider = ({ children, width, height }) => {
 
   const moveUnit = (x, y) => {
     if (!selectedUnit) return false
-
-    // max 4 cells of movement
-    if (Math.sqrt((x - selectedUnit.x)**2 + (y - selectedUnit.y)**2) > 4) return false
-
-    // the targeted cell must be next to the player owned cells
-    // TODO: this code is duplicated
-    const isSamePlayer = (tx, ty) => tiles[tx] && tiles[tx][ty] && tiles[tx][ty].player === player
-    if (
-      tiles[x][y].player !== player
-      && !(
-        isSamePlayer(x - 1, y)
-        || isSamePlayer(x + 1, y)
-        || isSamePlayer(y % 2 ? x : x - 1, y - 1)
-        || isSamePlayer(y % 2 ? x + 1 : x, y - 1)
-        || isSamePlayer(y % 2 ? x : x - 1, y + 1)
-        || isSamePlayer(y % 2 ? x + 1 : x, y + 1)
-      )
-    ) {
-      return
-    }
+    if (!tiles[x][y].isAvailable) return false
 
     console.log('moving unit to ', x, y)
 
@@ -288,7 +279,6 @@ const TilesProvider = ({ children, width, height }) => {
   }
 
   const action = (x, y) => {
-    setAvailableTiles()
     return (
       selectUnit(x, y)
       || moveUnit(x, y)
@@ -302,8 +292,8 @@ const TilesProvider = ({ children, width, height }) => {
         tiles,
         player,
         gold,
+        balances,
         newAsset,
-        // getBalances,
         setNewAsset,
         next,
         action,

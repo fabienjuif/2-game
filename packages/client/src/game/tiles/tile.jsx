@@ -77,4 +77,4 @@ const Tile = ({ x, y, tint = 0xFFFFFF, isAvailable, object, empty }) => {
   )
 }
 
-export default React.memo(Tile)
+export default memo(Tile)

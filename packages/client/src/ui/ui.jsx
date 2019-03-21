@@ -1,4 +1,4 @@
-import React, { useContext, Fragment } from 'react'
+import React, { useContext, Fragment, memo } from 'react'
 import TilesContext from '../contexts/tiles'
 import './ui.css'
 
@@ -6,7 +6,7 @@ const UI = () => {
   const {
     player,
     gold,
-    // balances,
+    balances,
     next,
     setNewAsset,
   } = useContext(TilesContext)
@@ -17,15 +17,15 @@ const UI = () => {
         <h1>2-game</h1>
         <h3>{`${player} turn!`}</h3>
 
-        {/* <div className="balances">
-          {Object.entries(getBalances()).map(([player, balance]) => (
+        <div className="balances">
+          {Object.entries(balances).map(([player, balance]) => (
             <Fragment>
               <div className="player">{player}:</div>
               <div className="gold">{gold[player]}</div>
               <div className="balance">({balance >= 0 ? '+' : ''}{balance})</div>
             </Fragment>
           ))}
-        </div> */}
+        </div>
       </div>
 
       <div className="actions">
@@ -54,4 +54,4 @@ const UI = () => {
   )
 }
 
-export default UI
+export default memo(UI)
