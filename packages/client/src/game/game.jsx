@@ -1,11 +1,9 @@
 import React, { useState, useEffect, useRef, useLayoutEffect } from 'react'
 import { Stage } from '@inlet/react-pixi'
-import * as PIXI from 'pixi.js'
 import Camera from './camera'
 import Tiles from './tiles'
 import Bunnies from './bunnies'
 import TilesContext from '../contexts/tiles'
-import Light from './light'
 import Hover from './hover'
 import './game.css'
 
@@ -64,12 +62,6 @@ const Game = ({ width, height }) => {
                 windowHeight={windowHeight}
               />
             </Camera>
-
-            {/* <Light
-              windowWidth={windowWidth}
-              windowHeight={windowHeight}
-              blendMode={PIXI.BLEND_MODES.MULTIPLY}
-            /> */}
           </TilesContext.Provider>
         </Stage >
       )}

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { random, easing, darker } from '@2-game/utils'
+import { random, easing } from '@2-game/utils'
 import { useTick, ParticleContainer } from '@inlet/react-pixi'
 import Bunny from './bunny'
 

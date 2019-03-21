@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import { Sprite, useTick, Graphics } from '@inlet/react-pixi'
+import { Sprite, useTick } from '@inlet/react-pixi'
 import { easing } from '@2-game/utils'
 import bunny from './bunny.png'
-
-// const texture = new PIXI.Texture.fromImage(bunny)
 
 const Bunny = ({
   x,
