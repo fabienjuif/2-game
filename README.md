@@ -54,3 +54,11 @@ Just for fun and to try react-pixi from inlet.
   * cells that are playable are highlighted at the turn begins
     - it uses a generated texture + blend mode to do so
   * light is gone since the highlighted cells are using same principe
+
+
+- beta12: https://fabienjuif.github.io/2-game/beta12/
+  * rework highlight to use alpha
+  * use some memo and optimise context
+  * new unit: king, new balances & pries
+  * better UI, better showing whos playing
+  * gold is processed after the player turn

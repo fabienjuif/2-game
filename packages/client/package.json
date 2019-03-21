@@ -2,7 +2,7 @@
   "name": "@2-game/client",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://fabienjuif.github.io/2-game/beta11/",
+  "homepage": "https://fabienjuif.github.io/2-game/beta12/",
   "dependencies": {
     "@2-game/utils": "^0.1.0",
     "@inlet/react-pixi": "^0.5.7",
