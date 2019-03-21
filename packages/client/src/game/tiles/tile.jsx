@@ -6,6 +6,7 @@ import Tree from './tree'
 import Villager from './villager'
 import Soldier from './soldier'
 import House from './house'
+import King from './king'
 import tile from './tile.png'
 
 const Asset = ({ name, ...props }) => {
@@ -14,6 +15,7 @@ const Asset = ({ name, ...props }) => {
     case 'villager': return <Villager {...props} />
     case 'soldier': return <Soldier {...props} />
     case 'house': return <House {...props} />
+    case 'king': return <King {...props} />
     default: return null
   }
 }

@@ -102,7 +102,7 @@ const TilesProvider = ({ children, width, height }) => {
 
         let isAvailable = false
 
-        if (['villager', 'soldier'].includes(newAsset)) {
+        if (['villager', 'soldier', 'king'].includes(newAsset)) {
             isAvailable = isSamePlayerInArea([
               [x, y],
               [x - 1, y],
@@ -116,7 +116,7 @@ const TilesProvider = ({ children, width, height }) => {
           isAvailable = isSamePlayerInArea([
             [x, y],
           ])
-        } else if (selectedUnit && ['villager', 'soldier'].includes(selectedUnit.object)) {
+        } else if (selectedUnit && ['villager', 'soldier', 'king'].includes(selectedUnit.object)) {
           isAvailable = (
             isSamePlayerInArea([
               [x, y],
@@ -268,7 +268,7 @@ const TilesProvider = ({ children, width, height }) => {
   const selectUnit = (x, y) => {
     const tile = tiles[x][y]
     if (tile.player !== player) return false
-    if (!['villager', 'soldier'].includes(tile.object)) return false
+    if (!['villager', 'soldier', 'king'].includes(tile.object)) return false
 
     console.log('selecting unit from', x, y)
 
