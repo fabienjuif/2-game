@@ -48,3 +48,9 @@ Just for fun and to try react-pixi from inlet.
   * trees spawn each turn
   * unit can be moved
   * ui is better and shows balance
+
+- beta11: https://fabienjuif.github.io/2-game/beta11/
+  * general style improvement
+  * cells that are playable are highlighted at the turn begins
+    - it uses a generated texture + blend mode to do so
+  * light is gone since the highlighted cells are using same principe
