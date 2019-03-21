@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState, useEffect } from 'react'
+import React, { useContext, useRef, useState, useEffect, memo } from 'react'
 import { Sprite, Container } from '@inlet/react-pixi'
 import { darker } from '@2-game/utils'
 import TilesContext from '../../contexts/tiles'
@@ -18,19 +18,18 @@ const Asset = ({ name, ...props }) => {
   }
 }
 
-const Tile = ({ x, y, tint, object, empty, ...props }) => {
+const Tile = ({ x, y, tint = 0xFFFFFF, isAvailable, object, empty }) => {
   if (empty) return null
 
   const { action } = useContext(TilesContext)
   const [innerTint, setInnerTint] = useState(tint)
   const click = useRef(undefined)
 
-  useEffect(
-    () => {
-      setInnerTint(tint)
-    },
-    [tint],
-  )
+  const setBaseTint = () => {
+    setInnerTint(isAvailable ? tint : darker(tint))
+  }
+
+  useEffect(setBaseTint, [tint, isAvailable])
 
   const pointerup = (e) => {
     if (!click.current) return
@@ -45,16 +44,16 @@ const Tile = ({ x, y, tint, object, empty, ...props }) => {
   }
 
   const pointerover = () => {
-    setInnerTint(darker(tint))
+    if (!isAvailable) return
+    setInnerTint(darker(innerTint))
   }
 
   const pointerout = () => {
-    setInnerTint(tint)
+    setBaseTint()
   }
 
   return (
     <Container
-      {...props}
       x={x * 20 + (y % 2 * 10)}
       y={y * 15}
       interactive
@@ -78,4 +77,4 @@ const Tile = ({ x, y, tint, object, empty, ...props }) => {
   )
 }
 
-export default Tile
+export default React.memo(Tile)

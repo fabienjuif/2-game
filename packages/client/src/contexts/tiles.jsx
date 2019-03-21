@@ -1,10 +1,9 @@
 // TODO: rename it board?
-import React, { createContext, useState } from 'react'
+import React, { createContext, useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { random } from '@2-game/utils'
 import BALANCES from './balances'
 import PRICES from './prices'
-import getAvailableTiles from './getAvailableTiles'
 
 const Context = createContext()
 
@@ -90,6 +89,35 @@ const TilesProvider = ({ children, width, height }) => {
   const [selectedUnit, setSelectedUnit] = useState(null)
   const [player, setPlayer] = useState('player1')
 
+  const setAvailableTiles = () => {
+    setTiles(tiles => {
+      const isSamePlayer = (tx, ty) => tiles[tx] && tiles[tx][ty] && tiles[tx][ty].player === player
+
+      return tiles.map(line => line.map((tile) => {
+        if (!newAsset && !selectedUnit) return { ...tile, isAvailable: true }
+
+        const { x, y } = tile
+
+        const isAvailable = (
+          tile.player === player
+          || isSamePlayer(x - 1, y)
+          || isSamePlayer(x + 1, y)
+          || isSamePlayer(y % 2 ? x : x - 1, y - 1)
+          || isSamePlayer(y % 2 ? x + 1 : x, y - 1)
+          || isSamePlayer(y % 2 ? x : x - 1, y + 1)
+          || isSamePlayer(y % 2 ? x + 1 : x, y + 1)
+        )
+
+        return {
+          ...tile,
+          isAvailable,
+        }
+      }))
+    })
+  }
+
+  useEffect(setAvailableTiles, [player, newAsset, selectedUnit])
+
   const getBalances = () => {
     const balances = Object.keys(gold).reduce((acc, player) => ({ ...acc, [player]: 0 }), {})
     const updateBalance = (player, g) => {
@@ -107,6 +135,7 @@ const TilesProvider = ({ children, width, height }) => {
 
     return balances
   }
+
 
   const next = () => {
     setPlayer(old => old === 'player1' ? 'player2' : 'player1')
@@ -147,13 +176,12 @@ const TilesProvider = ({ children, width, height }) => {
         object: random(0, 20) === 0 ? 'tree' : undefined,
       }
     })))
-
   }
 
   const placeNewAsset = (x, y) => {
-    if (!newAsset) return
-    if (!PRICES.has(newAsset)) return
-    if (PRICES.get(newAsset) > gold[player]) return
+    if (!newAsset) return false
+    if (!PRICES.has(newAsset)) return false
+    if (PRICES.get(newAsset) > gold[player]) return false
 
     // cell should be next to a player owned one
     // TODO: this code is duplicated
@@ -169,15 +197,15 @@ const TilesProvider = ({ children, width, height }) => {
         || isSamePlayer(y % 2 ? x + 1 : x, y + 1)
       )
     ) {
-      return
+      return false
     }
 
     // some assets are stronger than other
-    if (newAsset === 'villager' && tiles[x][y].object && tiles[x][y].object !== 'tree') return
-    if (newAsset === 'house' && tiles[x][y].object && tiles[x][y].object !== 'tree') return
+    if (newAsset === 'villager' && tiles[x][y].object && tiles[x][y].object !== 'tree') return false
+    if (newAsset === 'house' && tiles[x][y].object && tiles[x][y].object !== 'tree') return false
 
     // some assets can't be placed in a board that is not owned
-    if (newAsset === 'house' && tiles[x][y].player !== player) return
+    if (newAsset === 'house' && tiles[x][y].player !== player) return false
 
     gold[player] -= PRICES.get(newAsset)
     setGold(gold)
@@ -191,6 +219,10 @@ const TilesProvider = ({ children, width, height }) => {
         player,
       }
     })))
+
+    setAvailableTiles()
+
+    return true
   }
 
   const moveUnit = (x, y) => {
@@ -256,6 +288,7 @@ const TilesProvider = ({ children, width, height }) => {
   }
 
   const action = (x, y) => {
+    setAvailableTiles()
     return (
       selectUnit(x, y)
       || moveUnit(x, y)
@@ -266,13 +299,11 @@ const TilesProvider = ({ children, width, height }) => {
   return (
     <Context.Provider
       value={{
-        getData: () => tiles,
-        getPlayer: () => player, // TODO: remove it
-        getGold: () => gold,
-        getnewAsset: () => newAsset,
-        getAvailableTiles: () => getAvailableTiles(tiles, player),
-        getBalances,
+        tiles,
         player,
+        gold,
+        newAsset,
+        // getBalances,
         setNewAsset,
         next,
         action,

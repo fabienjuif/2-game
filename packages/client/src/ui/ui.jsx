@@ -4,22 +4,20 @@ import './ui.css'
 
 const UI = () => {
   const {
-    getPlayer,
-    getGold,
-    getBalances,
+    player,
+    gold,
+    // balances,
     next,
     setNewAsset,
   } = useContext(TilesContext)
-
-  const gold = getGold()
 
   return (
     <div className="ui">
       <div className="infos">
         <h1>2-game</h1>
-        <h3>{`${getPlayer()} turn!`}</h3>
+        <h3>{`${player} turn!`}</h3>
 
-        <div className="balances">
+        {/* <div className="balances">
           {Object.entries(getBalances()).map(([player, balance]) => (
             <Fragment>
               <div className="player">{player}:</div>
@@ -27,7 +25,7 @@ const UI = () => {
               <div className="balance">({balance >= 0 ? '+' : ''}{balance})</div>
             </Fragment>
           ))}
-        </div>
+        </div> */}
       </div>
 
       <div className="actions">
@@ -49,7 +47,7 @@ const UI = () => {
         <button
           onClick={next}
         >
-          {getPlayer() === 'player1' ? 'To player 2' : 'Next turn'}
+          {player === 'player1' ? 'To player 2' : 'Next turn'}
         </button>
       </div>
     </div>

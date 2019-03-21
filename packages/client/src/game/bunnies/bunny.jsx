@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, memo } from 'react'
 import { Sprite, useTick } from '@inlet/react-pixi'
 import { easing } from '@2-game/utils'
 import bunny from './bunny.png'
@@ -81,4 +81,4 @@ const Bunny = ({
   )
 }
 
-export default Bunny
+export default memo(Bunny)

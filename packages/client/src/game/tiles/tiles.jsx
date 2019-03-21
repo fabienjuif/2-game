@@ -14,10 +14,10 @@ const getTint = (player) => {
 
 const Tiles = () => {
   const [tiles, setTiles] = useState([])
-  const { getData } = useContext(TilesContext) || {}
+  const { tiles: baseTiles } = useContext(TilesContext) || {}
 
   useTick((delta) => {
-    setTiles(getData().map((line, x) => line.map((tile, y) => {
+    setTiles(baseTiles.map((line, x) => line.map((tile, y) => {
       if (!tiles[x] || !tiles[x][y]) return { ...tile, tint: getTint(tile.player) }
       const innerTile = tiles[x][y]
 
@@ -70,14 +70,10 @@ const Tiles = () => {
     })))
   })
 
-  return [].concat(...tiles.map(line => line.map(({ key, x, y, tint, empty, object }) => (
+  return [].concat(...tiles.map(line => line.map(tile => (
     <Tile
-      key={key}
-      x={x}
-      y={y}
-      object={object}
-      empty={empty}
-      tint={tint || 0xFFFFFF}
+      key={tile.key}
+      {...tile}
     />
   ))))
 }
