@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Sprite, useTick } from '@inlet/react-pixi'
+import { Sprite, useTick, Graphics } from '@inlet/react-pixi'
 import { easing } from '@2-game/utils'
 import bunny from './bunny.png'
 
@@ -75,12 +75,9 @@ const Bunny = ({
   return (
     <Sprite
       {...props}
-      // texture={texture}
       image={bunny}
-      // cacheAsBitmap={true}
       x={position.x}
       y={position.y}
-      interactive={false}
       anchor={0.5}
     />
   )

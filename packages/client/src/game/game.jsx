@@ -6,6 +6,7 @@ import Tiles from './tiles'
 import Bunnies from './bunnies'
 import TilesContext from '../contexts/tiles'
 import Light from './light'
+import Hover from './hover'
 import './game.css'
 
 const Game = ({ width, height }) => {
@@ -57,13 +58,18 @@ const Game = ({ width, height }) => {
               height={height}
             >
               <Tiles  />
+
+              <Hover
+                windowWidth={windowWidth}
+                windowHeight={windowHeight}
+              />
             </Camera>
 
-            <Light
+            {/* <Light
               windowWidth={windowWidth}
               windowHeight={windowHeight}
               blendMode={PIXI.BLEND_MODES.MULTIPLY}
-            />
+            /> */}
           </TilesContext.Provider>
         </Stage >
       )}

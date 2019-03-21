@@ -66,6 +66,7 @@ const Tile = ({ x, y, tint, object, empty, ...props }) => {
       <Sprite
         image={tile}
         anchor={0.5}
+        scale={0.1}
         x={0}
         y={0}
         tint={innerTint}

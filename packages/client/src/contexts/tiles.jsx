@@ -4,6 +4,7 @@ import PropTypes from 'prop-types'
 import { random } from '@2-game/utils'
 import BALANCES from './balances'
 import PRICES from './prices'
+import getAvailableTiles from './getAvailableTiles'
 
 const Context = createContext()
 
@@ -266,10 +267,12 @@ const TilesProvider = ({ children, width, height }) => {
     <Context.Provider
       value={{
         getData: () => tiles,
-        getPlayer: () => player,
+        getPlayer: () => player, // TODO: remove it
         getGold: () => gold,
         getnewAsset: () => newAsset,
+        getAvailableTiles: () => getAvailableTiles(tiles, player),
         getBalances,
+        player,
         setNewAsset,
         next,
         action,

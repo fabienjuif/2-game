@@ -14,12 +14,12 @@ export const hexRgb = (hex) => {
 
 export const rgbHex = (r, g, b) => b | (g << 8) | (r << 16)
 
-export const darker = (hex) => {
+export const darker = (hex, coeff = 0.75) => {
   const [r, g, b] = hexRgb(hex)
   return rgbHex(
-    r * 0.75,
-    g * 0.75,
-    b * 0.75,
+    r * coeff,
+    g * coeff,
+    b * coeff,
   )
 }
 

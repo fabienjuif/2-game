@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react'
-import { random } from '@2-game/utils'
-import { ParticleContainer } from '@inlet/react-pixi'
+import React, { useState } from 'react'
+import { random, easing, darker } from '@2-game/utils'
+import { useTick, ParticleContainer } from '@inlet/react-pixi'
 import Bunny from './bunny'
 
 const getBunnys = (count, windowWidth, windowHeight) => Array
@@ -14,36 +14,44 @@ const getBunnys = (count, windowWidth, windowHeight) => Array
       y,
       targetX: random(50, windowWidth - 100),
       targetY: random(50, windowHeight - 100),
-      speed: random(100, 200),
-      scale: random(0.5, 2),
-      tint: random(0x555555, 0xffffff),
+      speed: random(10, 20),
+      scale: random(0.5, 3),
       easeTime: 'easeOutCubic',
       easeX: 'easeInCubic',
       easeY: 'easeInQuint',
     }
   })
 
-const Bunnys = ({ count, windowWidth, windowHeight }) => {
-  const [bunnys, setBunnys] = useState([])
+const Bunnies = ({ count = 20, windowWidth, windowHeight }) => {
+  const [bunnys, setBunnys] = useState(getBunnys(count, windowWidth, windowHeight))
+  const [frame, setFrame] = useState(0)
+  const [endAnimationFrame, setEndAnimationFrame] = useState(undefined)
+  const [disapeared, setDisapeared] = useState(true)
+  const [alpha, setAlpha] = useState(0)
 
-  useEffect(() => {
-    setBunnys(getBunnys(count, windowWidth, windowHeight))
+  useTick((delta) => {
+    setFrame(frame => frame + 1)
 
-    setInterval(
-      () => {
-        setBunnys(getBunnys(count, windowWidth, windowHeight))
-      },
-      3000,
-    )
-  }, [])
+    if (endAnimationFrame <= frame && disapeared) setBunnys(getBunnys(count, windowWidth, windowHeight))
 
-  return bunnys.map(bunny => React.createElement(Bunny, bunny))
+    if (endAnimationFrame) {
+      if (disapeared) setAlpha(easing.easeOutCubic((endAnimationFrame - frame) / 100))
+      else setAlpha(easing.easeInCubic(1 - (endAnimationFrame - frame) / 100))
+    }
+
+    if (Math.round(frame) % 100 === 0) {
+      setEndAnimationFrame(frame + 100)
+      setDisapeared(disapeared => !disapeared)
+    }
+  })
+
+  return (
+    <ParticleContainer
+      alpha={alpha}
+    >
+      {bunnys.map(bunny => React.createElement(Bunny, bunny))}
+    </ParticleContainer>
+  )
 }
 
-const Wrapper = (props) => (
-  <ParticleContainer>
-    <Bunnys {...props} count={10} />
-  </ParticleContainer>
-)
-
-export default Wrapper
+export default Bunnies
