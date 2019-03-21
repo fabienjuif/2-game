@@ -25,10 +25,12 @@ const Tile = ({ x, y, tint = 0xFFFFFF, isAvailable, object, empty }) => {
 
   const { action } = useContext(TilesContext)
   const [innerTint, setInnerTint] = useState(tint)
+  const [alpha, setAlpha] = useState(1)
   const click = useRef(undefined)
 
   const setBaseTint = () => {
-    setInnerTint(isAvailable ? tint : darker(tint))
+    setInnerTint(tint)
+    setAlpha(isAvailable ? 1 : 0.6)
   }
 
   useEffect(setBaseTint, [tint, isAvailable])
@@ -63,6 +65,7 @@ const Tile = ({ x, y, tint = 0xFFFFFF, isAvailable, object, empty }) => {
       pointerup={pointerup}
       pointerover={pointerover}
       pointerout={pointerout}
+      alpha={alpha}
     >
       <Sprite
         image={tile}

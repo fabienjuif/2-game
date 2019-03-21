@@ -78,8 +78,8 @@ const getTiles = (width, height) => {
 }
 
 const getGold = () => ({
-  player1: 30,
-  player2: 30,
+  player1: 10,
+  player2: 10,
 })
 
 const TilesProvider = ({ children, width, height }) => {
@@ -91,6 +91,7 @@ const TilesProvider = ({ children, width, height }) => {
   const [balances, setBalances] = useState({ player1: 0, player2: 0 })
 
   const setAvailableTiles = () => {
+    console.log('here')
     setTiles(tiles => {
       const isSamePlayer = (tx, ty) => tiles[tx] && tiles[tx][ty] && tiles[tx][ty].player === player
       const isSamePlayerInArea = (array) => array.find(([x, y]) => isSamePlayer(x, y))
@@ -113,9 +114,7 @@ const TilesProvider = ({ children, width, height }) => {
               [y % 2 ? x + 1 : x, y + 1],
             ])
         } else if (['house'].includes(newAsset)) {
-          isAvailable = isSamePlayerInArea([
-            [x, y],
-          ])
+          isAvailable = isSamePlayer(x, y)
         } else if (selectedUnit && ['villager', 'soldier', 'king'].includes(selectedUnit.object)) {
           isAvailable = (
             isSamePlayerInArea([
@@ -129,6 +128,25 @@ const TilesProvider = ({ children, width, height }) => {
             ])
             // TODO: it should not be pythagore but a A*
             && Math.sqrt((tile.x - selectedUnit.x) ** 2 + (tile.y - selectedUnit.y) ** 2) <= 4
+          )
+        }
+
+        if (
+          isAvailable
+          && tile.object !== undefined
+          && (
+            (selectedUnit && ['villager', 'soldier', 'king'].includes(selectedUnit.object))
+            || ['villager', 'soldier', 'king'].includes(newAsset)
+          )
+        ) {
+          const type = newAsset || selectUnit.object
+          isAvailable = (
+            tile.player !== player
+            && (
+              (type === 'villager' && ['tree'].includes(tile.object))
+              || (type === 'soldier' && ['tree', 'villager', 'house'].includes(tile.object))
+              || (type === 'king' && ['tree', 'villager', 'house', 'soldier', 'king'].includes(tile.object))
+            )
           )
         }
 
@@ -207,15 +225,6 @@ const TilesProvider = ({ children, width, height }) => {
     if (!PRICES.has(newAsset)) return false
     if (PRICES.get(newAsset) > gold[player]) return false
     if (!tiles[x][y].isAvailable) return false
-
-    // TODO: available tiles should take care of this
-    // some assets are stronger than other
-    if (newAsset === 'villager' && tiles[x][y].object && tiles[x][y].object !== 'tree') return false
-    if (newAsset === 'house' && tiles[x][y].object && tiles[x][y].object !== 'tree') return false
-
-    // some assets can't be placed in a board that is not owned
-    // TODO: available tiles should take care of this
-    if (newAsset === 'house' && tiles[x][y].player !== player) return false
 
     gold[player] -= PRICES.get(newAsset)
     setGold(gold)
