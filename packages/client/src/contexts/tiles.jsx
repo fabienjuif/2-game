@@ -91,7 +91,6 @@ const TilesProvider = ({ children, width, height }) => {
   const [balances, setBalances] = useState({ player1: 0, player2: 0 })
 
   const setAvailableTiles = () => {
-    console.log('here')
     setTiles(tiles => {
       const isSamePlayer = (tx, ty) => tiles[tx] && tiles[tx][ty] && tiles[tx][ty].player === player
       const isSamePlayerInArea = (array) => array.find(([x, y]) => isSamePlayer(x, y))

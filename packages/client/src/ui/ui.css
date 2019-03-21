@@ -41,9 +41,21 @@
 }
 
 .ui .balance {
+  display: flex;
+  opacity: 0.5;
+}
+
+.ui .balance.selected {
+  opacity: 1;
+}
+
+.ui .balance {
   padding-right: 1em;
-  margin-left: .5em;
   border-right: 1px solid white;
+}
+
+.ui .balance .value {
+    margin-left: .5em;
 }
 
 .ui .balance:last-child {

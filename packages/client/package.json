@@ -6,6 +6,7 @@
   "dependencies": {
     "@2-game/utils": "^0.1.0",
     "@inlet/react-pixi": "^0.5.7",
+    "classnames": "^2.2.6",
     "pixi.js": "^4.8.5",
     "react": "^16.8.4",
     "react-dom": "^16.8.4",

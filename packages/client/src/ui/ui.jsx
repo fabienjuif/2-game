@@ -1,4 +1,5 @@
-import React, { useContext, Fragment } from 'react'
+import React, { useContext } from 'react'
+import cn from 'classnames'
 import TilesContext from '../contexts/tiles'
 import './ui.css'
 
@@ -18,12 +19,20 @@ const UI = () => {
         <h3>{`${player} turn!`}</h3>
 
         <div className="balances">
-          {Object.entries(balances).map(([player, balance]) => (
-            <Fragment key={player}>
-              <div className="player">{player}:</div>
-              <div className="gold">{gold[player]}</div>
-              <div className="balance">({balance >= 0 ? '+' : ''}{balance})</div>
-            </Fragment>
+          {Object.entries(balances).map(([currPlayer, balance]) => (
+            <div
+              key={currPlayer}
+              className={cn(
+                'balance',
+                {
+                  selected: currPlayer === player,
+                },
+              )}
+            >
+              <div className="player">{currPlayer}:</div>
+              <div className="gold">{gold[currPlayer]}</div>
+              <div className="value">({balance >= 0 ? '+' : ''}{balance})</div>
+            </div>
           ))}
         </div>
       </div>
