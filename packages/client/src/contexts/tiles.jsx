@@ -78,8 +78,8 @@ const getTiles = (width, height) => {
 }
 
 const getGold = () => ({
-  player1: 10,
-  player2: 10,
+  player1: 1000,
+  player2: 1000,
 })
 
 const TilesProvider = ({ children, width, height }) => {
@@ -96,28 +96,33 @@ const TilesProvider = ({ children, width, height }) => {
 
   const setAvailableTiles = () => {
     setTiles(tiles => {
-      const isSamePlayer = (tx, ty) => tiles[tx] && tiles[tx][ty] && tiles[tx][ty].player === player
+      const tileExists = (tx, ty) => tiles[tx] && tiles[tx][ty]
+      const isSamePlayer = (tx, ty) => tileExists(tx, ty) && tiles[tx][ty].player === player
       const isSamePlayerInArea = (array) => array.find(([x, y]) => isSamePlayer(x, y))
+      const isEnemyUnit = units => (tx, ty) => tileExists(tx, ty) && tiles[tx][ty].player !== player && units.includes(tiles[tx][ty].object)
+      const isEnemyUnitInArea = units => array => array.find(([x, y]) => isEnemyUnit(units)(x, y))
+
+      const objectType = newAsset || (selectedUnit && selectedUnit.object)
+      const isUnit = ['villager', 'soldier', 'king'].includes(objectType)
 
       const newTiles = tiles.map(line => line.map((tile) => {
         if (tile.empty) return tile
         if (!newAsset && !selectedUnit) return { ...tile, isAvailable: true }
 
         const { x, y } = tile
-        const objectType = newAsset || (selectedUnit.object)
-        const isUnit = ['villager', 'soldier', 'king'].includes(objectType)
         let isAvailable = false
+        const closeArea = [
+          [x, y],
+          [x - 1, y],
+          [x + 1, y],
+          [y % 2 ? x : x - 1, y - 1],
+          [y % 2 ? x + 1 : x, y - 1],
+          [y % 2 ? x : x - 1, y + 1],
+          [y % 2 ? x + 1 : x, y + 1],
+        ]
 
         if (isUnit) {
-          isAvailable = isSamePlayerInArea([
-            [x, y],
-            [x - 1, y],
-            [x + 1, y],
-            [y % 2 ? x : x - 1, y - 1],
-            [y % 2 ? x + 1 : x, y - 1],
-            [y % 2 ? x : x - 1, y + 1],
-            [y % 2 ? x + 1 : x, y + 1],
-          ])
+          isAvailable = isSamePlayerInArea(closeArea)
 
           if (isAvailable && tile.object !== undefined && tile.object !== 'tree') {
             isAvailable = (
@@ -131,6 +136,14 @@ const TilesProvider = ({ children, width, height }) => {
 
           if (selectedUnit && isAvailable) {
             isAvailable = Math.sqrt((x - selectedUnit.x) ** 2 + (y - selectedUnit.y) ** 2) <= 4
+          }
+
+          if (isAvailable && tile.player !== undefined) {
+            if (objectType === 'villager') {
+              isAvailable = !isEnemyUnitInArea(['soldier', 'king'])(closeArea)
+            } else if (objectType === 'soldier') {
+              isAvailable = !isEnemyUnitInArea(['king'])(closeArea)
+            }
           }
         } else if (['house'].includes(newAsset)) {
           isAvailable = (
