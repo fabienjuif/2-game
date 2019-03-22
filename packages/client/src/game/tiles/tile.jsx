@@ -9,18 +9,20 @@ import House from './house'
 import King from './king'
 import tile from './tile.png'
 
-const Asset = ({ name, ...props }) => {
+const Asset = ({ name, playable, ...props }) => {
+  const alpha = playable ? 1 : 0.5
+
   switch (name) {
     case 'tree': return <Tree {...props} />
-    case 'villager': return <Villager {...props} />
-    case 'soldier': return <Soldier {...props} />
     case 'house': return <House {...props} />
-    case 'king': return <King {...props} />
+    case 'villager': return <Villager {...props} alpha={alpha} />
+    case 'soldier': return <Soldier {...props} alpha={alpha} />
+    case 'king': return <King {...props} alpha={alpha} />
     default: return null
   }
 }
 
-const Tile = ({ x, y, tint = 0xFFFFFF, isAvailable, object, empty }) => {
+const Tile = ({ x, y, tint = 0xFFFFFF, isAvailable, object, empty, playable }) => {
   if (empty) return null
 
   const { action } = useContext(TilesContext)
@@ -77,6 +79,7 @@ const Tile = ({ x, y, tint = 0xFFFFFF, isAvailable, object, empty }) => {
       />
       <Asset
         name={object}
+        playable={playable}
       />
     </Container>
   )

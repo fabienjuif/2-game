@@ -172,10 +172,6 @@ const TilesProvider = ({ children, width, height }) => {
   useEffect(processBalances, [tiles])
 
   const next = () => {
-
-    // turn is not over yet
-    // if (player === 'player1') return
-
     // turn is over
     // - count gold
     const newGold = gold[player] + balances[player]
@@ -188,7 +184,7 @@ const TilesProvider = ({ children, width, height }) => {
     if (newGold <= 0) { 
       setTiles(tiles => tiles.map(line => line.map((tile) => {
         if (tile.player !== player) return tile
-        if (tile.object === 'tree') return tile
+        if (['tile', 'house'].includes(tile.object)) return tile
 
         return {
           ...tile,
@@ -197,7 +193,8 @@ const TilesProvider = ({ children, width, height }) => {
       })))
     }
 
-    setPlayer(old => old === 'player1' ? 'player2' : 'player1')
+    const newPlayer = player === 'player1' ? 'player2' : 'player1'
+    setPlayer(newPlayer)
     setNewAsset(null)
     setSelectedUnit(null)
 
@@ -208,6 +205,14 @@ const TilesProvider = ({ children, width, height }) => {
       return {
         ...tile,
         object: random(0, 20) === 0 ? 'tree' : undefined,
+      }
+    })))
+
+    // - mark tiles as playable
+    setTiles(tiles => tiles.map(line => line.map((tile) => {
+      return {
+        ...tile,
+        playable: (tile.player === newPlayer && ['villager', 'soldier', 'king'].includes(tile.object)),
       }
     })))
   }
@@ -248,6 +253,7 @@ const TilesProvider = ({ children, width, height }) => {
           ...tile,
           object: selectedUnit.object,
           player: selectedUnit.player,
+          playable: false,
         }
       }
 
@@ -255,6 +261,7 @@ const TilesProvider = ({ children, width, height }) => {
         return {
           ...tile,
           object: undefined,
+          playable: false,
         }
       }
 
@@ -270,6 +277,7 @@ const TilesProvider = ({ children, width, height }) => {
     const tile = tiles[x][y]
     if (tile.player !== player) return false
     if (!['villager', 'soldier', 'king'].includes(tile.object)) return false
+    if (!tile.playable) return false
 
     console.log('selecting unit from', x, y)
 
