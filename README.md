@@ -70,3 +70,8 @@ Just for fun and to try react-pixi from inlet.
 - beta14: https://fabienjuif.github.io/2-game/beta14/
   * player can play its unit only once a turn
   * units can protect their surrounding
+
+- beta15: https://fabienjuif.github.io/2-game/beta15/
+  * game is generated until player 1 and 2 has same number of tiles
+  * starting gold is set back to 10
+  * improve UI so players have a feedback
