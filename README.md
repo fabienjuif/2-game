@@ -62,3 +62,7 @@ Just for fun and to try react-pixi from inlet.
   * new unit: king, new balances & pries
   * better UI, better showing whos playing
   * gold is processed after the player turn
+
+- beta13: https://fabienjuif.github.io/2-game/beta13/
+  * bunnies are using tint instead of alpha to appear/disappear
+  * unit movements are unbugued

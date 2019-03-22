@@ -4,7 +4,8 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "start": "yarn --cwd packages/client start"
+    "start": "yarn --cwd packages/client start",
+    "build": "yarn --cwd packages/client build"
   },
   "workspaces": [
     "./packages/*"
