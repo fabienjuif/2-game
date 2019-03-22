@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState, useEffect, memo } from 'react'
+import React, { useContext, useRef, useState, useEffect } from 'react'
 import { Sprite, Container } from '@inlet/react-pixi'
 import { darker } from '@2-game/utils'
 import TilesContext from '../../contexts/tiles'
@@ -82,4 +82,4 @@ const Tile = ({ x, y, tint = 0xFFFFFF, isAvailable, object, empty }) => {
   )
 }
 
-export default memo(Tile)
+export default Tile

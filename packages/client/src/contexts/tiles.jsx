@@ -90,62 +90,52 @@ const TilesProvider = ({ children, width, height }) => {
   const [player, setPlayer] = useState('player1')
   const [balances, setBalances] = useState({ player1: 0, player2: 0 })
 
+  useEffect(() => {
+    if (newAsset) setSelectedUnit(null)
+  }, [newAsset])
+
   const setAvailableTiles = () => {
     setTiles(tiles => {
       const isSamePlayer = (tx, ty) => tiles[tx] && tiles[tx][ty] && tiles[tx][ty].player === player
       const isSamePlayerInArea = (array) => array.find(([x, y]) => isSamePlayer(x, y))
 
-      return tiles.map(line => line.map((tile) => {
+      const newTiles = tiles.map(line => line.map((tile) => {
+        if (tile.empty) return tile
         if (!newAsset && !selectedUnit) return { ...tile, isAvailable: true }
 
         const { x, y } = tile
-
+        const objectType = newAsset || (selectedUnit.object)
+        const isUnit = ['villager', 'soldier', 'king'].includes(objectType)
         let isAvailable = false
 
-        if (['villager', 'soldier', 'king'].includes(newAsset)) {
-            isAvailable = isSamePlayerInArea([
-              [x, y],
-              [x - 1, y],
-              [x + 1, y],
-              [y % 2 ? x : x - 1, y - 1],
-              [y % 2 ? x + 1 : x, y - 1],
-              [y % 2 ? x : x - 1, y + 1],
-              [y % 2 ? x + 1 : x, y + 1],
-            ])
-        } else if (['house'].includes(newAsset)) {
-          isAvailable = isSamePlayer(x, y)
-        } else if (selectedUnit && ['villager', 'soldier', 'king'].includes(selectedUnit.object)) {
-          isAvailable = (
-            isSamePlayerInArea([
-              [x, y],
-              [x - 1, y],
-              [x + 1, y],
-              [y % 2 ? x : x - 1, y - 1],
-              [y % 2 ? x + 1 : x, y - 1],
-              [y % 2 ? x : x - 1, y + 1],
-              [y % 2 ? x + 1 : x, y + 1],
-            ])
-            // TODO: it should not be pythagore but a A*
-            && Math.sqrt((tile.x - selectedUnit.x) ** 2 + (tile.y - selectedUnit.y) ** 2) <= 4
-          )
-        }
+        if (isUnit) {
+          isAvailable = isSamePlayerInArea([
+            [x, y],
+            [x - 1, y],
+            [x + 1, y],
+            [y % 2 ? x : x - 1, y - 1],
+            [y % 2 ? x + 1 : x, y - 1],
+            [y % 2 ? x : x - 1, y + 1],
+            [y % 2 ? x + 1 : x, y + 1],
+          ])
 
-        if (
-          isAvailable
-          && tile.object !== undefined
-          && (
-            (selectedUnit && ['villager', 'soldier', 'king'].includes(selectedUnit.object))
-            || ['villager', 'soldier', 'king'].includes(newAsset)
-          )
-        ) {
-          const type = newAsset || selectUnit.object
-          isAvailable = (
-            tile.player !== player
-            && (
-              (type === 'villager' && ['tree'].includes(tile.object))
-              || (type === 'soldier' && ['tree', 'villager', 'house'].includes(tile.object))
-              || (type === 'king' && ['tree', 'villager', 'house', 'soldier', 'king'].includes(tile.object))
+          if (isAvailable && tile.object !== undefined && tile.object !== 'tree') {
+            isAvailable = (
+              player !== tile.player
+              && (
+                (objectType === 'soldier' && ['villager', 'house'].includes(tile.object))
+                || (objectType === 'king' && ['villager', 'house', 'soldier', 'king'].includes(tile.object))
+              )
             )
+          }
+
+          if (selectedUnit && isAvailable) {
+            isAvailable = Math.sqrt((x - selectedUnit.x) ** 2 + (y - selectedUnit.y) ** 2) <= 4
+          }
+        } else if (['house'].includes(newAsset)) {
+          isAvailable = (
+            isSamePlayer(x, y)
+            && tile.object === undefined
           )
         }
 
@@ -154,6 +144,8 @@ const TilesProvider = ({ children, width, height }) => {
           isAvailable,
         }
       }))
+
+      return newTiles
     })
   }
 
