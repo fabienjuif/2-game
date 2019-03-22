@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { random, easing } from '@2-game/utils'
+import { random, easing, darker } from '@2-game/utils'
 import { useTick, ParticleContainer } from '@inlet/react-pixi'
 import Bunny from './bunny'
 
@@ -27,7 +27,7 @@ const Bunnies = ({ count = 20, windowWidth, windowHeight }) => {
   const [frame, setFrame] = useState(0)
   const [endAnimationFrame, setEndAnimationFrame] = useState(undefined)
   const [disapeared, setDisapeared] = useState(true)
-  const [alpha, setAlpha] = useState(0)
+  const [tint, setTint] = useState(0)
 
   useTick((delta) => {
     setFrame(frame => frame + 1)
@@ -35,8 +35,8 @@ const Bunnies = ({ count = 20, windowWidth, windowHeight }) => {
     if (endAnimationFrame <= frame && disapeared) setBunnys(getBunnys(count, windowWidth, windowHeight))
 
     if (endAnimationFrame) {
-      if (disapeared) setAlpha(easing.easeOutCubic((endAnimationFrame - frame) / 100))
-      else setAlpha(easing.easeInCubic(1 - (endAnimationFrame - frame) / 100))
+      if (disapeared) setTint(Math.max(0x222222, darker(0xFFFFFF, easing.easeOutCubic((endAnimationFrame - frame) / 100))))
+      else setTint(Math.max(0x222222, darker(0xFFFFFF, easing.easeInCubic(1 - (endAnimationFrame - frame) / 100))))
     }
 
     if (Math.round(frame) % 100 === 0) {
@@ -47,7 +47,7 @@ const Bunnies = ({ count = 20, windowWidth, windowHeight }) => {
 
   return (
     <ParticleContainer
-      alpha={alpha}
+      tint={tint}
     >
       {bunnys.map(bunny => React.createElement(Bunny, bunny))}
     </ParticleContainer>
