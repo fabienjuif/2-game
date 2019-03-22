@@ -35,7 +35,7 @@ const giveTileToPlayer = tiles => (tile) => {
 }
 
 const getTiles = (width, height) => {
-  const tiles = []
+  let tiles = []
 
   const player1 = {
     x: Math.round(random(0, Math.ceil(width / 20))),
@@ -74,12 +74,20 @@ const getTiles = (width, height) => {
     }
   }
 
-  return tiles.map(line => line.map(giveTileToPlayer(tiles)))
+  tiles = tiles.map(line => line.map(giveTileToPlayer(tiles)))
+
+  // control that player 1 and 2 have same amount of tiles
+  const counts = { player1: 0, player2: 0 }
+  tiles.forEach(line => line.forEach((tile) => {
+    if (tile.player) counts[tile.player] += 1
+  }))
+  if (counts.player1 !== counts.player2) return getTiles(width, height)
+  return tiles
 }
 
 const getGold = () => ({
-  player1: 1000,
-  player2: 1000,
+  player1: 10,
+  player2: 10,
 })
 
 const TilesProvider = ({ children, width, height }) => {
