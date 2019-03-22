@@ -66,3 +66,7 @@ Just for fun and to try react-pixi from inlet.
 - beta13: https://fabienjuif.github.io/2-game/beta13/
   * bunnies are using tint instead of alpha to appear/disappear
   * unit movements are unbugued
+
+- beta14: https://fabienjuif.github.io/2-game/beta14/
+  * player can play its unit only once a turn
+  * units can protect their surrounding
