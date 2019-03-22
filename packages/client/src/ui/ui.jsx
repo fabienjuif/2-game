@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import cn from 'classnames'
 import TilesContext from '../contexts/tiles'
 import './ui.css'
@@ -10,7 +10,25 @@ const UI = () => {
     balances,
     next,
     setNewAsset,
+    newAsset,
   } = useContext(TilesContext)
+
+  useEffect(() => {
+    const listener = ({ keyCode, repeat }) => {
+      if (repeat) return
+      if (keyCode === 49) setNewAsset('house')
+      if (keyCode === 50) setNewAsset('villager')
+      if (keyCode === 51) setNewAsset('soldier')
+      if (keyCode === 52) setNewAsset('king')
+      if (keyCode === 13) next()
+    }
+
+    document.addEventListener('keydown', listener)
+
+    return () => {
+      document.removeEventListener('keydown', listener)
+    }
+  }, [setNewAsset, next])
 
   return (
     <div className="ui">
@@ -37,29 +55,34 @@ const UI = () => {
         </div>
       </div>
 
-      <div className="actions">
+      <div className={cn('actions', player)}>
         <button
           onClick={() => setNewAsset('house')}
+          className={cn({ selected: newAsset === 'house' })}
         >
-          House [10gold / +10 gold per turn]
+          House [10/+10]
         </button>
         <button
           onClick={() => setNewAsset('villager')}
+          className={cn({ selected: newAsset === 'villager' })}
         >
-          Villager [10 gold / -5 gold per turn]
+          Villager [10/-5]
         </button>
         <button
           onClick={() => setNewAsset('soldier')}
+          className={cn({ selected: newAsset === 'soldier' })}
         >
-          Soldier [20 gold / -20 gold per turn]
+          Soldier [20/-20]
         </button>
         <button
           onClick={() => setNewAsset('king')}
+          className={cn({ selected: newAsset === 'king' })}
         >
-          King [40 gold / -40 gold per turn]
+          King [40/-40]
         </button>
         <button
           onClick={next}
+          className="next"
         >
           {player === 'player1' ? 'To player 2' : 'Next turn'}
         </button>

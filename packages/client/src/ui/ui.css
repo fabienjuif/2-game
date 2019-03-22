@@ -32,6 +32,28 @@
   padding: 1em;
   margin: 1em;
   pointer-events: auto;
+  color: white;
+  border-radius: 2px;
+  border: 2px solid transparent;
+  box-sizing: border-box;
+}
+
+.ui .actions button:hover {
+  transform: translateY(-2px);
+}
+
+.ui .actions button.selected {
+  border-color: rgba(255, 255, 255, 0.6);
+}
+
+.ui .actions.player1 button,
+.ui .actions.player2 button.next {
+  background-color: #e64a4a;
+}
+
+.ui .actions.player2 button,
+.ui .actions.player1 button.next {
+  background-color: #5975ff;
 }
 
 .ui .balances {
