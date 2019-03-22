@@ -1,5 +1,5 @@
 // TODO: rename it board?
-import React, { createContext, useState, useEffect } from 'react'
+import React, { createContext, useState, useLayoutEffect } from 'react'
 import PropTypes from 'prop-types'
 import { random } from '@2-game/utils'
 import BALANCES from './balances'
@@ -98,7 +98,7 @@ const TilesProvider = ({ children, width, height }) => {
   const [player, setPlayer] = useState('player1')
   const [balances, setBalances] = useState({ player1: 0, player2: 0 })
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (newAsset) setSelectedUnit(null)
   }, [newAsset])
 
@@ -170,7 +170,7 @@ const TilesProvider = ({ children, width, height }) => {
     })
   }
 
-  useEffect(setAvailableTiles, [player, newAsset, selectedUnit])
+  useLayoutEffect(setAvailableTiles, [player, newAsset, selectedUnit])
 
   const processBalances = () => {
     const balances = Object.keys(gold).reduce((acc, player) => ({ ...acc, [player]: 0 }), {})
@@ -190,7 +190,7 @@ const TilesProvider = ({ children, width, height }) => {
     setBalances(balances)
   }
 
-  useEffect(processBalances, [tiles])
+  useLayoutEffect(processBalances, [tiles])
 
   const next = () => {
     // turn is over

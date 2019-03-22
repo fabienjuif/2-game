@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useLayoutEffect } from 'react'
 import { Stage } from '@inlet/react-pixi'
 import Camera from './camera'
 import Tiles from './tiles'
-import Bunnies from './bunnies'
+import Stars from './stars'
 import TilesContext from '../contexts/tiles'
 import './game.css'
 
@@ -43,7 +43,7 @@ const Game = ({ width, height }) => {
           }}
         >
           <TilesContext.Provider value={value}>
-            <Bunnies
+            <Stars
               windowWidth={windowWidth}
               windowHeight={windowHeight}
             />

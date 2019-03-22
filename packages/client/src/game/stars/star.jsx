@@ -1,9 +1,9 @@
 import React, { useState, useEffect, memo } from 'react'
 import { Sprite, useTick } from '@inlet/react-pixi'
 import { easing } from '@2-game/utils'
-import bunny from './bunny.png'
+import star from './star.png'
 
-const Bunny = ({
+const Star = ({
   x,
   y,
   targetX,
@@ -73,7 +73,7 @@ const Bunny = ({
   return (
     <Sprite
       {...props}
-      image={bunny}
+      image={star}
       x={position.x}
       y={position.y}
       anchor={0.5}
@@ -81,4 +81,4 @@ const Bunny = ({
   )
 }
 
-export default memo(Bunny)
+export default memo(Star)
