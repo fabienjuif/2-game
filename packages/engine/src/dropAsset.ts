@@ -23,6 +23,10 @@ export default (state: State, payload: Point): State => {
 
     return {
       ...tile,
+      played: (
+        tile.player !== state.turn
+        || tile.unit !== undefined
+      ),
       available: false,
       unit: state.selectedAsset,
       player: state.turn,

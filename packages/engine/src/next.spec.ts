@@ -217,4 +217,35 @@ describe('next', () => {
     const { tiles } = next(state)
     expect(tiles.find(line => !!line.find(tile => tile.unit === 'grave'))).toBeFalsy()
   })
+
+  it('should mark all units as not played', () => {
+    const state: State = {
+      tiles: createTiles(10, 10),
+      selectedAsset: undefined,
+      selectedUnit: undefined,
+      players: [
+        {
+          name: 'player1',
+          gold: 10,
+          x: 0,
+          y: 0,
+        },
+        {
+          name: 'player2',
+          gold: 10,
+          x: 0,
+          y: 0,
+        },
+      ],
+      turn: 'player1',
+    }
+
+    state.tiles[0][0].player = 'player1'
+    state.tiles[0][0].played = true
+    state.tiles[1][0].player = 'player2'
+    state.tiles[1][0].played = true
+
+    const { tiles } = next(state)
+    expect(tiles.find(line => !!line.find(tile => tile.played))).toBeFalsy()
+  })
 })

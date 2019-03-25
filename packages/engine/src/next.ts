@@ -4,9 +4,11 @@ export default (state: State): State => {
 
   // remove graves
   // mark all tiles as available
+  // mark all tiles as not played
   let tiles: Tile[][] = state.tiles.map(line => line.map(tile => ({
     ...tile,
     available: true,
+    played: false,
     unit: tile.unit === 'grave' ? undefined : tile.unit,
   })))
 
@@ -30,7 +32,6 @@ export default (state: State): State => {
   }
 
   // TODO: plant tree
-  // TODO: mark tiles as playable
 
   return {
     ...state,

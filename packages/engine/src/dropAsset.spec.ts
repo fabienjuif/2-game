@@ -127,4 +127,82 @@ describe('dropAsset', () => {
     const { tiles } = dropAsset(state, { x: 2, y: 2 })
     expect(tiles.find(line => !!line.find(tile => !tile.available))).toBeFalsy()
   })
+
+  it('should not be playable when droped on a unit', () => {
+    const state: State = {
+      tiles: createTiles(3, 3),
+      players: [{
+        name: 'player1',
+        gold: 1000,
+        x: 0,
+        y: 0,
+      }],
+      selectedAsset: 'soldier',
+      selectedUnit: undefined,
+      turn: 'player1',
+    }
+
+    state.tiles[2][2].available = true
+    state.tiles[2][2].unit = 'house'
+    state.tiles[2][2].player = 'player1'
+
+    const { tiles } = dropAsset(state, { x: 2, y: 2 })
+    expect(tiles[2][2]).toMatchObject({
+      available: false,
+      played: true,
+      unit: 'soldier',
+    })
+  })
+
+  it('should not be playable when droped in enemy territory', () => {
+    const state: State = {
+      tiles: createTiles(3, 3),
+      players: [{
+        name: 'player1',
+        gold: 1000,
+        x: 0,
+        y: 0,
+      }],
+      selectedAsset: 'soldier',
+      selectedUnit: undefined,
+      turn: 'player1',
+    }
+
+    state.tiles[2][2].available = true
+    state.tiles[2][2].unit = undefined
+    state.tiles[2][2].player = 'player2'
+
+    const { tiles } = dropAsset(state, { x: 2, y: 2 })
+    expect(tiles[2][2]).toMatchObject({
+      available: false,
+      played: true,
+      unit: 'soldier',
+    })
+  })
+
+  it('should be playable when droped on an empty tile of its own', () => {
+    const state: State = {
+      tiles: createTiles(3, 3),
+      players: [{
+        name: 'player1',
+        gold: 1000,
+        x: 0,
+        y: 0,
+      }],
+      selectedAsset: 'soldier',
+      selectedUnit: undefined,
+      turn: 'player1',
+    }
+
+    state.tiles[2][2].available = true
+    state.tiles[2][2].unit = undefined
+    state.tiles[2][2].player = 'player1'
+
+    const { tiles } = dropAsset(state, { x: 2, y: 2 })
+    expect(tiles[2][2]).toMatchObject({
+      available: false,
+      played: false,
+      unit: 'soldier',
+    })
+  })
 })
