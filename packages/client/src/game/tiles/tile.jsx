@@ -1,7 +1,7 @@
 import React, { useContext, useRef, useState, useEffect } from 'react'
 import { Sprite, Container } from '@inlet/react-pixi'
 import { darker } from '@2-game/utils'
-import TilesContext from '../../contexts/tiles'
+import BoardContext from '../../contexts/board'
 import Tree from './tree'
 import Villager from './villager'
 import Soldier from './soldier'
@@ -22,20 +22,20 @@ const Asset = ({ name, playable, ...props }) => {
   }
 }
 
-const Tile = ({ x, y, tint = 0xFFFFFF, isAvailable, object, empty, playable }) => {
+const Tile = ({ x, y, tint = 0xFFFFFF, available, unit, empty, playable }) => {
   if (empty) return null
 
-  const { action } = useContext(TilesContext)
+  const { action } = useContext(BoardContext)
   const [innerTint, setInnerTint] = useState(tint)
   const [alpha, setAlpha] = useState(1)
   const click = useRef(undefined)
 
   const setBaseTint = () => {
     setInnerTint(tint)
-    setAlpha(isAvailable ? 1 : 0.6)
+    setAlpha(available ? 1 : 0.6)
   }
 
-  useEffect(setBaseTint, [tint, isAvailable])
+  useEffect(setBaseTint, [tint, available])
 
   const pointerup = (e) => {
     if (!click.current) return
@@ -50,7 +50,7 @@ const Tile = ({ x, y, tint = 0xFFFFFF, isAvailable, object, empty, playable }) =
   }
 
   const pointerover = () => {
-    if (!isAvailable) return
+    if (!available) return
     setInnerTint(darker(innerTint))
   }
 
@@ -78,7 +78,7 @@ const Tile = ({ x, y, tint = 0xFFFFFF, isAvailable, object, empty, playable }) =
         tint={innerTint}
       />
       <Asset
-        name={object}
+        name={unit}
         playable={playable}
       />
     </Container>

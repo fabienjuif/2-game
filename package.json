@@ -5,9 +5,16 @@
   "private": true,
   "scripts": {
     "start": "yarn --cwd packages/client start",
-    "build": "yarn --cwd packages/client build"
+    "build": "yarn --cwd packages/client build",
+    "test": "jest"
   },
   "workspaces": [
     "./packages/*"
-  ]
+  ],
+  "devDependencies": {
+    "@types/jest": "^24.0.11",
+    "jest": "^24.5.0",
+    "ts-jest": "^24.0.0",
+    "typescript": "^3.3.4000"
+  }
 }

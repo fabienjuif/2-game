@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react'
 import { Container, useTick } from '@inlet/react-pixi'
 import { easing, hexRgb, rgbHex } from '@2-game/utils'
-import TilesContext from '../../contexts/tiles'
+import BoardContext from '../../contexts/board'
 import Tile from './tile'
 
 const getTint = (player) => {
@@ -14,12 +14,12 @@ const getTint = (player) => {
 
 const Tiles = () => {
   const [tiles, setTiles] = useState([])
-  const { tiles: baseTiles } = useContext(TilesContext) || {}
+  const { tiles: baseTiles } = useContext(BoardContext)
 
   useTick((delta) => {
-    setTiles(baseTiles.map((line, x) => line.map((tile, y) => {
-      if (!tiles[x] || !tiles[x][y]) return { ...tile, tint: getTint(tile.player) }
-      const innerTile = tiles[x][y]
+    setTiles(baseTiles.map(line => line.map((tile) => {
+      if (!tiles[tile.y] || !tiles[tile.y][tile.x]) return { ...tile, tint: getTint(tile.player) }
+      const innerTile = tiles[tile.y][tile.x]
 
       if (innerTile.player !== tile.player) {
         const [targetR, targetG, targetB] = hexRgb(getTint(tile.player))
@@ -72,7 +72,7 @@ const Tiles = () => {
 
   return [].concat(...tiles.map(line => line.map(tile => (
     <Tile
-      key={tile.key}
+      key={`${tile.x}-${tile.y}`}
       {...tile}
     />
   ))))

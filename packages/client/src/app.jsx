@@ -1,14 +1,14 @@
 import React from 'react'
 import Game from './game'
 import UI from './ui'
-import { TilesProvider } from './contexts/tiles'
+import { BoardProvider } from './contexts/board'
 
 const App = () => {
-  const width = 20 * 12
-  const height = 15 * 12
+  const width = 12
+  const height = 12
 
   return (
-    <TilesProvider
+    <BoardProvider
       width={width}
       height={height}
     >
@@ -18,7 +18,7 @@ const App = () => {
       />
 
       <UI />
-    </TilesProvider>
+    </BoardProvider>
   )
 }
 

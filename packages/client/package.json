@@ -4,6 +4,7 @@
   "private": true,
   "homepage": "https://fabienjuif.github.io/2-game/beta15/",
   "dependencies": {
+    "@2-game/engine": "^0.1.0",
     "@2-game/utils": "^0.1.0",
     "@inlet/react-pixi": "^0.5.7",
     "classnames": "^2.2.6",
