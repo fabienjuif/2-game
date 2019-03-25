@@ -9,14 +9,6 @@ const unselect = (state: State): State => ({
 export default (state: State, payload: Point): State => {
   if (state.selectedAsset === undefined) return unselect(state)
 
-  // const unitCost = getUnitCost(state.selectedAsset as UnitType)
-  // const foundPlayer = state.players.find(({ name }) => name === state.turn)
-  // if (!foundPlayer || foundPlayer.gold < unitCost) return unselect(state)
-  // const currentPlayer = {
-  //   ...foundPlayer,
-  //   gold: foundPlayer.gold - unitCost,
-  // }
-
   let droped = false
   const tiles = state.tiles.map(line => line.map((tile) => {
     if (

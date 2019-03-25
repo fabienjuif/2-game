@@ -53,6 +53,7 @@ const getTiles = (payload: GenerateActionPayload) => (players: Player[]): Tile[]
         empty: player ? false : Math.random() <= Math.max(0.05, 1 / (Math.min(y, Math.abs(y - height)) + Math.min(x, Math.abs(x - width)) + 1)),
         player: player ? player.name : undefined,
         gold: unit === undefined ? 1 : 0,
+        played: false,
       })
     }
   }

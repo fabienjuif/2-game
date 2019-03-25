@@ -9,6 +9,7 @@ const createTile = (x: number, y: number): Tile => ({
   gold: 1,
   unit: undefined,
   player: undefined,
+  played: false,
 })
 
 const createTiles = (width, height): Tile[][] => {
