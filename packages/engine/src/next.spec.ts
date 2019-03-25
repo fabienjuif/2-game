@@ -147,14 +147,14 @@ describe('next', () => {
   })
 
   it('should kill units if the player do not have enough gold', () => {
-    const state: State = {
+    let state: State = {
       tiles: createTiles(10, 10),
       selectedAsset: undefined,
       selectedUnit: undefined,
       players: [
         {
           name: 'player1',
-          gold: 10,
+          gold: 40,
           x: 0,
           y: 0,
         },
@@ -176,6 +176,19 @@ describe('next', () => {
     state.tiles[1][0].unit = 'soldier'
     state.tiles[1][0].gold = -19
 
+    state = next(state)
+    expect(state.tiles[0][0]).toMatchObject({
+      gold: -39,
+      unit: 'king',
+      player: 'player1',
+    })
+    expect(state.tiles[1][0]).toMatchObject({
+      player: 'player2',
+      unit: 'soldier',
+      gold: -19,
+    })
+
+    state.turn = 'player1'
     const { tiles } = next(state)
     expect(tiles.find(line => !!line.find(tile => tile.unit === 'king'))).toBeFalsy()
     expect(tiles[0][0]).toMatchObject({

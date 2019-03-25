@@ -17,7 +17,8 @@ export default (state: State): State => {
     if (tile.player !== state.turn) return
     balance += tile.gold
   }))
-  if (balance < 0) {
+  const player = state.players.find(({ name }) => name === state.turn)
+  if (player && (player.gold + balance) < 0) {
     tiles = tiles.map(line => line.map((tile) => {
       if (tile.player !== state.turn) return tile
       if (tile.unit === undefined) return tile
