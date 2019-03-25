@@ -134,23 +134,4 @@ describe('selectUnit', () => {
     expect(selectedUnit).toEqual(undefined)
     expect(tiles.find(line => !!line.find(tile => !tile.available))).toBeFalsy()
   })
-
-  describe('villager', () => {
-    it('can be moved around its cells', () => {
-    })
-
-    it('can not be moved on a owned unit (except trees)', () => {
-    })
-
-    it('can not be moved on a enemy house', () => {
-
-    })
-
-    it('can be move to a cell that is surrounded by something <= at him', () => {
-    })
-
-    it('can not be moved to a cell that is surrounded by something > at him', () => {
-
-    })
-  })
 })
