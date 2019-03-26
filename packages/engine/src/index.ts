@@ -37,13 +37,24 @@ export default (config: { width: number, height: number, players: number }) => {
 
   const actionOnTile = (tile: Point): [boolean, State] => {
     if (store.getState().selectedAsset !== undefined) {
+      const getPlayerGold = (state: State): number => {
+        const { gold } = state.players.find(({ name }) => name === state.turn) as Player
+        return gold
+      }
+
+      const gold = getPlayerGold(store.getState())
       const res = decorate(dropAsset)(tile)
-      if (res[0]) return res
+
+      // if the selected asset didn't droped (gold didn't move), then we go to the next action
+      if (res[0] && gold !== getPlayerGold(res[1])) return res
     }
 
     if (store.getState().selectedUnit) {
+      const { x, y } = store.getState().selectedUnit as Point
       const res = decorate(moveUnit)(tile)
-      if (res[0]) return res
+
+      // if the selected unit didn't move we go to the next action
+      if (res[0] && res[1].tiles[y][x].unit === undefined) return res
     }
 
     return decorate(selectUnit)(tile)

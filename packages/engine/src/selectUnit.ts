@@ -1,4 +1,3 @@
-import { isSamePlayerAround, isOneOfEnemyUnitsAround } from './utils'
 import availabilities from './availabilities'
 
 const markAvailable = (state: State): State => ({
@@ -28,11 +27,27 @@ export default (state: State, payload: Point): State => {
 
   const selectedUnitType = state.tiles[y][x].unit
 
-  return availabilities(
+  // default availabilities
+  const stateWithAvailabilities = availabilities(
     {
       ...state,
       selectedUnit: payload,
+      selectedAsset: undefined,
     },
     selectedUnitType as UnitType,
   )
+
+  // override availabilities so a unit can't move further than 4 units
+  // TODO: should be A* not Pythagore
+  // TODO: test
+  return {
+    ...stateWithAvailabilities,
+    tiles: stateWithAvailabilities.tiles.map(line => line.map((tile) => {
+      if (!tile.available) return tile
+      return {
+        ...tile,
+        available: Math.sqrt((tile.x - x)**2 + (tile.y - y)**2) < 5,
+      }
+    }))
+  }
 }

@@ -27,12 +27,12 @@ const createTiles = (width: number, height: number): Tile[][] => {
 }
 
 describe('selectUnit', () => {
-  it('should select the given unit', () => {
+  it('should select the given unit and remove the selectedAsset', () => {
     const state: State = {
       tiles: createTiles(5, 5),
       players: [],
       turn: 'player1',
-      selectedAsset: undefined,
+      selectedAsset: 'house',
       selectedUnit: undefined,
     }
 
@@ -40,8 +40,9 @@ describe('selectUnit', () => {
     state.tiles[3][3].played = false
     state.tiles[3][3].unit = 'villager'
 
-    const { selectedUnit } = selectUnit(state, { x: 3, y: 3 })
+    const { selectedUnit, selectedAsset } = selectUnit(state, { x: 3, y: 3 })
     expect(selectedUnit).toEqual({ x: 3, y: 3 })
+    expect(selectedAsset).toBeUndefined()
   })
 
   it('should not select the tile if there is not unit on it and mark all surrounded tiles as available', () => {

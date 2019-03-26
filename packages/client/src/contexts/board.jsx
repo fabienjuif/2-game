@@ -31,60 +31,6 @@ const BoardProvider = ({ children, width, height }) => {
     [state]
   )
 
-  // const moveUnit = (x, y) => {
-  //   if (!selectedUnit) return false
-  //   if (!tiles[x][y].available) return false
-
-  //   console.log('moving unit to ', x, y)
-
-  //   setTiles(tiles => tiles.map((line, tx) => line.map((tile, ty) => {
-  //     if (tx === x && ty === y) {
-  //       return {
-  //         ...tile,
-  //         unit: selectedUnit.unit,
-  //         player: selectedUnit.player,
-  //         playable: false,
-  //       }
-  //     }
-
-  //     if (tx === selectedUnit.x && ty === selectedUnit.y) {
-  //       return {
-  //         ...tile,
-  //         unit: undefined,
-  //         playable: false,
-  //       }
-  //     }
-
-  //     return tile
-  //   })))
-
-  //   setSelectedUnit(null)
-
-  //   return true
-  // }
-
-  // const selectUnit = (x, y) => {
-  //   const tile = tiles[x][y]
-  //   if (tile.player !== state.turn) return false
-  //   if (!['villager', 'soldier', 'king'].includes(tile.unit)) return false
-  //   if (!tile.playable) return false
-
-  //   console.log('selecting unit from', x, y)
-
-  //   setSelectedUnit(tile)
-  //   setNewAsset(null) // TODO: in next engine
-
-  //   return true
-  // }
-
-  // const action = (x, y) => {
-  //   return (
-  //     // selectUnit(x, y)
-  //     // moveUnit(x, y)
-  //     placeNewAsset(x, y)
-  //   )
-  // }
-
   return (
     <Context.Provider
       value={{
