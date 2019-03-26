@@ -25,3 +25,16 @@ export interface NextAction extends Action {
   type: 'NEXT',
 }
 export const next = (): NextAction => ({ type: 'NEXT' })
+
+
+export interface SelectUnitAction extends Action {
+  type: 'SELECT_UNIT',
+  payload: Point,
+}
+export const selectUnit = (tile: Point): SelectUnitAction => ({ type: 'SELECT_UNIT', payload: tile })
+
+export interface MoveUnitAction extends Action {
+  type: 'MOVE_UNIT',
+  payload: Point,
+}
+export const moveUnit = (tile: Point): MoveUnitAction => ({ type: 'MOVE_UNIT', payload: tile })

@@ -1,6 +1,6 @@
 import { createStore } from 'redux'
 import reducer from './reducer'
-import { generate, selectAsset, dropAsset, next } from './actions'
+import { generate, selectAsset, dropAsset, next, selectUnit, moveUnit } from './actions'
 
 const getReduxDevToolsEnhancer = () => {
   if (
@@ -35,11 +35,25 @@ export default (config: { width: number, height: number, players: number }) => {
     ]
   }
 
+  const actionOnTile = (tile: Point): [boolean, State] => {
+    if (store.getState().selectedAsset !== undefined) {
+      const res = decorate(dropAsset)(tile)
+      if (res[0]) return res
+    }
+
+    if (store.getState().selectedUnit) {
+      const res = decorate(moveUnit)(tile)
+      if (res[0]) return res
+    }
+
+    return decorate(selectUnit)(tile)
+  }
+
   return {
     subscribe: store.subscribe,
     getState: store.getState,
     selectAsset: decorate(selectAsset),
-    dropAsset: decorate(dropAsset),
     next: decorate(next),
+    actionOnTile,
   }
 }

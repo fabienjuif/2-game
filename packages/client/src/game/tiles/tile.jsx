@@ -22,10 +22,10 @@ const Asset = ({ name, playable, ...props }) => {
   }
 }
 
-const Tile = ({ x, y, tint = 0xFFFFFF, available, unit, empty, playable }) => {
+const Tile = ({ x, y, tint = 0xFFFFFF, available, unit, empty, played }) => {
   if (empty) return null
 
-  const { action } = useContext(BoardContext)
+  const { actionOnTile } = useContext(BoardContext)
   const [innerTint, setInnerTint] = useState(tint)
   const [alpha, setAlpha] = useState(1)
   const click = useRef(undefined)
@@ -40,7 +40,7 @@ const Tile = ({ x, y, tint = 0xFFFFFF, available, unit, empty, playable }) => {
   const pointerup = (e) => {
     if (!click.current) return
     if (click.current > Date.now() - 200) {
-      action(x, y)
+      actionOnTile({ x, y })
     }
     click.current = undefined
   }
@@ -79,7 +79,7 @@ const Tile = ({ x, y, tint = 0xFFFFFF, available, unit, empty, playable }) => {
       />
       <Asset
         name={unit}
-        playable={playable}
+        playable={!played}
       />
     </Container>
   )

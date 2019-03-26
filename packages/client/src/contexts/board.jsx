@@ -31,10 +31,6 @@ const BoardProvider = ({ children, width, height }) => {
     [state]
   )
 
-  const placeNewAsset = (x, y) => {
-    engine.dropAsset({ x, y })
-  }
-
   // const moveUnit = (x, y) => {
   //   if (!selectedUnit) return false
   //   if (!tiles[x][y].available) return false
@@ -81,13 +77,13 @@ const BoardProvider = ({ children, width, height }) => {
   //   return true
   // }
 
-  const action = (x, y) => {
-    return (
-      // selectUnit(x, y)
-      // moveUnit(x, y)
-      placeNewAsset(x, y)
-    )
-  }
+  // const action = (x, y) => {
+  //   return (
+  //     // selectUnit(x, y)
+  //     // moveUnit(x, y)
+  //     placeNewAsset(x, y)
+  //   )
+  // }
 
   return (
     <Context.Provider
@@ -95,8 +91,8 @@ const BoardProvider = ({ children, width, height }) => {
         ...state,
         balances,
         setNewAsset: engine.selectAsset,
+        actionOnTile: engine.actionOnTile,
         next: engine.next,
-        action,
       }}
     >
       {children}

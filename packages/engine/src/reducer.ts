@@ -2,14 +2,26 @@ import generate from './generate'
 import selectAsset from './selectAsset'
 import dropAsset from './dropAsset'
 import next from './next'
+import selectUnit from './selectUnit'
+import moveUnit from './moveUnit'
+
 import {
   GenerateAction,
   SelectAssetAction,
   DropAssetAction,
-  NextAction
+  NextAction,
+  SelectUnitAction,
+  MoveUnitAction,
 } from './actions'
 
-type Action = GenerateAction | SelectAssetAction | DropAssetAction | NextAction
+type Action = (
+  GenerateAction
+  | SelectAssetAction
+  | DropAssetAction
+  | NextAction
+  | SelectUnitAction
+  | MoveUnitAction
+)
 
 const initState: State = {
   tiles: [],
@@ -29,6 +41,8 @@ export default (state = initState, action: Action): State => {
       newState = dropAsset(newState, action.payload)
       return selectAsset(newState, state.selectedAsset)
     }
+    case 'SELECT_UNIT': return selectUnit(state, action.payload)
+    case 'MOVE_UNIT': return moveUnit(state, action.payload)
     case 'NEXT': return next(state)
     default: return state
   }
