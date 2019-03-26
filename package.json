@@ -11,7 +11,7 @@
     "build:engine": "yarn --cwd packages/engine build",
     "build:utils": "yarn --cwd packages/utils build",
     "build:client": "yarn --cwd packages/client build",
-    "build": "run-p build:*",
+    "build": "run-s build:*",
     "test": "jest"
   },
   "workspaces": [
