@@ -3,7 +3,7 @@ import { Stage } from '@inlet/react-pixi'
 import Camera from './camera'
 import Tiles from './tiles'
 import Stars from './stars'
-import TilesContext from '../contexts/tiles'
+import BoardContext from '../contexts/board'
 import './game.css'
 
 const Game = ({ width, height }) => {
@@ -27,7 +27,7 @@ const Game = ({ width, height }) => {
 
   if (!windowWidth || !windowHeight) return false
   return (
-    <TilesContext.Consumer>
+    <BoardContext.Consumer>
       {value => (
         <Stage
           width={windowWidth}
@@ -42,7 +42,7 @@ const Game = ({ width, height }) => {
             resizeTo: window,
           }}
         >
-          <TilesContext.Provider value={value}>
+          <BoardContext.Provider value={value}>
             <Stars
               windowWidth={windowWidth}
               windowHeight={windowHeight}
@@ -56,10 +56,10 @@ const Game = ({ width, height }) => {
             >
               <Tiles  />
             </Camera>
-          </TilesContext.Provider>
+          </BoardContext.Provider>
         </Stage >
       )}
-    </TilesContext.Consumer>
+    </BoardContext.Consumer>
   )
 }
 

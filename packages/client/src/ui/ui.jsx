@@ -1,17 +1,17 @@
 import React, { useContext, useEffect } from 'react'
 import cn from 'classnames'
-import TilesContext from '../contexts/tiles'
+import BoardContext from '../contexts/board'
 import './ui.css'
 
 const UI = () => {
   const {
-    player,
-    gold,
+    turn,
+    players,
     balances,
     next,
     setNewAsset,
     newAsset,
-  } = useContext(TilesContext)
+  } = useContext(BoardContext)
 
   useEffect(() => {
     const listener = ({ keyCode, repeat }) => {
@@ -34,28 +34,28 @@ const UI = () => {
     <div className="ui">
       <div className="infos">
         <h1>2-game</h1>
-        <h3>{`${player} turn!`}</h3>
+        <h3>{`${turn} turn!`}</h3>
 
         <div className="balances">
-          {Object.entries(balances).map(([currPlayer, balance]) => (
+          {players.map(({ name, gold }) => (
             <div
-              key={currPlayer}
+              key={name}
               className={cn(
                 'balance',
                 {
-                  selected: currPlayer === player,
+                  selected: name === turn,
                 },
               )}
             >
-              <div className="player">{currPlayer}:</div>
-              <div className="gold">{gold[currPlayer]}</div>
-              <div className="value">({balance >= 0 ? '+' : ''}{balance})</div>
+              <div className="player">{name}:</div>
+              <div className="gold">{gold}</div>
+              <div className="value">({balances[name] >= 0 ? '+' : ''}{balances[name]})</div>
             </div>
           ))}
         </div>
       </div>
 
-      <div className={cn('actions', player)}>
+      <div className={cn('actions', turn)}>
         <button
           onClick={() => setNewAsset('house')}
           className={cn({ selected: newAsset === 'house' })}
@@ -84,7 +84,7 @@ const UI = () => {
           onClick={next}
           className="next"
         >
-          {player === 'player1' ? 'To player 2' : 'Next turn'}
+          {turn === 'player1' ? 'To player 2' : 'Next turn'}
         </button>
       </div>
     </div>

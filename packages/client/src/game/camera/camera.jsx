@@ -10,14 +10,14 @@ const Camera = ({
   windowHeight,
   ...props,
 }) => {
-  const [scale, setScale] = useState(Math.min(windowWidth / (width + 100), windowHeight / (height + 100)))
-  const [[x, y], setPosition] = useState([(windowWidth - (width * scale)) / 2, (windowHeight - (height * scale)) / 2])
+  const [scale, setScale] = useState(Math.min(windowWidth / ((width * 20) + 100), windowHeight / ((height * 15) + 100)))
+  const [[x, y], setPosition] = useState([(windowWidth - (width * scale * 20)) / 2, (windowHeight - (height * 15 * scale)) / 2])
   const ref = useRef(null)
 
   useEffect(
     () => {
       ref.current.interactive = true
-      ref.current.hitArea = new Rectangle(0, 0, width, height)
+      ref.current.hitArea = new Rectangle(0, 0, width * 20, height * 20)
 
       document.body.addEventListener('wheel', (e) => {
         e.preventDefault()

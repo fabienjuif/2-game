@@ -1,0 +1,15 @@
+{
+  "name": "@2-game/engine",
+  "version": "0.1.0",
+  "main": "dist/index.js",
+  "private": true,
+  "types": "src/types.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch"
+  },
+  "dependencies": {
+    "@2-game/utils": "^0.1.0",
+    "redux": "^4.0.1"
+  }
+}
