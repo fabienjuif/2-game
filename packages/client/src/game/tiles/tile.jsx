@@ -7,6 +7,7 @@ import Villager from './villager'
 import Soldier from './soldier'
 import House from './house'
 import King from './king'
+import Grave from './grave'
 import tile from './tile.png'
 
 const Asset = ({ name, playable, ...props }) => {
@@ -18,6 +19,7 @@ const Asset = ({ name, playable, ...props }) => {
     case 'villager': return <Villager {...props} alpha={alpha} />
     case 'soldier': return <Soldier {...props} alpha={alpha} />
     case 'king': return <King {...props} alpha={alpha} />
+    case 'grave': return <Grave {...props} />
     default: return null
   }
 }
