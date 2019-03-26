@@ -1,5 +1,13 @@
 import next from './next'
 
+const TIMES = process.env.CI ? 100 : 5
+
+const times = (test: Function) => () => {
+  for (let i = 0; i < TIMES; i += 1) {
+    test()
+  }
+}
+
 const createTile = (x: number, y: number): Tile => ({
   x,
   y,
@@ -261,9 +269,9 @@ describe('next', () => {
     expect(tiles.find(line => !!line.find(tile => tile.played))).toBeFalsy()
   })
 
-  it('should plant only one tree around existing one', () => {
-    const state: State = {
-      tiles: createTiles(10, 10),
+  it('should plant only one tree around existing one (~10% chance)', times(() => {
+    let state: State = {
+      tiles: createTiles(100, 100),
       selectedAsset: undefined,
       selectedUnit: undefined,
       players: [
@@ -283,19 +291,28 @@ describe('next', () => {
       turn: 'player1',
     }
 
-    state.tiles[3][3].unit = 'tree'
+    state.tiles[10][10].unit = 'tree'
 
-    const { tiles } = next(state)
-    expect(tiles.reduce((acc, line) => acc + line.reduce((acc, tile) => acc + (tile.unit === 'tree' ? 1 : 0), 0), 0)).toEqual(2)
+    // we are looping 100 times to have a chance to see a tree
+    for (let i = 0; i < 100; i += 1) {
+      state = next(state)
+    }
+
+    const { tiles } = state
+    // it should be a tree around 3/3
     expect(
-      tiles[2][3].unit === 'tree'
-      || tiles[2][4].unit === 'tree'
-      || tiles[3][2].unit === 'tree'
-      || tiles[3][4].unit === 'tree'
-      || tiles[4][3].unit === 'tree'
-      || tiles[4][4].unit === 'tree'
+      tiles[10][9].unit === 'tree'
+      || tiles[10][11].unit === 'tree'
+      || tiles[9][9].unit === 'tree'
+      || tiles[9][8].unit === 'tree'
+      || tiles[11][9].unit === 'tree'
+      || tiles[11][8].unit === 'tree'
     ).toBeTruthy()
-  })
+
+    const treesCount = tiles.reduce((acc, line) => acc + line.reduce((acc, tile) => acc + (tile.unit === 'tree' ? 1 : 0), 0), 0)
+    expect(treesCount).toBeGreaterThanOrEqual(20)
+    expect(treesCount).toBeLessThanOrEqual(500)
+  }))
 
   it('should not plant tree on unit', () => {
     const state: State = {

@@ -35,10 +35,11 @@ export default (state: State): State => {
     }))
   }
 
-  // plant some tree
+  // plant some tree, with 10% chance
   const tilesWhereToPlantTrees: Tile[] = []
   tiles.forEach(line => line.forEach((tile) => {
     if (tile.unit !== 'tree') return
+    if (Math.random() > 0.10) return
 
     const emptyTiles = getEmptyTilesAround(tiles)(tile.x, tile.y)
     if (emptyTiles.length === 0) return
