@@ -4,8 +4,14 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "start": "yarn --cwd packages/client start",
-    "build": "yarn --cwd packages/client build",
+    "start:engine": "yarn --cwd packages/engine build -w",
+    "start:utils": "yarn --cwd packages/utils build -w",
+    "start:client": "yarn --cwd packages/client start",
+    "start": "run-p start:*",
+    "build:engine": "yarn --cwd packages/engine build",
+    "build:utils": "yarn --cwd packages/utils build",
+    "build:client": "yarn --cwd packages/client build",
+    "build": "run-p build:*",
     "test": "jest"
   },
   "workspaces": [
@@ -14,6 +20,7 @@
   "devDependencies": {
     "@types/jest": "^24.0.11",
     "jest": "^24.5.0",
+    "npm-run-all": "^4.1.5",
     "typescript": "^3.3.4000"
   }
 }
