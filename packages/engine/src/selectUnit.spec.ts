@@ -1,4 +1,3 @@
-import './types.d'
 import selectUnit from './selectUnit'
 
 const createTile = (x: number, y: number): Tile => ({
@@ -12,11 +11,11 @@ const createTile = (x: number, y: number): Tile => ({
   played: false,
 })
 
-const createTiles = (width, height): Tile[][] => {
+const createTiles = (width: number, height: number): Tile[][] => {
   const tiles = []
 
   for (let y = 0; y < height; y += 1) {
-    const line = []
+    const line: Tile[] = []
     tiles.push(line)
 
     for (let x = 0; x < width; x += 1) {

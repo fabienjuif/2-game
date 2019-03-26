@@ -2,7 +2,7 @@ import generate from './generate'
 
 const TIMES = process.env.CI ? 100 : 5
 
-const times = test => () => {
+const times = (test: Function) => () => {
   for (let i = 0; i < TIMES; i += 1) {
     test()
   }
@@ -10,8 +10,8 @@ const times = test => () => {
 
 describe('generation', () => {
   it('should generate the right amount of tiles', times(() => {
-    const count = tiles => tiles.reduce((acc, line) => acc + line.length, 0)
-    const testTiles = (width, height) => {
+    const count = (tiles: Tile[][]) => tiles.reduce((acc, line) => acc + line.length, 0)
+    const testTiles = (width: number, height: number) => {
       const { tiles } = generate({ width, height, players: 1 })
       expect(count(tiles)).toBeGreaterThanOrEqual(width * height)
       expect(tiles.length).toBeGreaterThanOrEqual(height)
@@ -26,9 +26,9 @@ describe('generation', () => {
   it('should give same tiles for all the players, and at least 6 tiles', times(() => {
     const { tiles } = generate({ width: 30, height: 30, players: 3 })
 
-    const player1Tiles = []
-    const player2Tiles = []
-    const player3Tiles = []
+    const player1Tiles: Tile[] = []
+    const player2Tiles: Tile[] = []
+    const player3Tiles: Tile[] = []
 
     tiles.forEach(line => line.forEach(tile => {
       if (tile.player === 'player1') player1Tiles.push(tile)
@@ -40,7 +40,7 @@ describe('generation', () => {
     expect(player1Tiles.length).toEqual(player2Tiles.length)
     expect(player2Tiles.length).toEqual(player3Tiles.length)
 
-    const filterNoUnit = tile => tile.unit === undefined && !tile.empty
+    const filterNoUnit = (tile: Tile) => tile.unit === undefined && !tile.empty
 
     expect(player1Tiles.filter(filterNoUnit).length).toEqual(player2Tiles.filter(filterNoUnit).length)
     expect(player2Tiles.filter(filterNoUnit).length).toEqual(player3Tiles.filter(filterNoUnit).length)
@@ -54,7 +54,7 @@ describe('generation', () => {
     })
   })
 
-  it('should generate ~10% of tree', times(() => {
+  it('should generate ~5% of tree', times(() => {
     const width = 100
     const height = 100
     const { tiles } = generate({ width, height, players: 1 })
@@ -63,11 +63,11 @@ describe('generation', () => {
       if (tile.unit === 'tree') trees.push(tile)
     }))
 
-    expect(trees.length).toBeGreaterThan((width * height) * 0.08) // greater than 8%
-    expect(trees.length).toBeLessThan((width * height) * 0.12) // less than 12%
+    expect(trees.length).toBeGreaterThan((width * height) * 0.04) // greater than 4%
+    expect(trees.length).toBeLessThan((width * height) * 0.6) // less than 6%
   }))
 
-  it('should generate ~5% of empty cells', times(() => {
+  it('should generate ~10% of empty cells', times(() => {
     const width = 100
     const height = 100
     const { tiles } = generate({ width, height, players: 1 })
@@ -76,14 +76,14 @@ describe('generation', () => {
       if (tile.empty) empty.push(tile)
     }))
 
-    expect(empty.length).toBeGreaterThan((width * height) * 0.03) // greater than 3%
-    expect(empty.length).toBeLessThan((width * height) * 0.08) // less than 8%
+    expect(empty.length).toBeGreaterThan((width * height) * 0.09) // greater than 9%
+    expect(empty.length).toBeLessThan((width * height) * 0.11) // less than 11%
   }))
 
   it('should separate players at least 5 cells from each others start point', times(() => {
     const { players } = generate({ width: 30, height: 30, players: 3 })
 
-    const getDistance = (playerA, playerB) => Math.sqrt((playerA.x - playerB.x)**2 + (playerA.y - playerB.y)**2)
+    const getDistance = (playerA: Player, playerB: Player) => Math.sqrt((playerA.x - playerB.x)**2 + (playerA.y - playerB.y)**2)
     expect(getDistance(players[0], players[1])).toBeGreaterThan(5)
     expect(getDistance(players[0], players[2])).toBeGreaterThan(5)
     expect(getDistance(players[1], players[2])).toBeGreaterThan(5)

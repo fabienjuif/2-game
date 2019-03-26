@@ -1,4 +1,3 @@
-import './types.d'
 import next from './next'
 
 const createTile = (x: number, y: number): Tile => ({
@@ -12,11 +11,11 @@ const createTile = (x: number, y: number): Tile => ({
   played: false,
 })
 
-const createTiles = (width, height): Tile[][] => {
+const createTiles = (width: number, height: number): Tile[][] => {
   const tiles = []
 
   for (let y = 0; y < height; y += 1) {
-    const line = []
+    const line: Tile[] = []
     tiles.push(line)
 
     for (let x = 0; x < width; x += 1) {
@@ -260,5 +259,75 @@ describe('next', () => {
 
     const { tiles } = next(state)
     expect(tiles.find(line => !!line.find(tile => tile.played))).toBeFalsy()
+  })
+
+  it('should plant only one tree around existing one', () => {
+    const state: State = {
+      tiles: createTiles(10, 10),
+      selectedAsset: undefined,
+      selectedUnit: undefined,
+      players: [
+        {
+          name: 'player1',
+          gold: 10,
+          x: 0,
+          y: 0,
+        },
+        {
+          name: 'player2',
+          gold: 10,
+          x: 0,
+          y: 0,
+        },
+      ],
+      turn: 'player1',
+    }
+
+    state.tiles[3][3].unit = 'tree'
+
+    const { tiles } = next(state)
+    expect(tiles.reduce((acc, line) => acc + line.reduce((acc, tile) => acc + (tile.unit === 'tree' ? 1 : 0), 0), 0)).toEqual(2)
+    expect(
+      tiles[2][3].unit === 'tree'
+      || tiles[2][4].unit === 'tree'
+      || tiles[3][2].unit === 'tree'
+      || tiles[3][4].unit === 'tree'
+      || tiles[4][3].unit === 'tree'
+      || tiles[4][4].unit === 'tree'
+    ).toBeTruthy()
+  })
+
+  it('should not plant tree on unit', () => {
+    const state: State = {
+      tiles: createTiles(10, 10),
+      selectedAsset: undefined,
+      selectedUnit: undefined,
+      players: [
+        {
+          name: 'player1',
+          gold: 10,
+          x: 0,
+          y: 0,
+        },
+        {
+          name: 'player2',
+          gold: 10,
+          x: 0,
+          y: 0,
+        },
+      ],
+      turn: 'player1',
+    }
+
+    state.tiles[3][3].unit = 'tree'
+    state.tiles[2][3].unit = 'house'
+    state.tiles[2][4].unit = 'villager'
+    state.tiles[3][2].unit = 'soldier'
+    state.tiles[3][4].unit = 'villager'
+    state.tiles[4][3].unit = 'king'
+    state.tiles[4][4].unit = 'house'
+
+    const { tiles } = next(state)
+    expect(tiles.reduce((acc, line) => acc + line.reduce((acc, tile) => acc + (tile.unit === 'tree' ? 1 : 0), 0), 0)).toEqual(1)
   })
 })

@@ -1,3 +1,6 @@
+import { random } from '@2-game/utils'
+import { getEmptyTilesAround } from './utils'
+
 export default (state: State): State => {
   let nextPlayerIndex = state.players.findIndex(({ name }) => name === state.turn) + 1
   if (state.players.length === nextPlayerIndex) nextPlayerIndex = 0
@@ -32,7 +35,24 @@ export default (state: State): State => {
     }))
   }
 
-  // TODO: plant tree
+  // plant some tree
+  const tilesWhereToPlantTrees: Tile[] = []
+  tiles.forEach(line => line.forEach((tile) => {
+    if (tile.unit !== 'tree') return
+
+    const emptyTiles = getEmptyTilesAround(tiles)(tile.x, tile.y)
+    if (emptyTiles.length === 0) return
+
+    const [x, y] = emptyTiles[random(0, emptyTiles.length - 1)]
+    tilesWhereToPlantTrees.push(tiles[y][x])
+  }))
+  tiles = tiles.map(line => line.map((tile) => {
+    if (!tilesWhereToPlantTrees.includes(tile)) return tile
+    return {
+      ...tile,
+      unit: 'tree' as UnitType,
+    }
+  }))
 
   return {
     ...state,
