@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from 'react'
+import React, { cloneElement, useRef, useEffect, useState, Children } from 'react'
 import { Container } from '@inlet/react-pixi'
 import { Rectangle } from 'pixi.js'
 
@@ -17,7 +17,8 @@ const Camera = ({
   useEffect(
     () => {
       ref.current.interactive = true
-      ref.current.hitArea = new Rectangle(0, 0, width * 20, height * 20)
+      // TODO: hit area should depend on width/height given by server (or local game)
+      ref.current.hitArea = new Rectangle(0, 0, 100 * 20, 100 * 20)
 
       document.body.addEventListener('wheel', (e) => {
         e.preventDefault()
@@ -75,7 +76,7 @@ const Camera = ({
       y={y}
       scale={scale}
     >
-      {children}
+      {Children.toArray(children).map(c => cloneElement(c, { camera: { x, y, scale } }))}
     </Container>
   )
 }

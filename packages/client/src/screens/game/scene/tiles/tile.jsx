@@ -1,7 +1,7 @@
 import React, { useContext, useRef, useState, useEffect } from 'react'
 import { Sprite, Container } from '@inlet/react-pixi'
 import { darker } from '@2-game/utils'
-import BoardContext from '../../contexts/board'
+import BoardContext from '../../board'
 import Tree from './tree'
 import Villager from './villager'
 import Soldier from './soldier'
@@ -27,7 +27,7 @@ const Asset = ({ name, playable, ...props }) => {
 const Tile = ({ x, y, tint = 0xFFFFFF, available, unit, empty, played }) => {
   if (empty) return null
 
-  const { actionOnTile } = useContext(BoardContext)
+  const { actionOnTile, overTile } = useContext(BoardContext)
   const [innerTint, setInnerTint] = useState(tint)
   const [alpha, setAlpha] = useState(1)
   const click = useRef(undefined)
@@ -52,8 +52,8 @@ const Tile = ({ x, y, tint = 0xFFFFFF, available, unit, empty, played }) => {
   }
 
   const pointerover = () => {
-    if (!available) return
-    setInnerTint(darker(innerTint))
+    if (overTile) overTile({ x, y })
+    if (available) setInnerTint(darker(innerTint))
   }
 
   const pointerout = () => {

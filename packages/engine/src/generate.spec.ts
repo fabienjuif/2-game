@@ -1,3 +1,4 @@
+import './types.d'
 import generate from './generate'
 
 const TIMES = process.env.CI ? 100 : 5

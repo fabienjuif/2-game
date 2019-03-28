@@ -1,24 +1,35 @@
-import React from 'react'
-import Game from './game'
-import UI from './ui'
-import { BoardProvider } from './contexts/board'
+import React, { Fragment } from 'react'
+import { useRoutes } from 'hookrouter'
+import Game from './screens/game'
+import Rooms from './screens/rooms'
+import Room from './screens/room'
+import Login from './screens/login'
+import { ServerProvider } from './server'
+
+const offlineRoutes = {
+  '/': () => <Login />,
+  '/game': () => <Game />,
+}
+
+const onlineRoutes = {
+  '/rooms': () => <Rooms />,
+  '/room/:roomId': ({ roomId }) => <Room id={roomId} />,
+  '/game/:roomId': ({ roomId }) => <Game roomId={roomId} />
+}
 
 const App = () => {
-  const width = 12
-  const height = 12
+  const offlineScreen = useRoutes(offlineRoutes)
+  const onlineScreen = useRoutes(onlineRoutes)
 
   return (
-    <BoardProvider
-      width={width}
-      height={height}
-    >
-      <Game
-        width={width}
-        height={height}
-      />
-
-      <UI />
-    </BoardProvider>
+    <Fragment>
+      {offlineScreen}
+      {onlineScreen && (
+        <ServerProvider>
+          {onlineScreen}
+        </ServerProvider>
+      )}
+    </Fragment>
   )
 }
 
