@@ -1,3 +1,5 @@
+import './types'
+
 const tileExists = (tiles: Tile[][]) => (x: number, y: number): boolean => !!(tiles[y] && tiles[y][x] && !tiles[y][x].empty)
 const isSamePlayer = (tiles: Tile[][]) => (x: number, y: number, player: string): boolean => tileExists(tiles)(x, y) && tiles[y][x].player === player
 const isOneOfEnemyUnits = (tiles: Tile[][]) => (x: number, y: number, player: string, units: UnitType[]): boolean => !!(tileExists(tiles)(x, y) && tiles[y][x].player !== player && tiles[y][x].unit && units.includes(tiles[y][x].unit as UnitType))

@@ -1,18 +1,33 @@
 import React, { useState, useContext } from 'react'
 import { Container, useTick } from '@inlet/react-pixi'
-import { easing, hexRgb, rgbHex } from '@2-game/utils'
-import BoardContext from '../../contexts/board'
+import { easing, hexRgb, rgbHex, getTint } from '@2-game/utils'
+import BoardContext from '../../board'
 import Tile from './tile'
 
-const getTint = (player) => {
-  switch (player) {
-    case 'player1': return 0xcc2020
-    case 'player2': return 0x2020cc
-    default: return 0xffffff
+const mergeTiles = (graphical, data) => {
+  const {
+    tint,
+    targetR,
+    targetG,
+    targetB,
+    targetFrame,
+    currentFrame,
+    previousPlayer,
+  } = graphical
+
+  return {
+    tint,
+    targetR,
+    targetG,
+    targetB,
+    targetFrame,
+    currentFrame,
+    previousPlayer,
+    ...data
   }
 }
 
-const Tiles = () => {
+const Tiles = ({ camera }) => {
   const [tiles, setTiles] = useState([])
   const { tiles: baseTiles } = useContext(BoardContext)
 
@@ -35,8 +50,8 @@ const Tiles = () => {
         }
       }
 
-      if (innerTile.targetFrame === undefined) return { ...innerTile, ...tile }
-      if (innerTile.currentFrame >= innerTile.targetFrame) return { ...innerTile, ...tile }
+      if (innerTile.targetFrame === undefined) return mergeTiles(innerTile, tile)
+      if (innerTile.currentFrame >= innerTile.targetFrame) return mergeTiles(innerTile, tile)
 
       const nextFramePercent = (innerTile.currentFrame + delta) / innerTile.targetFrame
       const easeNextFramePercent = Math.min(1, easing.linear(nextFramePercent))
@@ -59,14 +74,11 @@ const Tiles = () => {
         nextValue(prevB, innerTile.targetB),
       )
 
-      const newTile = {
-        ...innerTile,
-        ...tile,
+      return {
+        ...mergeTiles(innerTile, tile),
         tint: newTint,
         currentFrame: innerTile.currentFrame + delta,
       }
-
-      return newTile
     })))
   })
 
@@ -78,7 +90,7 @@ const Tiles = () => {
   ))))
 }
 
-const Wrapper = (props) => (
+const Wrapper = ({ camera, ...props }) => (
   <Container {...props}>
     <Tiles />
   </Container>

@@ -6,10 +6,12 @@
   "scripts": {
     "start:engine": "yarn --cwd packages/engine build -w",
     "start:utils": "yarn --cwd packages/utils build -w",
+    "start:server": "yarn --cwd packages/server start",
     "start:client": "yarn --cwd packages/client start",
     "start": "run-p start:*",
     "build:engine": "yarn --cwd packages/engine build",
     "build:utils": "yarn --cwd packages/utils build",
+    "build:server": "yarn --cwd packages/server build",
     "build:client": "yarn --cwd packages/client build",
     "build": "run-s build:*",
     "test": "jest"
@@ -21,6 +23,7 @@
     "@types/jest": "^24.0.11",
     "jest": "^24.5.0",
     "npm-run-all": "^4.1.5",
+    "ts-jest": "^24.0.0",
     "typescript": "^3.3.4000"
   }
 }

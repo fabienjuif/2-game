@@ -1,3 +1,4 @@
+import './types'
 import moveUnit from './moveUnit'
 
 const createTile = (x: number, y: number): Tile => ({

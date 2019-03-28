@@ -1,17 +1,20 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import cn from 'classnames'
-import BoardContext from '../contexts/board'
+import BoardContext from '../board'
 import './ui.css'
 
 const UI = () => {
   const {
     turn,
     players,
+    currentPlayer,
     balances,
     next,
     setNewAsset,
     newAsset,
   } = useContext(BoardContext)
+
+  const [disabled, setDisabled] = useState(true)
 
   useEffect(() => {
     const listener = ({ keyCode, repeat }) => {
@@ -29,6 +32,10 @@ const UI = () => {
       document.removeEventListener('keydown', listener)
     }
   }, [setNewAsset, next])
+
+  useEffect(() => {
+    setDisabled(currentPlayer && currentPlayer !== turn)
+  }, [currentPlayer, turn])
 
   return (
     <div className="ui">
@@ -59,30 +66,35 @@ const UI = () => {
         <button
           onClick={() => setNewAsset('house')}
           className={cn({ selected: newAsset === 'house' })}
+          disabled={disabled}
         >
           House [10/+10]
         </button>
         <button
           onClick={() => setNewAsset('villager')}
           className={cn({ selected: newAsset === 'villager' })}
+          disabled={disabled}
         >
           Villager [10/-5]
         </button>
         <button
           onClick={() => setNewAsset('soldier')}
           className={cn({ selected: newAsset === 'soldier' })}
+          disabled={disabled}
         >
           Soldier [20/-20]
         </button>
         <button
           onClick={() => setNewAsset('king')}
           className={cn({ selected: newAsset === 'king' })}
+          disabled={disabled}
         >
           King [40/-40]
         </button>
         <button
-          onClick={next}
+          onClick={() => next()}
           className="next"
+          disabled={disabled}
         >
           {turn === 'player1' ? 'To player 2' : 'Next turn'}
         </button>

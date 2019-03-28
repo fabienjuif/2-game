@@ -1,3 +1,4 @@
+import './types.d'
 import selectUnit from './selectUnit'
 
 const createTile = (x: number, y: number): Tile => ({

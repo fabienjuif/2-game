@@ -28,6 +28,14 @@ interface State {
   tiles: Tile[][],
   players: Player[],
   selectedAsset: AssetType | undefined,
-  selectedUnit: Point | undefined,
+  selectedUnit: Point | undefined,
   turn: string,
+}
+
+interface Board {
+  subscribe: Function,
+  getState: () => State,
+  selectAsset: (assetType: AssetType) => [boolean, State],
+  next: () => [boolean, State],
+  actionOnTile: (tile: Point) => [boolean, State],
 }
