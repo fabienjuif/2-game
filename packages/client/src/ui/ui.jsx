@@ -7,6 +7,7 @@ const UI = () => {
   const {
     turn,
     players,
+    currentPlayer,
     balances,
     next,
     setNewAsset,
@@ -59,30 +60,35 @@ const UI = () => {
         <button
           onClick={() => setNewAsset('house')}
           className={cn({ selected: newAsset === 'house' })}
+          disabled={currentPlayer !== turn}
         >
           House [10/+10]
         </button>
         <button
           onClick={() => setNewAsset('villager')}
           className={cn({ selected: newAsset === 'villager' })}
+          disabled={currentPlayer !== turn}
         >
           Villager [10/-5]
         </button>
         <button
           onClick={() => setNewAsset('soldier')}
           className={cn({ selected: newAsset === 'soldier' })}
+          disabled={currentPlayer !== turn}
         >
           Soldier [20/-20]
         </button>
         <button
           onClick={() => setNewAsset('king')}
           className={cn({ selected: newAsset === 'king' })}
+          disabled={currentPlayer !== turn}
         >
           King [40/-40]
         </button>
         <button
           onClick={next}
           className="next"
+          disabled={currentPlayer !== turn}
         >
           {turn === 'player1' ? 'To player 2' : 'Next turn'}
         </button>

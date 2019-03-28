@@ -1,0 +1,16 @@
+{
+  "name": "@2-game/server",
+  "version": "0.1.0",
+  "src": "src/index.js",
+  "private": true,
+  "scripts": {
+    "start": "nodemon -q src"
+  },
+  "dependencies": {
+    "@fabienjuif/sockjs": "^0.4.0-rc.1",
+    "engine.io": "^3.3.2"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.10"
+  }
+}

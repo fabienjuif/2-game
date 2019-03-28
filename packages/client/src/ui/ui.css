@@ -28,6 +28,12 @@
   margin-left: auto;
 }
 
+.ui .actions button:disabled,
+.ui .actions button:disabled:hover {
+  background-color: grey !important;
+  transform: none;
+}
+
 .ui .actions button {
   padding: 1em;
   margin: 1em;

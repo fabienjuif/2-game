@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "homepage": "https://fabienjuif.github.io/2-game/beta16/",
+  "proxy": "http://localhost:9999",
   "dependencies": {
     "@2-game/engine": "^0.1.0",
     "@2-game/utils": "^0.1.0",
@@ -11,7 +12,8 @@
     "pixi.js": "^4.8.5",
     "react": "^16.8.4",
     "react-dom": "^16.8.4",
-    "react-scripts": "^2.1.8"
+    "react-scripts": "^2.1.8",
+    "engine.io-client": "^3.3.2"
   },
   "scripts": {
     "start": "BROWSER=none react-scripts start",
