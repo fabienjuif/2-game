@@ -7,7 +7,7 @@ const getPlayers = (payload : GenerateActionPayload): Player[] => {
 
   const players = Array.from({ length: count }).map((_, index) => ({
     name: `player${index + 1}`,
-    gold: 10,
+    gold: 10 + (10 * index),
     x: random(0, width),
     y: random(0, height),
   }))
@@ -42,8 +42,8 @@ const getTiles = (payload: GenerateActionPayload) => (players: Player[]): Tile[]
     for (let x = 0; x < width; x += 1) {
       let player = players.find(player => player.x === x && player.y === y)
 
-      let unit: UnitType | undefined = undefined
-      if (Math.random() <= 0.05) unit = 'tree'
+      let unit: UnitType | undefined = (player ? 'house' : undefined)
+      if (!player && Math.random() <= 0.05) unit = 'tree'
 
       line.push({
         x,
