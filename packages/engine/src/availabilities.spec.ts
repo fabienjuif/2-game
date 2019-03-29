@@ -28,7 +28,7 @@ const createTiles = (width: number, height: number): Tile[][] => {
 
 describe('availabilities', () => {
   describe('house', () => {
-    it('should mark availables owned tiles', () => {
+    it('should mark availables owned tiles other owned houses', () => {
       const state: State = {
         players: [{
           name: 'player1',
@@ -43,6 +43,12 @@ describe('availabilities', () => {
       }
 
       state.tiles[3][3].player = 'player1'
+      state.tiles[3][3].unit = 'house'
+      state.tiles[3][4].player = 'player1'
+      state.tiles[2][3].player = 'player1'
+      state.tiles[5][6].player = 'player1'
+      state.tiles[8][8].player = 'player2'
+      state.tiles[8][8].unit = 'house'
 
       const { tiles } = availabilities(state, 'house')
       expect(tiles.reduce(
@@ -51,8 +57,9 @@ describe('availabilities', () => {
           0,
         ),
         0
-      )).toEqual(1)
-      expect(tiles[3][3].available).toBe(true)
+      )).toEqual(2)
+      expect(tiles[3][4].available).toBe(true)
+      expect(tiles[2][3].available).toBe(true)
     })
 
     it('should not let a house be droped on a owned tile with a unit on it', () => {
@@ -218,13 +225,13 @@ describe('availabilities', () => {
           0,
         ),
         0
-      )).toEqual(7)
+      )).toEqual(6) // because unit protect cells around them
       expect(tiles[3][3].available).toBe(true)
       expect(tiles[3][4].available).toBe(true)
       expect(tiles[3][2].available).toBe(true)
       expect(tiles[2][3].available).toBe(true)
       expect(tiles[2][4].available).toBe(true)
-      expect(tiles[4][3].available).toBe(true)
+      expect(tiles[4][3].available).toBe(false) // protected by 5/2 unit
       expect(tiles[4][4].available).toBe(true)
     })
 
