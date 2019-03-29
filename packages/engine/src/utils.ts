@@ -1,6 +1,7 @@
 const tileExists = (tiles: Tile[][]) => (x: number, y: number): boolean => !!(tiles[y] && tiles[y][x] && !tiles[y][x].empty)
 const isSamePlayer = (tiles: Tile[][]) => (x: number, y: number, player: string): boolean => tileExists(tiles)(x, y) && tiles[y][x].player === player
 const isOneOfEnemyUnits = (tiles: Tile[][]) => (x: number, y: number, player: string, units: UnitType[]): boolean => !!(tileExists(tiles)(x, y) && tiles[y][x].player !== player && tiles[y][x].unit && units.includes(tiles[y][x].unit as UnitType))
+const isOneOfAlliedUnits = (tiles: Tile[][]) => (x: number, y: number, player: string, units: UnitType[]): boolean => !!(tileExists(tiles)(x, y) && tiles[y][x].player === player && tiles[y][x].unit && units.includes(tiles[y][x].unit as UnitType))
 
 const getAroundArea = (x: number, y: number) => [
   [x, y],
@@ -14,6 +15,7 @@ const getAroundArea = (x: number, y: number) => [
 
 export const isSamePlayerAround = (tiles: Tile[][]) => (x: number, y: number, player: string): boolean => !!getAroundArea(x, y).find(([x, y]) => isSamePlayer(tiles)(x, y, player))
 export const isOneOfEnemyUnitsAround = (tiles: Tile[][]) => (x: number, y: number, player: string, units: UnitType[]): boolean => !!getAroundArea(x, y).find(([x, y]) => isOneOfEnemyUnits(tiles)(x, y, player, units))
+export const isOneOfAlliedUnitsAround = (tiles: Tile[][]) => (x: number, y: number, player: string, units: UnitType[]): boolean => !!getAroundArea(x, y).find(([x, y]) => isOneOfAlliedUnits(tiles)(x, y, player, units))
 
 export const getEmptyTilesAround = (tiles: Tile[][]) => (x: number, y: number) => getAroundArea(x, y).filter(([x, y]) => tileExists(tiles)(x, y) && tiles[y][x].unit === undefined)
 

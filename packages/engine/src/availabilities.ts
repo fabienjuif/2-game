@@ -1,4 +1,4 @@
-import { isSamePlayerAround, isOneOfEnemyUnitsAround } from './utils'
+import { isSamePlayerAround, isOneOfEnemyUnitsAround, isOneOfAlliedUnitsAround } from './utils'
 
 export default (state: State, unitType: UnitType): State => {
   const base = (tile: Tile) => (
@@ -22,6 +22,7 @@ export default (state: State, unitType: UnitType): State => {
           base(tile)
           && tile.player === state.turn
           && tile.unit === undefined
+          && isOneOfAlliedUnitsAround(state.tiles)(tile.x, tile.y, state.turn, ['house'])
         ),
       }))),
     }
@@ -38,7 +39,7 @@ export default (state: State, unitType: UnitType): State => {
         available: (
             base(tile)
             && (tile.unit === undefined || tile.unit === 'tree')
-            && !isOneOfEnemyUnitsAround(state.tiles)(tile.x, tile.y, state.turn, ['soldier', 'king'])
+          && !isOneOfEnemyUnitsAround(state.tiles)(tile.x, tile.y, state.turn, ['villager', 'soldier', 'king'])
         ),
       }))),
     }
@@ -55,7 +56,7 @@ export default (state: State, unitType: UnitType): State => {
         available: (
           base(tile)
           && (tile.unit === undefined || !['soldier', 'king'].includes(tile.unit))
-          && !isOneOfEnemyUnitsAround(state.tiles)(tile.x, tile.y, state.turn, ['king'])
+          && !isOneOfEnemyUnitsAround(state.tiles)(tile.x, tile.y, state.turn, ['soldier', 'king'])
         ),
       }))),
     }
