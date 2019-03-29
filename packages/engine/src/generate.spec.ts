@@ -23,6 +23,41 @@ describe('generation', () => {
     testTiles(100, 200)
   }))
 
+  it('should generate 1 house per player', () => {
+    const { tiles, players } = generate({ width: 30, height: 30, players: 3 })
+
+    const houseTiles: Tile[] = []
+    tiles.forEach(line => line.forEach((tile) => {
+      if (tile.unit === 'house') houseTiles.push(tile)
+    }))
+
+    expect(houseTiles).toHaveLength(3)
+    houseTiles.sort((a, b) => {
+      if (!a.player) return -1
+      if (!b.player) return -1
+
+      return a.player.localeCompare(b.player)
+    })
+    expect(houseTiles[0]).toMatchObject({
+      unit: 'house',
+      player: 'player1',
+      x: players[0].x,
+      y: players[0].y,
+    })
+    expect(houseTiles[1]).toMatchObject({
+      unit: 'house',
+      player: 'player2',
+      x: players[1].x,
+      y: players[1].y,
+    })
+    expect(houseTiles[2]).toMatchObject({
+      unit: 'house',
+      player: 'player3',
+      x: players[2].x,
+      y: players[2].y,
+    })
+  })
+
   it('should give same tiles for all the players, and at least 6 tiles', times(() => {
     const { tiles } = generate({ width: 30, height: 30, players: 3 })
 
@@ -46,12 +81,12 @@ describe('generation', () => {
     expect(player2Tiles.filter(filterNoUnit).length).toEqual(player3Tiles.filter(filterNoUnit).length)
   }))
 
-  it('should give 10 gold for each players', () => {
-    const { players } = generate({ width: 30, height: 30, players: 2 })
+  it('should give 10 gold for for first player, 20 for second, etc', () => {
+    const { players } = generate({ width: 30, height: 30, players: 3 })
 
-    players.forEach(player => {
-      expect(player.gold).toEqual(10)
-    })
+    expect(players[0].gold).toEqual(10)
+    expect(players[1].gold).toEqual(20)
+    expect(players[2].gold).toEqual(30)
   })
 
   it('should generate ~5% of tree', times(() => {
