@@ -1,3 +1,4 @@
+import './types.d'
 import availabilities from './availabilities'
 
 const createTile = (x: number, y: number): Tile => ({

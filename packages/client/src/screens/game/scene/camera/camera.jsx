@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from 'react'
+import React, { cloneElement, useRef, useEffect, useState, Children } from 'react'
 import { Container } from '@inlet/react-pixi'
 import { Rectangle } from 'pixi.js'
 
@@ -75,7 +75,7 @@ const Camera = ({
       y={y}
       scale={scale}
     >
-      {children}
+      {Children.toArray(children).map(c => cloneElement(c, { camera: { x, y, scale } }))}
     </Container>
   )
 }

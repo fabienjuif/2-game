@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from 'react'
 import cn from 'classnames'
-import BoardContext from '../contexts/board'
+import BoardContext from '../board'
 import './ui.css'
 
 const UI = () => {
@@ -86,7 +86,7 @@ const UI = () => {
           King [40/-40]
         </button>
         <button
-          onClick={next}
+          onClick={() => next()}
           className="next"
           disabled={currentPlayer !== turn}
         >

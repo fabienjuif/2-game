@@ -1,3 +1,4 @@
+import './types.d'
 import next from './next'
 
 const TIMES = process.env.CI ? 100 : 5

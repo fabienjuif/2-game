@@ -23,6 +23,15 @@ export const darker = (hex: number, coeff = 0.75) => {
   )
 }
 
+export const getTint = (player: string) => {
+  switch (player) {
+    case 'player1': return 0xe64a4a
+    case 'player2': return 0x5975ff
+    case 'player3': return 0xd6c81f
+    default: return 0xffffff
+  }
+}
+
 // source: https://gist.github.com/gre/1650294
 export const easing = {
   // no easing, no acceleration

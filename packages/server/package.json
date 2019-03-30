@@ -1,14 +1,17 @@
 {
   "name": "@2-game/server",
   "version": "0.1.0",
-  "src": "src/index.js",
+  "main": "dist/index.js",
+  "types": "src/index.ts",
   "private": true,
   "scripts": {
-    "start": "nodemon -q src"
+    "build": "tsc",
+    "start": "node dist"
   },
   "dependencies": {
     "@fabienjuif/sockjs": "^0.4.0-rc.1",
-    "engine.io": "^3.3.2"
+    "engine.io": "^3.3.2",
+    "uuid": "^3.3.2"
   },
   "devDependencies": {
     "nodemon": "^1.18.10"

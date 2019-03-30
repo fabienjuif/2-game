@@ -1,17 +1,22 @@
 {
   "compilerOptions": {
+    "target": "es2018",
     "module": "commonjs",
-    "sourceMap": false,
-    "noImplicitAny": true,
-    "removeComments": true,
-    "preserveConstEnums": true,
-    "strictNullChecks": true,
-    "outDir": "dist"
+    "lib": [
+      "es2018",
+      "dom"
+    ],
+    "declaration": true,
+    "outDir": "dist",
+    "strict": true,
+    "esModuleInterop": true
   },
   "include": [
     "**/src/**/*"
   ],
   "exclude": [
-    "node_modules"
-  ]
+    "node_modules",
+    "dist",
+    "**/src/**.spec.ts"
+  ],
 }

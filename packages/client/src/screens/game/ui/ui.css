@@ -52,14 +52,17 @@
   border-color: rgba(255, 255, 255, 0.6);
 }
 
-.ui .actions.player1 button,
-.ui .actions.player2 button.next {
+.ui .actions.player1 button {
   background-color: #e64a4a;
 }
 
-.ui .actions.player2 button,
-.ui .actions.player1 button.next {
+.ui .actions.player2 button {
   background-color: #5975ff;
+}
+
+.ui .actions.player3 button {
+  color: black;
+  background-color: #d6c81f;
 }
 
 .ui .balances {
