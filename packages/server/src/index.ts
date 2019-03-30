@@ -155,7 +155,7 @@ const startGame = (playerId: string, roomId: string) => {
 
   const playerSize = room.players.length
 
-  const board = engine({ width: playerSize * 5, height: playerSize * 5, players: playerSize })
+  const board = engine({ width: 10 + playerSize, height: 10 + playerSize, players: playerSize })
 
   // TODO: update room
   // TODO: dispatch 'SET_ROOM' for others players

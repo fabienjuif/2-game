@@ -28,6 +28,7 @@ export const getTint = (player: string) => {
     case 'player1': return 0xe64a4a
     case 'player2': return 0x5975ff
     case 'player3': return 0xd6c81f
+    case 'player4': return 0xfea6f8
     default: return 0xffffff
   }
 }
