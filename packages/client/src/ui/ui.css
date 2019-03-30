@@ -56,6 +56,16 @@
   background-color: #5975ff;
 }
 
+.ui .actions.player3 button {
+  color: black;
+  background-color: #d6c81f;
+}
+
+.ui .actions.player4 button {
+  color: black;
+  background-color: #fea6f8;
+}
+
 .ui .balances {
   display: flex;
   justify-content: center;

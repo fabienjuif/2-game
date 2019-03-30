@@ -128,7 +128,7 @@ export default (payload: GenerateActionPayload): State => {
     retries += 1
     totalRetries += 1
 
-    if (retries > 100) {
+    if (retries > 300) {
       retries = 0
       width = Math.round(1.2 * width)
       height = Math.round(1.2 * height)
