@@ -11,6 +11,7 @@
     "start": "run-p start:*",
     "build:engine": "yarn --cwd packages/engine build",
     "build:utils": "yarn --cwd packages/utils build",
+    "build:server": "yarn --cwd packages/server build",
     "build:client": "yarn --cwd packages/client build",
     "build": "run-s build:*",
     "test": "jest"

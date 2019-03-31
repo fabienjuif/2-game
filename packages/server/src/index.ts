@@ -1,6 +1,9 @@
+const path = require('path')
+const fs = require('fs')
 const sockjs = require('@fabienjuif/sockjs')
 const http = require('http')
-const uuid = require('uuid/v1')
+const Koa = require('koa')
+const serve = require('koa-static')
 
 import getId from './getId'
 import createRoom from './createRoom'
@@ -8,9 +11,14 @@ import joinRoom from './joinRoom'
 import leaveRoom from './leaveRoom'
 import startGame from './startGame'
 
-const ws = sockjs.createServer({ prefix: '/ws' })
+const app = new Koa()
+app.use(serve(path.resolve(__dirname, 'client')))
+app.use((ctx: any) => { // TODO: type
+  ctx.set('Content-Type', 'text/html')
+  ctx.body = fs.createReadStream(path.resolve(__dirname, 'client', 'index.html'))
+})
 
-// TODO: import Board type???
+const ws = sockjs.createServer({ prefix: '/ws' })
 
 const context: Context = {
   boards: new Map(),
@@ -34,22 +42,6 @@ const sendMessageToRoom = (playerId: string, message: string) => {
 // TODO: handle socket disconnection (memory leak atm)
 
 ws.on('connection', (socket: any) => {
-  // const id = uuid()
-  // socket.write(JSON.stringify({ type: 'SET_ID', payload: id }))
-
-  // context.rooms.forEach((room) => {
-  //   if (room.status !== 'OPEN') return
-  //   socket.write(JSON.stringify({ type: 'SET_ROOM', payload: room }))
-  // })
-
-  // const player = {
-  //   socket,
-  //   id,
-  //   status: 'ROOMS',
-  //   name: 'anonymous',
-  // }
-  // context.players.set(id, player as Player)
-
   let id: string
 
   socket.on('data', async (message: string) => {
@@ -71,9 +63,10 @@ ws.on('connection', (socket: any) => {
   })
 })
 
-const server = http.createServer()
+const server = http.createServer(app.callback())
 ws.attach(server)
 
-server.listen(9999, '0.0.0.0', () => {
-  console.log('Listening on ::9999')
+const PORT = process.env.PORT || 9999
+server.listen(PORT, '0.0.0.0', () => {
+  console.log(`Listening on ::${PORT}`)
 })
