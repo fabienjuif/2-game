@@ -17,7 +17,8 @@ const Camera = ({
   useEffect(
     () => {
       ref.current.interactive = true
-      ref.current.hitArea = new Rectangle(0, 0, width * 20, height * 20)
+      // TODO: hit area should depend on width/height given by server (or local game)
+      ref.current.hitArea = new Rectangle(0, 0, 100 * 20, 100 * 20)
 
       document.body.addEventListener('wheel', (e) => {
         e.preventDefault()

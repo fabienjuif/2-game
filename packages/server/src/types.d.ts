@@ -17,3 +17,9 @@ interface Room {
   players: string[],
   date: Date,
 }
+
+interface Context {
+  boards: Map<string, Object>, // TODO: import Board type from 'engine'
+  players: Map<string, Player>,
+  rooms: Map<string, Room>,
+}

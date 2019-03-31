@@ -2,11 +2,13 @@
   "name": "@2-game/server",
   "version": "0.1.0",
   "main": "dist/index.js",
-  "types": "src/index.ts",
+  "types": "dist/index.d.ts",
   "private": true,
   "scripts": {
     "build": "tsc",
-    "start": "node dist"
+    "start:build": "tsc -w",
+    "start:start": "nodemon -q dist",
+    "start": "run-p start:*"
   },
   "dependencies": {
     "@fabienjuif/sockjs": "^0.4.0-rc.1",
