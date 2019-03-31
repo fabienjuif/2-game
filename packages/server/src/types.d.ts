@@ -6,12 +6,13 @@ interface Player {
   name: string,
   status: PlayerStatus,
   roomId: string | undefined,
-  player: string | undefined,
+  player: string | undefined, // player name from game (player1, player2, etc)
   socket: any, // TODO: retrieve socket type (from SockJS)
 }
 
 interface Room {
   id: string,
+  name: string,
   status: RoomStatus,
   full: boolean,
   players: string[],

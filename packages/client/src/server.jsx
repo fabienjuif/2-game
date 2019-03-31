@@ -10,6 +10,20 @@ const ServerProvider = ({ children }) => {
   const callbacks = useRef([])
   const [playerId, setPlayerId] = useState()
 
+  const send = (action) => {
+    if (!socketReady) return
+    if (!socket.current) return
+    if (socket.current.readyState !== 1) return
+
+    console.log(`▷  ${action.type.padEnd(15, ' ')} [${new Date().toLocaleTimeString()}]`, action.payload)
+
+    socket.current.send(JSON.stringify(action))
+  }
+
+  const register = (cbs) => {
+    callbacks.current = [...callbacks.current, ...[].concat(cbs)]
+  }
+
   useEffect(
     () => {
       const setConnection = () => {
@@ -17,10 +31,16 @@ const ServerProvider = ({ children }) => {
 
         socket.current.onopen = function () {
           socketReady.current = true
+
+          const urlParams = new URLSearchParams(window.location.search)
+
+          send({ type: 'GET_ID', payload: urlParams.get('name') })
         }
 
         socket.current.onmessage = (e) => {
           const action = JSON.parse(e.data)
+
+          console.log(`◀︎  ${action.type.padEnd(15, ' ')} [${new Date().toLocaleTimeString()}]`, action.payload)
 
           if (action.type === 'SET_ID') setPlayerId(action.payload)
 
@@ -40,20 +60,6 @@ const ServerProvider = ({ children }) => {
     },
     [],
   )
-
-  const send = (action) => {
-    if (!socketReady) return
-    if (!socket.current) return
-    if (socket.current.readyState !== 1) return
-
-    console.log('Sending to server:', action.type)
-
-    socket.current.send(JSON.stringify(action))
-  }
-
-  const register = (cbs) => {
-    callbacks.current = [...callbacks.current, ...[].concat(cbs)]
-  }
 
   return (
     <Context.Provider

@@ -52,7 +52,7 @@ const Tile = ({ x, y, tint = 0xFFFFFF, available, unit, empty, played }) => {
   }
 
   const pointerover = () => {
-    overTile({ x, y })
+    if (overTile) overTile({ x, y })
     if (available) setInnerTint(darker(innerTint))
   }
 

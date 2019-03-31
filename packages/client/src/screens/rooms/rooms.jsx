@@ -9,6 +9,7 @@ import './rooms.css'
 const Rooms = () => {
   const { playerId, send, register } = useContext(SocketContext)
   const [rooms, setRooms] = useState([])
+  const [players, setPlayers] = useState({})
 
   const addRoom = (room) => {
     setRooms((oldRooms) => {
@@ -18,13 +19,24 @@ const Rooms = () => {
     })
   }
 
+  const setName = ({ id, name }) => {
+    setPlayers((oldPlayers) => ({ ...oldPlayers, [id]: name }))
+  }
+
+  const setNames = (players) => {
+    players.forEach(setName)
+  }
+
   useEffect(
     () => {
       register((action, socket) => {
         const { type, payload } = action
 
         if (type === 'SET_ROOM') return addRoom(payload)
+        if (type === 'SET_ROOMS') return setRooms(payload)
         if (type === 'START_GAME') return navigate(`/game/${payload}`)
+        if (type === 'SET_NAME') return setName(payload)
+        if (type === 'SET_NAMES') return setNames(payload)
       })
     },
     [],
@@ -34,7 +46,7 @@ const Rooms = () => {
     <div className="screen">
       2-game
 
-      You are: {playerId}
+      You are: {players[playerId]}
 
       <button
         onClick={() => send({ type: 'CREATE_ROOM' })}
@@ -45,7 +57,7 @@ const Rooms = () => {
       <h2>Rooms</h2>
       {rooms.map(room => (
         <div>
-          <h3>{room.id}</h3>
+          <h3>{room.name}</h3>
 
           {room.players.includes(playerId) || (
             <button
@@ -74,7 +86,7 @@ const Rooms = () => {
           <div>players:</div>
           <div>
             {room.players.map(playerId => (
-              <div>{playerId}</div>
+              <div>{players[playerId]}</div>
             ))}
           </div>
         </div>

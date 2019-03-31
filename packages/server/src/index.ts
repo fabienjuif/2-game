@@ -2,6 +2,7 @@ const sockjs = require('@fabienjuif/sockjs')
 const http = require('http')
 const uuid = require('uuid/v1')
 
+import getId from './getId'
 import createRoom from './createRoom'
 import joinRoom from './joinRoom'
 import leaveRoom from './leaveRoom'
@@ -33,25 +34,35 @@ const sendMessageToRoom = (playerId: string, message: string) => {
 // TODO: handle socket disconnection (memory leak atm)
 
 ws.on('connection', (socket: any) => {
-  const id = uuid()
-  socket.write(JSON.stringify({ type: 'SET_ID', payload: id }))
+  // const id = uuid()
+  // socket.write(JSON.stringify({ type: 'SET_ID', payload: id }))
 
-  context.rooms.forEach((room) => {
-    if (room.status !== 'OPEN') return
-    socket.write(JSON.stringify({ type: 'SET_ROOM', payload: room }))
-  })
+  // context.rooms.forEach((room) => {
+  //   if (room.status !== 'OPEN') return
+  //   socket.write(JSON.stringify({ type: 'SET_ROOM', payload: room }))
+  // })
 
-  const player = {
-    socket,
-    id,
-    status: 'ROOMS',
-    name: 'anonymous',
-  }
-  context.players.set(id, player as Player)
+  // const player = {
+  //   socket,
+  //   id,
+  //   status: 'ROOMS',
+  //   name: 'anonymous',
+  // }
+  // context.players.set(id, player as Player)
 
-  socket.on('data', (message: string) => {
+  let id: string
+
+  socket.on('data', async (message: string) => {
     const { type, payload } = JSON.parse(message)
 
+    // login
+    if (type === 'GET_ID') {
+      id = await getId(context, socket)(payload)
+      return
+    }
+    if (!id) return
+
+    // rooms
     if (type === 'CREATE_ROOM') return createRoom(context)(id)
     if (type === 'JOIN_ROOM') return joinRoom(context)(id, payload)
     if (type === 'LEAVE_ROOM') return leaveRoom(context)(id, payload)

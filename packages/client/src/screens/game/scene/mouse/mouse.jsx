@@ -4,10 +4,11 @@ import { getTint, darker } from '@2-game/utils'
 import BoardContext from '../../board'
 import mouse from '../tiles/tile.png'
 
-const Mouse = ({ camera }) => {
+const Mouse = () => {
   const { mousePosition, turn, currentPlayer } = useContext(BoardContext)
 
   if (currentPlayer === turn) return null
+  if (mousePosition === undefined) return null
 
   return (
     <Sprite

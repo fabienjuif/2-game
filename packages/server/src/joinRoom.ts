@@ -1,4 +1,5 @@
 import leaveRoom from './leaveRoom'
+import setRoom from './setRoom'
 
 export default (context: Context) => (playerId: string, roomId: string) => {
   const { rooms, players } = context
@@ -38,7 +39,7 @@ export default (context: Context) => (playerId: string, roomId: string) => {
     if (!['ROOMS', 'ROOM'].includes(player.status)) return
     if (player.status === 'ROOM' && player.roomId !== room.id) return
 
-    player.socket.write(JSON.stringify({ type: 'SET_ROOM', payload: room }))
+    player.socket.write(JSON.stringify(setRoom(context)(room)))
   })
 
   return room

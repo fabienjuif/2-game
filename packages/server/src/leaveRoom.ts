@@ -1,4 +1,8 @@
-export default ({ rooms, players }: Context) => (playerId: string, roomId: string) => {
+import setRoom from './setRoom'
+
+export default (context: Context) => (playerId: string, roomId: string) => {
+  const { rooms, players } = context
+
   if (!rooms.has(roomId)) return
   if (!players.has(playerId)) return
 
@@ -22,7 +26,7 @@ export default ({ rooms, players }: Context) => (playerId: string, roomId: strin
     if (!['ROOMS', 'ROOM'].includes(player.status)) return
     if (player.status === 'ROOM' && player.roomId !== room.id) return
 
-    player.socket.write(JSON.stringify({ type: 'SET_ROOM', payload: room }))
+    player.socket.write(JSON.stringify(setRoom(context)(room)))
   })
 
   if (room.players.length === 0) {

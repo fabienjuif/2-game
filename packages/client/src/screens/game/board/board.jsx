@@ -1,45 +1,19 @@
 import React, { createContext, useState, useLayoutEffect, useRef, useEffect } from 'react'
 import PropTypes from 'prop-types'
-// import gameEngine from '@2-game/engine'
 import useBalances from './useBalances'
 import useOnline from './useOnline'
+import useLocal from './useLocal'
 
 const Context = createContext()
 
 const BoardProvider = ({ children, roomId }) => {
-  // const { current: engine } = useRef(gameEngine({ width, height, players: 2 }))
-  // const refSocket = useRef()
-  // const [state, setState] = useState({
-  //   players: [],
-  //   tiles: [],
-  // })
-  // const [currentPlayer, setCurrentPlayer] = useState()
-
-  const { state, currentPlayer, ...callbacks } = useOnline(roomId)
+  const { state, currentPlayer, ...callbacks } = (roomId ? useOnline(roomId) : useLocal(12, 12))
   const balances = useBalances(state)
 
-  // useLayoutEffect(() => {
-  //   engine.subscribe(() => {
-  //     if (state === engine.getState()) return
-  //     setState(engine.getState())
-  //   })
-  // }, [])
-
-
-  // useLayoutEffect(
-  //   () => {
-  //     const balances = state.players.reduce((acc, { name }) => ({ ...acc, [name]: 0 }), {})
-  //     state.tiles.forEach(line => line.forEach((tile) => {
-  //       if (!tile.player) return
-  //       if (tile.empty) return
-
-  //       balances[tile.player] += tile.gold
-  //     }))
-
-  //     setBalances(balances)
-  //   },
-  //   [state]
-  // )
+  const height = state.tiles.length
+  if (height === 0) return null
+  const width = state.tiles[0].length
+  if (width === 0) return null
 
   return (
     <Context.Provider
@@ -50,7 +24,7 @@ const BoardProvider = ({ children, roomId }) => {
         balances,
       }}
     >
-      {children}
+      {children({ width, height })}
     </Context.Provider>
   )
 }
