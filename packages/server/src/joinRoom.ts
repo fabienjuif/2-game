@@ -1,17 +1,22 @@
 import leaveRoom from './leaveRoom'
 import setRoom from './setRoom'
 
+const sendRoom = (context: Context) => (player: Player, room: Room) => player.socket.write(JSON.stringify(setRoom(context)(room)))
+
 export default (context: Context) => (playerId: string, roomId: string) => {
   const { rooms, players } = context
 
-  if (!rooms.has(roomId)) return
   if (!players.has(playerId)) return
+  const oldPlayer = players.get(playerId) as Player
+
+  if (!rooms.has(roomId)) {
+    oldPlayer.socket.write(JSON.stringify({ type: 'ROOM_NOTFOUND', payload: roomId }))
+    return
+  }
 
   const oldRoom = rooms.get(roomId) as Room
-  if (oldRoom.full) return
-  if (oldRoom.players.includes(playerId)) return
+  if (oldRoom.full || oldRoom.players.includes(playerId)) return sendRoom(context)(oldPlayer, oldRoom)
 
-  const oldPlayer = players.get(playerId) as Player
   if (oldPlayer.roomId) leaveRoom(context)(playerId, oldPlayer.roomId)
 
   console.log(`${playerId} is joining room ${roomId}`)
@@ -39,7 +44,7 @@ export default (context: Context) => (playerId: string, roomId: string) => {
     if (!['ROOMS', 'ROOM'].includes(player.status)) return
     if (player.status === 'ROOM' && player.roomId !== room.id) return
 
-    player.socket.write(JSON.stringify(setRoom(context)(room)))
+    sendRoom(context)(player, room)
   })
 
   return room

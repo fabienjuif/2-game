@@ -3,15 +3,15 @@ import { navigate } from 'hookrouter'
 import SocketContext from '../../server'
 import './rooms.css'
 
-// TODO: socket should not be connected twice (here and in game)
-// TODO: it should be shared across screens
-
 const Rooms = () => {
   const { playerId, send, register } = useContext(SocketContext)
   const [rooms, setRooms] = useState([])
   const [players, setPlayers] = useState({})
 
-  const addRoom = (room) => {
+  const addRoom = (room, { id }) => {
+    console.log(room, id)
+    if (room.players.includes(id)) return navigate(`/room/${room.id}`)
+
     setRooms((oldRooms) => {
       const rooms = oldRooms.filter(({ id }) => id !== room.id)
       if (room.players.length === 0) return rooms
@@ -29,15 +29,12 @@ const Rooms = () => {
 
   useEffect(
     () => {
-      register((action, socket) => {
-        const { type, payload } = action
-
-        if (type === 'SET_ROOM') return addRoom(payload)
-        if (type === 'SET_ROOMS') return setRooms(payload)
-        if (type === 'START_GAME') return navigate(`/game/${payload}`)
-        if (type === 'SET_NAME') return setName(payload)
-        if (type === 'SET_NAMES') return setNames(payload)
-      })
+      register([
+        ['SET_ROOM', addRoom],
+        ['SET_ROOMS', setRooms],
+        ['SET_NAME', setName],
+        ['SET_NAMES', setNames],
+      ])
     },
     [],
   )
@@ -61,7 +58,7 @@ const Rooms = () => {
 
           {room.players.includes(playerId) || (
             <button
-              onClick={() => send({ type: 'JOIN_ROOM', payload: room.id })}
+              onClick={() => navigate(`/room/${room.id}`)}
             >
               Join
             </button>

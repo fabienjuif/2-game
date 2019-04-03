@@ -8,8 +8,11 @@ const serve = require('koa-static')
 import getId from './getId'
 import createRoom from './createRoom'
 import joinRoom from './joinRoom'
+import setRoom from './setRoom'
 import leaveRoom from './leaveRoom'
 import startGame from './startGame'
+import setName from './setName'
+import attachGame from './attachGame'
 
 const app = new Koa()
 app.use(serve(path.resolve(__dirname, 'client')))
@@ -48,11 +51,42 @@ ws.on('connection', (socket: any) => {
     const { type, payload } = JSON.parse(message)
 
     // login
+    if (type === 'SET_ID') {
+      const oldPlayer = context.players.get(payload)
+      if (!oldPlayer) {
+        socket.write(JSON.stringify({ type: 'NOTFOUND_ID' }))
+        return
+      }
+
+      id = payload
+      const player = {
+        ...oldPlayer,
+        socket,
+      }
+      context.players.set(id, player)
+
+      socket.write(JSON.stringify({ type: 'SET_ID', payload }))
+
+      // TODO: client should ask?
+      const room = context.rooms.get(player.roomId as string)
+      const board = context.boards.get(id)
+      if (room) {
+        if (board) return attachGame(context)(player, room, board)
+        player.socket.write(JSON.stringify(setRoom(context)(room)))
+      } else {
+        // socket.write(JSON.stringify({ type: 'SET_NAME', payload: { id, name: oldPlayer.name } }))
+        socket.write(JSON.stringify({ type: 'SET_NAMES', payload: Array.from(context.players.values()).map(({ id, name }) => ({ id, name })) }))
+        socket.write(JSON.stringify({ type: 'SET_ROOMS', payload: Array.from(context.rooms.values()).filter(room => room.status === 'OPEN') }))
+      }
+      return
+    }
     if (type === 'GET_ID') {
-      id = await getId(context, socket)(payload)
+      id = await getId(context, socket)()
       return
     }
     if (!id) return
+
+    if (type === 'SET_NAME') return setName(context)(id, payload)
 
     // rooms
     if (type === 'CREATE_ROOM') return createRoom(context)(id)

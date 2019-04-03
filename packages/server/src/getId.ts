@@ -1,11 +1,10 @@
-const uuid = require('uuid/v1')
-
-import setRoom from './setRoom'
+const uuid = require('uuid/v4')
 
 // TODO: socket from sockjs
-export default (context: Context, socket: any) => async (name: string = 'anonymous') => {
+export default (context: Context, socket: any) => async () => {
   const { players, rooms } = context
   const id = uuid()
+  const name = 'anonymous' // TODO: take a random name
 
   const player = {
     socket,
@@ -18,17 +17,9 @@ export default (context: Context, socket: any) => async (name: string = 'anonymo
   // send id to the player
   player.socket.write(JSON.stringify({ type: 'SET_ID', payload: id }))
 
-  // send name <-> id to all players
-  players.forEach((curr) => {
-    if (!['ROOMS', 'ROOM'].includes(curr.status)) return
-    curr.socket.write(JSON.stringify({ type: 'SET_NAME', payload: { id, name } }))
-  })
-
-  // send names to player
-  player.socket.write(JSON.stringify({ type: 'SET_NAMES', payload: Array.from(players.values()).map(({ id, name }) => ({ id, name })) }))
-
-  // send rooms to player
-  player.socket.write(JSON.stringify({ type: 'SET_ROOMS', payload: Array.from(rooms.values()).filter(room => room.status === 'OPEN') }))
+  // send names & rooms to player
+  // player.socket.write(JSON.stringify({ type: 'SET_NAMES', payload: Array.from(players.values()).map(({ id, name }) => ({ id, name })) }))
+  // player.socket.write(JSON.stringify({ type: 'SET_ROOMS', payload: Array.from(rooms.values()).filter(room => room.status === 'OPEN') }))
 
   return id
 }

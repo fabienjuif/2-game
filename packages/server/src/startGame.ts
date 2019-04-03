@@ -1,12 +1,13 @@
-const createBus = require('events')
-
 import engine from '@2-game/engine'
+import attachGame from './attachGame'
 
-const bus = new createBus()
+export default (context: Context) => (playerId: string, roomId: string) => {
+  const { rooms, players, boards } = context
 
-export default ({ rooms, players, boards }: Context) => (playerId: string, roomId: string) => {
   if (!rooms.has(roomId)) return
   if (!players.has(playerId)) return
+  const oldRoom = rooms.get(roomId) as Room
+  if (oldRoom.status === 'STARTED') return
 
   const player = {
     ...players.get(playerId),
@@ -19,7 +20,7 @@ export default ({ rooms, players, boards }: Context) => (playerId: string, roomI
   // TODO: make sure that the player who start the game is the first player
 
   const room = {
-    ...rooms.get(roomId),
+    ...oldRoom,
     status: 'STARTED',
     date: new Date(),
   } as Room
@@ -51,34 +52,6 @@ export default ({ rooms, players, boards }: Context) => (playerId: string, roomI
     players.set(playerId, player)
     boards.set(playerId, board)
 
-    player.socket.write(JSON.stringify({ type: 'SET_PLAYER', payload: player.player }))
-
-    let state: any // TODO: import State from engine!!
-    const sendState = () => {
-      const newState = board.getState()
-      if (newState !== state) player.socket.write(JSON.stringify({ type: 'SYNC', payload: newState }))
-      state = newState
-    }
-    board.subscribe(sendState)
-    sendState()
-
-    // TODO: disconnect at the end of the game
-    bus.on('MOUSE', (payload: any /* TODO: type */) => {
-      if (payload.currentPlayer === player.player) return
-
-      player.socket.write(JSON.stringify({ type: 'MOUSE', payload }))
-    })
-
-    // TODO: disconnect at the end of the game
-    player.socket.on('data', (message: string) => {
-      const { type, payload } = JSON.parse(message)
-
-      room.date = new Date()
-
-      if (type === 'NEXT') return board.next()
-      if (type === 'SET_NEWASSET') return board.selectAsset(payload)
-      if (type === 'ACTION') return board.actionOnTile(payload)
-      if (type === 'MOUSE' && board.getState().turn === player.player) bus.emit('MOUSE', { currentPlayer: player.player, ...payload })
-    })
+    attachGame(context)(player, room, board)
   })
 }

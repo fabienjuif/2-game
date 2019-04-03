@@ -1,7 +1,11 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { navigate } from 'hookrouter'
 
 const Login = () => {
+  useEffect(() => {
+    window.sessionStorage.removeItem('id')
+  })
+
   return (
     <div className="screen">
       <button
