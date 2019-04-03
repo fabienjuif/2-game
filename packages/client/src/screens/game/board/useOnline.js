@@ -26,9 +26,9 @@ const useOnline = (roomId) => {
   useEffect(
     () => {
       server.register([
-        ['SYNC', setState],
-        ['SET_PLAYER', setCurrentPlayer],
-        ['MOUSE', setMousePosition],
+        ['SYNC', payload => setState(payload)],
+        ['SET_PLAYER', payload => setCurrentPlayer(payload)],
+        ['MOUSE', payload => setMousePosition(payload)],
       ])
     },
     [],

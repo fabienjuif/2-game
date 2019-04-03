@@ -73,6 +73,7 @@ ws.on('connection', (socket: any) => {
       if (room) {
         if (board) return attachGame(context)(player, room, board)
         player.socket.write(JSON.stringify(setRoom(context)(room)))
+        socket.write(JSON.stringify({ type: 'SET_NAMES', payload: Array.from(context.players.values()).map(({ id, name }) => ({ id, name })) }))
       } else {
         // socket.write(JSON.stringify({ type: 'SET_NAME', payload: { id, name: oldPlayer.name } }))
         socket.write(JSON.stringify({ type: 'SET_NAMES', payload: Array.from(context.players.values()).map(({ id, name }) => ({ id, name })) }))

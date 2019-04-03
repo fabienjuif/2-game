@@ -13,7 +13,7 @@ const Room = ({ id }) => {
         ['SET_ID', () => send({ type: 'JOIN_ROOM', payload: id })],
         ['START_GAME', gameId => navigate(`/game/${gameId}`)],
         ['ROOM_NOTFOUND', () => navigate('/rooms')],
-        ['SET_ROOM', setRoom],
+        ['SET_ROOM', room => setRoom(room)],
         ['SET_NAME', ({ id, name }) => setPlayerNames(old => ({ ...old, [id]: name }))],
         ['SET_NAMES', (players) => {
           setPlayerNames(players.reduce(
@@ -55,7 +55,9 @@ const Room = ({ id }) => {
       <h2>Players</h2>
       <ul>
         {(room.players || []).map(id => (
-          <li>
+          <li
+            key={id}
+          >
             {playerNames[id] || 'Anonymous'}
             {isOwner && id !== playerId && (
               <button>

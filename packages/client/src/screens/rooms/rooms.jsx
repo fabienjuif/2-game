@@ -30,10 +30,10 @@ const Rooms = () => {
   useEffect(
     () => {
       register([
-        ['SET_ROOM', addRoom],
-        ['SET_ROOMS', setRooms],
-        ['SET_NAME', setName],
-        ['SET_NAMES', setNames],
+        ['SET_ROOM', (room, options) => addRoom(room, options)],
+        ['SET_ROOMS', rooms => setRooms(rooms)],
+        ['SET_NAME', name => setName(name)],
+        ['SET_NAMES', names => setNames(names)],
       ])
     },
     [],
@@ -53,7 +53,9 @@ const Rooms = () => {
 
       <h2>Rooms</h2>
       {rooms.map(room => (
-        <div>
+        <div
+          key={room.id}
+        >
           <h3>{room.name}</h3>
 
           {room.players.includes(playerId) || (
@@ -82,8 +84,12 @@ const Rooms = () => {
 
           <div>players:</div>
           <div>
-            {room.players.map(playerId => (
-              <div>{players[playerId]}</div>
+            {room.players.map(id => (
+              <div
+                key={id}
+              >
+                {players[id]}
+              </div>
             ))}
           </div>
         </div>
