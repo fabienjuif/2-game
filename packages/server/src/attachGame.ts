@@ -1,8 +1,5 @@
 const createBus = require('events')
 
-// TODO: bus is shared betweens board !!!
-const bus = new createBus()
-
 export default (context: Context) => (player: Player, room: Room, board: any /* TODO: Board from engine */) => {
   player.socket.write(JSON.stringify({ type: 'START_GAME', payload: room.id }))
 
@@ -17,8 +14,10 @@ export default (context: Context) => (player: Player, room: Room, board: any /* 
   board.subscribe(sendState)
   sendState()
 
+  if (!room.bus) room.bus = new createBus()
+
   // TODO: disconnect at the end of the game
-  bus.on('MOUSE', (payload: any /* TODO: type */) => {
+  room.bus.on('MOUSE', (payload: any /* TODO: type */) => {
     if (payload.currentPlayer === player.player) return
 
     player.socket.write(JSON.stringify({ type: 'MOUSE', payload }))
@@ -33,6 +32,6 @@ export default (context: Context) => (player: Player, room: Room, board: any /* 
     if (type === 'NEXT') return board.next()
     if (type === 'SET_NEWASSET') return board.selectAsset(payload)
     if (type === 'ACTION') return board.actionOnTile(payload)
-    if (type === 'MOUSE' && board.getState().turn === player.player) bus.emit('MOUSE', { currentPlayer: player.player, ...payload })
+    if (type === 'MOUSE' && board.getState().turn === player.player) room.bus.emit('MOUSE', { currentPlayer: player.player, ...payload })
   })
 }

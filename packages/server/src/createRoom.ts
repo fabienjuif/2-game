@@ -18,6 +18,7 @@ export default (context: Context) => (playerId: string) => {
     status: "OPEN",
     date: new Date(),
     players: [],
+    bus: undefined,
   }
 
   rooms.set(room.id, room)

@@ -17,6 +17,7 @@ interface Room {
   full: boolean,
   players: string[],
   date: Date,
+  bus: any, // TODO: retrieve events (node) bus type
 }
 
 interface Context {
