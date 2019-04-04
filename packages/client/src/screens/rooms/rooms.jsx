@@ -8,10 +8,7 @@ const Rooms = () => {
   const [rooms, setRooms] = useState([])
   const [players, setPlayers] = useState({})
 
-  const addRoom = (room, { id }) => {
-    console.log(room, id)
-    if (room.players.includes(id)) return navigate(`/room/${room.id}`)
-
+  const addRoom = (room) => {
     setRooms((oldRooms) => {
       const rooms = oldRooms.filter(({ id }) => id !== room.id)
       if (room.players.length === 0) return rooms
@@ -30,7 +27,8 @@ const Rooms = () => {
   useEffect(
     () => {
       register([
-        ['SET_ROOM', (room, options) => addRoom(room, options)],
+        ['JOIN_ROOM', roomId => navigate(`/room/${roomId}`)],
+        ['SET_ROOM', room => addRoom(room)],
         ['SET_ROOMS', rooms => setRooms(rooms)],
         ['SET_NAME', name => setName(name)],
         ['SET_NAMES', names => setNames(names)],
@@ -58,29 +56,11 @@ const Rooms = () => {
         >
           <h3>{room.name}</h3>
 
-          {room.players.includes(playerId) || (
-            <button
-              onClick={() => navigate(`/room/${room.id}`)}
-            >
-              Join
-            </button>
-          )}
-
-          {room.players.includes(playerId) && (
-            <button
-              onClick={() => send({ type: 'LEAVE_ROOM', payload: room.id })}
-            >
-              Leave
-            </button>
-          )}
-
-          {room.players.includes(playerId) && room.players[0] === playerId && (
-            <button
-              onClick={() => send({ type: 'START_GAME', payload: room.id })}
-            >
-              Start
-            </button>
-          )}
+          <button
+            onClick={() => navigate(`/room/${room.id}`)}
+          >
+            Join
+          </button>
 
           <div>players:</div>
           <div>

@@ -4,6 +4,7 @@ import { navigate } from 'hookrouter'
 const Login = () => {
   useEffect(() => {
     window.sessionStorage.removeItem('id')
+    window.localStorage.removeItem('id')
   })
 
   return (

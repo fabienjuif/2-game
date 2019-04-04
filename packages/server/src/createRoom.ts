@@ -6,7 +6,10 @@ export default (context: Context) => (playerId: string) => {
   const { rooms, players } = context
 
   console.log(`${playerId} is creating a new room`)
-  const { name: playerName } = players.get(playerId) || { name: 'Anonymous' }
+  const player = players.get(playerId)
+  if (!player) return
+
+  const playerName = player.name || 'Anonymous'
 
   const room: Room = {
     id: uuid(),
@@ -19,5 +22,5 @@ export default (context: Context) => (playerId: string) => {
 
   rooms.set(room.id, room)
 
-  return joinRoom(context)(playerId, room.id)
+  player.socket.write(JSON.stringify({ type: 'JOIN_ROOM', payload: room.id }))
 }

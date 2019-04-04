@@ -30,16 +30,6 @@ export default (context: Context) => (playerId: string, roomId: string) => {
 
   const board = engine({ width: 10 + playerSize, height: 10 + playerSize, players: playerSize })
 
-  // TODO: update room
-  // TODO: dispatch 'SET_ROOM' for others players
-
-  room.players.forEach((playerId) => {
-    const player = players.get(playerId)
-    if (!player) return
-
-    player.socket.write(JSON.stringify({ type: 'START_GAME', payload: roomId }))
-  })
-
   room.players.forEach((playerId, index) => {
     const oldPlayer = players.get(playerId)
     if (!oldPlayer) return

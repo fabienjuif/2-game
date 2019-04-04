@@ -29,11 +29,17 @@ const ServerProvider = ({ children }) => {
   }
 
   useEffect(() => {
+    const sessionName = window.sessionStorage.getItem('name') || window.localStorage.getItem('name')
     const urlParams = new URLSearchParams(window.location.search)
-    if (urlParams && urlParams.get('name') && urlParams.get('name') !== name.current) {
-      name.current = urlParams.get('name')
-      send({ type: 'SET_NAME', payload: urlParams.get('name') })
-    }
+
+    const newName = (urlParams && urlParams.get('name')) || sessionName
+    if (!newName || newName === name.current) return
+
+    name.current = newName
+    window.sessionStorage.setItem('name', name.current)
+    window.localStorage.setItem('name', name.current)
+
+    send({ type: 'SET_NAME', payload: name.current })
   })
 
   useEffect(
@@ -44,7 +50,8 @@ const ServerProvider = ({ children }) => {
         socket.current = new SockJs('/ws')
 
         socket.current.onopen = function () {
-          playerId = window.sessionStorage.getItem('id')
+          playerId = window.sessionStorage.getItem('id') || window.localStorage.getItem('id')
+
           if (playerId) send({ type: 'SET_ID', payload: playerId })
           else send({ type: 'GET_ID' })
 
@@ -58,6 +65,7 @@ const ServerProvider = ({ children }) => {
 
           if (action.type === 'SET_ID') {
             window.sessionStorage.setItem('id', action.payload)
+            window.localStorage.setItem('id', action.payload)
             playerId = action.payload
             setPlayerId(action.payload)
 
@@ -67,9 +75,26 @@ const ServerProvider = ({ children }) => {
 
           if (action.type === 'NOTFOUND_ID') {
             playerId = undefined
+            window.sessionStorage.removeItem('id')
+            window.localStorage.removeItem('id')
             navigate('/')
             return
           }
+
+          if (action.type === 'START_GAME') {
+            navigate(`/game/${action.payload}`)
+            return
+          }
+
+          if (action.type === 'SET_ROOM') {
+            if (!window.location.pathname.includes('/room/')) {
+              if (action.payload.players.includes(playerId)) {
+                navigate(`/room/${action.payload.id}`)
+                return
+              }
+            }
+          }
+
 
           listeners.current
             .filter(([type]) => type === action.type)

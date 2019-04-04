@@ -4,6 +4,8 @@ const createBus = require('events')
 const bus = new createBus()
 
 export default (context: Context) => (player: Player, room: Room, board: any /* TODO: Board from engine */) => {
+  player.socket.write(JSON.stringify({ type: 'START_GAME', payload: room.id }))
+
   player.socket.write(JSON.stringify({ type: 'SET_PLAYER', payload: player.player }))
 
   let state: any // TODO: import State from engine!!

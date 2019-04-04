@@ -11,7 +11,6 @@ const Room = ({ id }) => {
     () => {
       register([
         ['SET_ID', () => send({ type: 'JOIN_ROOM', payload: id })],
-        ['START_GAME', gameId => navigate(`/game/${gameId}`)],
         ['ROOM_NOTFOUND', () => navigate('/rooms')],
         ['SET_ROOM', room => setRoom(room)],
         ['SET_NAME', ({ id, name }) => setPlayerNames(old => ({ ...old, [id]: name }))],

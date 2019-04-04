@@ -45,6 +45,8 @@ export default (context: Context) => (playerId: string, roomId: string) => {
     if (player.status === 'ROOM' && player.roomId !== room.id) return
 
     sendRoom(context)(player, room)
+
+    player.socket.write(JSON.stringify({ type: 'SET_NAMES', payload: Array.from(context.players.values()).map(({ id, name }) => ({ id, name })) }))
   })
 
   return room
