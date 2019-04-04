@@ -48,10 +48,10 @@ const Scene = ({ width, height }) => {
             >
               <ServerProvider.Provider value={serverValue}>
                 <BoardContext.Provider value={value}>
-                  {/* <Stars
+                  <Stars
                     windowWidth={windowWidth}
                     windowHeight={windowHeight}
-                  /> */}
+                  />
 
                   <Camera
                     windowWidth={windowWidth}

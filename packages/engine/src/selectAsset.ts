@@ -1,4 +1,4 @@
-import { isSamePlayerAround, isOneOfEnemyUnitsAround, getUnitCost } from './utils'
+import { getUnitCost } from './utils'
 import mapAvailabilities from './availabilities'
 
 export default (state: State, payload: AssetType): State => {

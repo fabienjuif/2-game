@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useLayoutEffect } from 'react'
+import { useRef, useState, useLayoutEffect } from 'react'
 import gameEngine from '@2-game/engine'
 
 const useOnline = (width, height) => {
@@ -14,7 +14,7 @@ const useOnline = (width, height) => {
 
   return {
     state,
-    setNewAsset: engine.setNewAsset,
+    setNewAsset: engine.selectAsset,
     actionOnTile: engine.actionOnTile,
     next: engine.next,
   }

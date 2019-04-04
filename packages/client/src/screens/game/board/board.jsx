@@ -1,4 +1,4 @@
-import React, { createContext, useState, useLayoutEffect, useRef, useEffect } from 'react'
+import React, { createContext } from 'react'
 import PropTypes from 'prop-types'
 import useBalances from './useBalances'
 import useOnline from './useOnline'
