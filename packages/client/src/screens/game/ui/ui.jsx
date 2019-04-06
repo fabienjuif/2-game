@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useLayoutEffect, useState } from 'react'
 import cn from 'classnames'
 import BoardContext from '../board'
 import './ui.css'
@@ -34,7 +34,7 @@ const UI = () => {
     }
   }, [setNewAsset, next])
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     setDisabled(currentPlayer && currentPlayer !== turn)
   }, [currentPlayer, turn])
 

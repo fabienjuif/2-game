@@ -59,7 +59,11 @@ const Camera = ({
 
         if (ref.current.clickStart) {
           const [startX, startY] = ref.current.clickStart
-          setPosition(([oldX, oldY]) => [oldX + x - startX, oldY + y - startY])
+          // TODO: size should be retrieven from the board (local or online)
+          setPosition(([oldX, oldY]) => [
+            Math.max(Math.min(oldX + x - startX, (100 * 5 * scale)), (-100 * 5 * scale)),
+            Math.max(Math.min(oldY + y - startY, (100 * 5 * scale)), (-100 * 5 * scale)),
+          ])
         }
 
         ref.current.clickStart = [x, y]
