@@ -22,11 +22,12 @@ export default (context: Context) => (playerId: string, roomId: string) => {
     players: oldRoom.players.filter(id => id !== playerId),
   }
 
-  players.forEach(player => {
-    if (!['ROOMS', 'ROOM'].includes(player.status)) return
+  players.forEach(currPlayer => {
+    if (currPlayer.id === player.id) return
+    if (!['ROOMS', 'ROOM'].includes(currPlayer.status)) return
     // if (player.status === 'ROOM' && player.roomId !== room.id) return
 
-    player.socket.write(JSON.stringify(setRoom(context)(room)))
+    currPlayer.socket.write(JSON.stringify(setRoom(context)(room)))
   })
 
   if (room.players.length === 0) {

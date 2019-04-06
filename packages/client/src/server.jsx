@@ -109,6 +109,7 @@ const ServerProvider = ({ children }) => {
         }
 
         socket.current.onclose = () => {
+          console.log('Unexpectly close socket...')
           setConnection()
         }
       }
@@ -116,7 +117,17 @@ const ServerProvider = ({ children }) => {
       setConnection()
 
       return () => {
-        socket.current.close()
+        console.log('Closing socket...')
+        if (socket.current) {
+          // override onclose so we don't reconnect
+          socket.current.onclose = () => {}
+
+          // close the socket
+          socket.current.close()
+
+          // make sure the provider doesn't use a closed socket
+          socket.current = undefined
+        }
       }
     },
     [],

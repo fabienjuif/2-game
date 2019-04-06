@@ -49,6 +49,7 @@ ws.on('connection', (socket: any) => {
 
   socket.on('data', async (message: string) => {
     const { type, payload } = JSON.parse(message)
+    let reconnection = false
 
     // login
     if (type === 'SET_ID') {
@@ -59,6 +60,7 @@ ws.on('connection', (socket: any) => {
       }
 
       id = payload
+      reconnection = true
       const player = {
         ...oldPlayer,
         socket,
@@ -66,34 +68,47 @@ ws.on('connection', (socket: any) => {
       context.players.set(id, player)
 
       socket.write(JSON.stringify({ type: 'SET_ID', payload }))
-
-      // TODO: client should ask?
-      const room = context.rooms.get(player.roomId as string)
-      const board = context.boards.get(id)
-      if (room) {
-        if (board) return attachGame(context)(player, room, board)
-        player.socket.write(JSON.stringify(setRoom(context)(room)))
-        socket.write(JSON.stringify({ type: 'SET_NAMES', payload: Array.from(context.players.values()).map(({ id, name }) => ({ id, name })) }))
-      } else {
-        socket.write(JSON.stringify({ type: 'SET_NAMES', payload: Array.from(context.players.values()).map(({ id, name }) => ({ id, name })) }))
-        socket.write(JSON.stringify({ type: 'SET_ROOMS', payload: Array.from(context.rooms.values()).filter(room => room.status === 'OPEN') }))
-      }
-      return
     }
     if (type === 'GET_ID') {
       id = await getId(context, socket)()
-      return
     }
     if (!id) return
 
     if (type === 'SET_NAME') return setName(context)(id, payload)
-
-    // rooms
     if (type === 'CREATE_ROOM') return createRoom(context)(id)
-    if (type === 'JOIN_ROOM') return joinRoom(context)(id, payload)
-    if (type === 'LEAVE_ROOM') return leaveRoom(context)(id, payload)
-    if (type === 'START_GAME') return startGame(context)(id, payload)
-    if (type === 'MESSAGE') return sendMessageToRoom(id, payload)
+    if (type === 'JOIN_ROOM') joinRoom(context)(id, payload)
+    if (type === 'LEAVE_ROOM') leaveRoom(context)(id, payload)
+    if (type === 'START_GAME') startGame(context)(id, payload)
+    if (type === 'MESSAGE') sendMessageToRoom(id, payload)
+
+    // one of this types doesn't need sync
+    // these are game types
+    if (['MOUSE', 'SET_NEWASSET', 'ACTION', 'NEXT'].includes(type)) return
+
+    // what ever the client ask, we try to adjust on its state and send him what it could need
+    const player = context.players.get(id)
+    if (!player) return
+    const room = context.rooms.get(player.roomId as string)
+    const board = context.boards.get(player.id)
+    const filterMapPlayer = (filter: (player: Player) => any) => {
+      return Array.from(context.players.values())
+        .filter(filter)
+        .map(({ id, name }) => ({ id, name }))
+    }
+    if (room) {
+      if (board) {
+        if (reconnection) attachGame(context)(player, room, board)
+        player.socket.write(JSON.stringify({ type: 'START_GAME', payload: room.id }))
+        player.socket.write(JSON.stringify({ type: 'SET_PLAYER', payload: player.player }))
+
+        return
+      }
+      player.socket.write(JSON.stringify(setRoom(context)(room)))
+      socket.write(JSON.stringify({ type: 'SET_NAMES', payload: filterMapPlayer(currPlayer => currPlayer.status === 'ROOM' && player.roomId === room.id) }))
+    } else {
+      socket.write(JSON.stringify({ type: 'SET_ROOMS', payload: Array.from(context.rooms.values()).filter(room => room.status === 'OPEN') }))
+      socket.write(JSON.stringify({ type: 'SET_NAMES', payload: filterMapPlayer(currPlayer => currPlayer.status !== 'PLAY') }))
+    }
   })
 })
 

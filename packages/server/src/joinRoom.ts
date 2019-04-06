@@ -1,7 +1,16 @@
 import leaveRoom from './leaveRoom'
 import setRoom from './setRoom'
 
-const sendRoom = (context: Context) => (player: Player, room: Room) => player.socket.write(JSON.stringify(setRoom(context)(room)))
+const sendRoom = (context: Context) => (player: Player, room: Room) => {
+  player.socket.write(JSON.stringify(setRoom(context)(room)))
+  // TODO: this code is duplicated with the one in index.ts
+  player.socket.write(JSON.stringify({
+    type: 'SET_NAMES',
+    payload: Array.from(context.players.values())
+      .filter(currPlayer => currPlayer.roomId === player.roomId)
+      .map(({ id, name }) => ({ id, name }))
+  }))
+}
 
 export default (context: Context) => (playerId: string, roomId: string) => {
   const { rooms, players } = context
@@ -15,7 +24,7 @@ export default (context: Context) => (playerId: string, roomId: string) => {
   }
 
   const oldRoom = rooms.get(roomId) as Room
-  if (oldRoom.full || oldRoom.players.includes(playerId)) return sendRoom(context)(oldPlayer, oldRoom)
+  if (oldRoom.full || oldRoom.players.includes(playerId)) return
 
   if (oldPlayer.roomId) leaveRoom(context)(playerId, oldPlayer.roomId)
 
@@ -40,13 +49,12 @@ export default (context: Context) => (playerId: string, roomId: string) => {
 
   rooms.set(room.id, room)
 
-  players.forEach(player => {
-    if (!['ROOMS', 'ROOM'].includes(player.status)) return
-    if (player.status === 'ROOM' && player.roomId !== room.id) return
+  players.forEach(currPlayer => {
+    if (currPlayer.id === player.id) return
+    if (!['ROOMS', 'ROOM'].includes(currPlayer.status)) return
+    if (currPlayer.status === 'ROOM' && currPlayer.roomId !== room.id) return
 
-    sendRoom(context)(player, room)
-
-    player.socket.write(JSON.stringify({ type: 'SET_NAMES', payload: Array.from(context.players.values()).map(({ id, name }) => ({ id, name })) }))
+    sendRoom(context)(currPlayer, room)
   })
 
   return room
