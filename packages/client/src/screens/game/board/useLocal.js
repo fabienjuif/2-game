@@ -2,7 +2,7 @@ import { useRef, useState, useLayoutEffect } from 'react'
 import gameEngine from '@2-game/engine'
 
 const useOnline = (width, height) => {
-  const { current: engine } = useRef(gameEngine({ width, height, players: 2 }))
+  const { current: engine } = useRef(gameEngine({ width, height, players: 4 }))
   const [state, setState] = useState(engine.getState())
 
   useLayoutEffect(() => {

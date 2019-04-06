@@ -11,10 +11,11 @@ const UI = () => {
     balances,
     next,
     setNewAsset,
-    newAsset,
+    selectedAsset,
   } = useContext(BoardContext)
 
   const [disabled, setDisabled] = useState(true)
+  const [sizes, setSizes] = useState({})
 
   useEffect(() => {
     const listener = ({ keyCode, repeat }) => {
@@ -37,10 +38,24 @@ const UI = () => {
     setDisabled(currentPlayer && currentPlayer !== turn)
   }, [currentPlayer, turn])
 
+  useEffect(() => {
+    if (!window || !window.document) return
+
+    const canvas = window.document.getElementsByTagName('canvas')
+    if (!canvas || canvas.length === 0) return
+
+    const game = canvas[0]
+    const rects = game.getClientRects()
+    if (!rects || rects.length === 0) return
+
+    const [{ top, left, width, height }] = rects
+
+    setSizes({ width, height });
+  })
+
   return (
-    <div className="ui">
+    <div className="ui" style={sizes}>
       <div className="infos">
-        <h1>2-game</h1>
         <h3>{`${turn} turn!`}</h3>
 
         <div className="balances">
@@ -65,28 +80,28 @@ const UI = () => {
       <div className={cn('actions', turn)}>
         <button
           onClick={() => setNewAsset('house')}
-          className={cn({ selected: newAsset === 'house' })}
+          className={cn({ selected: selectedAsset === 'house' })}
           disabled={disabled}
         >
           House [10/+10]
         </button>
         <button
           onClick={() => setNewAsset('villager')}
-          className={cn({ selected: newAsset === 'villager' })}
+          className={cn({ selected: selectedAsset === 'villager' })}
           disabled={disabled}
         >
           Villager [10/-5]
         </button>
         <button
           onClick={() => setNewAsset('soldier')}
-          className={cn({ selected: newAsset === 'soldier' })}
+          className={cn({ selected: selectedAsset === 'soldier' })}
           disabled={disabled}
         >
           Soldier [20/-20]
         </button>
         <button
           onClick={() => setNewAsset('king')}
-          className={cn({ selected: newAsset === 'king' })}
+          className={cn({ selected: selectedAsset === 'king' })}
           disabled={disabled}
         >
           King [40/-40]
