@@ -1,4 +1,3 @@
-import './types.d'
 import dropAsset from './dropAsset'
 
 const createTile = (x: number, y: number): Tile => ({
