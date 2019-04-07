@@ -43,18 +43,21 @@ describe('generation', () => {
       player: 'player1',
       x: players[0].x,
       y: players[0].y,
+      gold: 11,
     })
     expect(houseTiles[1]).toMatchObject({
       unit: 'house',
       player: 'player2',
       x: players[1].x,
       y: players[1].y,
+      gold: 11,
     })
     expect(houseTiles[2]).toMatchObject({
       unit: 'house',
       player: 'player3',
       x: players[2].x,
       y: players[2].y,
+      gold: 11,
     })
   })
 

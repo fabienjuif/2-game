@@ -45,14 +45,18 @@ const getTiles = (payload: GenerateActionPayload) => (players: Player[]): Tile[]
       let unit: UnitType | undefined = (player ? 'house' : undefined)
       if (!player && Math.random() <= 0.05) unit = 'tree'
 
+      let gold = 0
+      if (unit === undefined) gold = 1
+      if (unit === 'house') gold = 11
+
       line.push({
         x,
         y,
         unit,
+        gold,
         available: true,
         empty: player ? false : Math.random() <= Math.max(0.10, 1 / (Math.min(y, Math.abs(y - height)) + Math.min(x, Math.abs(x - width)) + 1)),
         player: player ? player.name : undefined,
-        gold: unit === undefined ? 1 : 0,
         played: false,
       })
     }
