@@ -204,4 +204,56 @@ describe('dropAsset', () => {
       unit: 'soldier',
     })
   })
+
+  it('should index house price on amount of already owned houses', () => {
+    let state: State = {
+      tiles: createTiles(3, 3),
+      players: [{
+        name: 'player1',
+        gold: 1000,
+        x: 0,
+        y: 0,
+      }],
+      selectedAsset: 'house',
+      selectedUnit: undefined,
+      turn: 'player1',
+    }
+
+    state.tiles[1][2].available = true
+    state.tiles[1][2].unit = undefined
+    state.tiles[1][2].player = 'player1'
+    state.tiles[2][1].available = true
+    state.tiles[2][1].unit = undefined
+    state.tiles[2][1].player = 'player1'
+    state.tiles[2][2].available = true
+    state.tiles[2][2].unit = undefined
+    state.tiles[2][2].player = 'player1'
+
+    // first house (==10)
+    state = dropAsset(state, { x: 2, y: 2 })
+    expect(state.tiles[2][2]).toMatchObject({
+      available: false,
+      played: false,
+      unit: 'house',
+    })
+    expect(state.players[0].gold).toEqual(990)
+
+    // second house (==12)
+    state = dropAsset(state, { x: 1, y: 2 })
+    expect(state.tiles[2][1]).toMatchObject({
+      available: false,
+      played: false,
+      unit: 'house',
+    })
+    expect(state.players[0].gold).toEqual(978)
+
+    // third house (==14)
+    state = dropAsset(state, { x: 2, y: 1 })
+    expect(state.tiles[1][2]).toMatchObject({
+      available: false,
+      played: false,
+      unit: 'house',
+    })
+    expect(state.players[0].gold).toEqual(964)
+  })
 })

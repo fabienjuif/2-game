@@ -1,7 +1,39 @@
 import React, { useContext, useEffect, useLayoutEffect, useState } from 'react'
 import cn from 'classnames'
+import { getUnitCost } from '@2-game/engine'
 import BoardContext from '../board'
 import './ui.css'
+
+const AssetButton = ({ children }) => {
+  const {
+    tiles,
+    turn,
+    setNewAsset,
+    selectedAsset,
+    currentPlayer,
+    players,
+  } = useContext(BoardContext)
+
+  if (!tiles) return null
+  const player = players.find(({ name }) => name === turn)
+  if (!player) return null
+
+  const cost = getUnitCost(children, { tiles }, { name: turn })
+  const disabled = (
+    (currentPlayer && currentPlayer !== turn)
+    || cost > player.gold
+  )
+
+  return (
+    <button
+      onClick={() => setNewAsset(children)}
+      className={cn({ selected: selectedAsset === children })}
+      disabled={disabled}
+    >
+      {children} [{cost}/+10]
+    </button>
+  )
+}
 
 const UI = () => {
   const {
@@ -11,7 +43,6 @@ const UI = () => {
     balances,
     next,
     setNewAsset,
-    selectedAsset,
   } = useContext(BoardContext)
 
   const [disabled, setDisabled] = useState(true)
@@ -48,7 +79,7 @@ const UI = () => {
     const rects = game.getClientRects()
     if (!rects || rects.length === 0) return
 
-    const [{ top, left, width, height }] = rects
+    const [{ width, height }] = rects
 
     setSizes({ width, height });
   })
@@ -78,34 +109,11 @@ const UI = () => {
       </div>
 
       <div className={cn('actions', turn)}>
-        <button
-          onClick={() => setNewAsset('house')}
-          className={cn({ selected: selectedAsset === 'house' })}
-          disabled={disabled}
-        >
-          House [10/+10]
-        </button>
-        <button
-          onClick={() => setNewAsset('villager')}
-          className={cn({ selected: selectedAsset === 'villager' })}
-          disabled={disabled}
-        >
-          Villager [10/-5]
-        </button>
-        <button
-          onClick={() => setNewAsset('soldier')}
-          className={cn({ selected: selectedAsset === 'soldier' })}
-          disabled={disabled}
-        >
-          Soldier [20/-20]
-        </button>
-        <button
-          onClick={() => setNewAsset('king')}
-          className={cn({ selected: selectedAsset === 'king' })}
-          disabled={disabled}
-        >
-          King [40/-40]
-        </button>
+        <AssetButton>house</AssetButton>
+        <AssetButton>villager</AssetButton>
+        <AssetButton>soldier</AssetButton>
+        <AssetButton>king</AssetButton>
+
         <button
           onClick={() => next()}
           className="next"

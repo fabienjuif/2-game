@@ -1,6 +1,9 @@
 import { createStore } from 'redux'
 import reducer from './reducer'
 import { generate, selectAsset, dropAsset, next, selectUnit, moveUnit } from './actions'
+import { getUnitCost } from './utils'
+
+export { getUnitCost }
 
 // TODO: find a way not to declare types twice (here and in types.ts)
 

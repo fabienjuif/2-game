@@ -1,16 +1,18 @@
-import { useRef, useState, useLayoutEffect } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import gameEngine from '@2-game/engine'
 
 const useOnline = (width, height) => {
-  const { current: engine } = useRef(gameEngine({ width, height, players: 4 }))
+  const { current: engine } = useRef(gameEngine({ width, height, players: 2 }))
   const [state, setState] = useState(engine.getState())
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     engine.subscribe(() => {
       if (state === engine.getState()) return
       setState(engine.getState())
     })
   }, [])
+
+  console.log('effect', state)
 
   return {
     state,

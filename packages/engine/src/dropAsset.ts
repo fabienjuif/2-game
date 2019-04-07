@@ -42,7 +42,7 @@ export default (state: State, payload: Point): State => {
       if (player.name !== state.turn) return player
       return {
         ...player,
-        gold: player.gold - getUnitCost(state.selectedAsset as UnitType),
+        gold: player.gold - getUnitCost(state.selectedAsset as UnitType, state, player),
       }
     })
   }

@@ -32,9 +32,20 @@ export const getUnitBalance = (unit: UnitType): number => {
   }
 }
 
-export const getUnitCost = (unit: UnitType): number => {
+export const getUnitCost = (unit: UnitType, state: State, player: Player): number => {
   switch (unit) {
-    case 'house': return 10
+    case 'house': {
+      const base = 10
+
+      const ownedHouses = []
+      state.tiles.forEach(line => line.forEach((tile) => {
+        if (tile.player !== player.name) return
+        if (tile.unit !== 'house') return
+        ownedHouses.push(tile)
+      }))
+
+      return base + (ownedHouses.length * 2)
+    }
     case 'villager': return 10
     case 'soldier': return 20
     case 'king': return 40
