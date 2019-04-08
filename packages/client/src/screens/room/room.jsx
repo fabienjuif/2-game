@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { navigate } from 'hookrouter'
 import SocketContext from '../../server'
+import './room.css'
 
 const Room = ({ id }) => {
   const [room, setRoom] = useState({})
@@ -44,42 +45,50 @@ const Room = ({ id }) => {
   const isOwner = (room.players || []).length > 0 && room.players[0] === playerId
 
   return (
-    <div className="screen">
-      <h1>{room.name}</h1>
-      <ul>
-        <li>full: {room.full ? 'true' : 'false'}</li>
-        <li>status: {room.status}</li>
-      </ul>
+    <div className="screen room">
+      <h1>2-game</h1>
 
-      <h2>Players</h2>
-      <ul>
-        {(room.players || []).map(id => (
-          <li
-            key={id}
-          >
-            {playerNames[id] || 'Anonymous'}
-            {isOwner && id !== playerId && (
-              <button>
-                Kick
+      <div className="room">
+        <h2>{room.name}</h2>
+        <div className="panels">
+          <div className="panel left-panel">
+            <h3>Players ({(room.players || []).length}/4)</h3>
+            <div>
+              {(room.players || []).map(id => (
+                <div
+                  key={id}
+                  className="player"
+                >
+                  {playerNames[id] || 'Anonymous'}
+                  {/* {isOwner && id !== playerId && (
+                    <button
+                      className="kick"
+                    >
+                      x
+                    </button>
+                  )} */}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="panel right-panel">
+            <button
+              className="leave"
+              onClick={leave}
+            >
+              Leave
+            </button>
+            {isOwner && (
+              <button
+                className="start"
+                onClick={start}
+              >
+                Start
               </button>
             )}
-          </li>
-        ))}
-      </ul>
-
-      <div>
-        <button
-          onClick={leave}
-        >
-          Leave
-        </button>
-        {isOwner && (
-          <button
-            onClick={start}
-          >
-            Start game
-          </button>
-        )}
+          </div>
+        </div>
       </div>
     </div>
   )

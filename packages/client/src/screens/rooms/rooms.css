@@ -1,3 +1,39 @@
-.screen {
+.screen.rooms .room {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  background-color: white;
+  border: 1px solid #646464;
+  color: #222222;
+  padding: 2em;
+  cursor: pointer;
+  transform: scale(.95);
+}
+
+.screen.rooms .room:hover {
+  transform: scale(1) rotate(.5deg);
+}
+
+.screen.rooms .room > * {
+  margin: 0 1em;
+}
+
+.screen.rooms .room .name {
+  border-right: 1px solid;
+  padding-right: 2em;
+}
+
+.screen.rooms .room .players {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.screen.rooms .room .player {
+  margin-right: 2em;
+}
+
+.screen.rooms button.create {
+  font-size: 1.1em;
+  background-color: red;
   color: white;
 }

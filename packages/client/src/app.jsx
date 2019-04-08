@@ -5,6 +5,7 @@ import Rooms from './screens/rooms'
 import Room from './screens/room'
 import Login from './screens/login'
 import { ServerProvider } from './server'
+import './app.css'
 
 const offlineRoutes = {
   '/': () => <Login />,

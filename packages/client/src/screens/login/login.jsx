@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
 import { navigate } from 'hookrouter'
+import './login.css'
 
 const Login = () => {
   useEffect(() => {
@@ -8,13 +9,11 @@ const Login = () => {
   })
 
   return (
-    <div className="screen">
-      <button
-        onClick={() => navigate('/game')}
-      >
-        Play offline
-      </button>
+    <div className="screen login">
+      <h1>2-game</h1>
+
       <form
+        className="online"
         onSubmit={(e) => {
           e.preventDefault()
           navigate(`/rooms?name=${e.target[0].value}`)
@@ -29,9 +28,16 @@ const Login = () => {
         <button
           type="submit"
         >
-          Go online
+          Play
         </button>
       </form>
+
+      <button
+        className="offline"
+        onClick={() => navigate('/game')}
+      >
+        Play offline
+      </button>
     </div>
   )
 }

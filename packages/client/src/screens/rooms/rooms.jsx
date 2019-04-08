@@ -38,12 +38,11 @@ const Rooms = () => {
   )
 
   return (
-    <div className="screen">
-      2-game
-
-      You are: {players[playerId]}
+    <div className="screen rooms">
+      <h1>2-game</h1>
 
       <button
+        className="create"
         onClick={() => send({ type: 'CREATE_ROOM' })}
       >
         Create room
@@ -52,20 +51,24 @@ const Rooms = () => {
       <h2>Rooms</h2>
       {rooms.map(room => (
         <div
+          className="room"
           key={room.id}
+          onClick={() => navigate(`/room/${room.id}`)}
         >
-          <h3>{room.name}</h3>
-
-          <button
-            onClick={() => navigate(`/room/${room.id}`)}
+          <div
+            className="name"
           >
-            Join
-          </button>
+            {room.name}
+            &nbsp;
+            ({room.players.length}/4)
+          </div>
 
-          <div>players:</div>
-          <div>
+          <div
+            className="players"
+          >
             {room.players.map(id => (
               <div
+                className="player"
                 key={id}
               >
                 {players[id]}
@@ -74,24 +77,6 @@ const Rooms = () => {
           </div>
         </div>
       ))}
-
-      <form
-        onSubmit={(e) => {
-          e.preventDefault()
-          navigate('/game/local')
-        }}
-      >
-        <input
-          type="text"
-          required
-          placeholder="pseudo"
-        />
-        <button
-          type="submit"
-        >
-          Go online
-        </button>
-      </form>
     </div>
   )
 }
