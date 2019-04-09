@@ -47,6 +47,7 @@ const useOnline = (roomId) => {
     setNewAsset: wrap('SET_NEWASSET'),
     actionOnTile: wrap('ACTION'),
     next: wrap('NEXT'),
+    concede: wrap('CONCEDE'),
     overTile: (position) => {
       if (state.turn !== currentPlayer) return
       setMousePosition(position)

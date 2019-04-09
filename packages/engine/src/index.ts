@@ -1,9 +1,9 @@
 import { createStore } from 'redux'
 import reducer from './reducer'
-import { generate, selectAsset, dropAsset, next, selectUnit, moveUnit } from './actions'
-import { getUnitCost } from './utils'
+import { generate, selectAsset, dropAsset, next, selectUnit, moveUnit, concede } from './actions'
+import { getUnitCost, getUnitBalance } from './utils'
 
-export { getUnitCost }
+export { getUnitCost, getUnitBalance }
 
 // TODO: find a way not to declare types twice (here and in types.ts)
 
@@ -27,6 +27,7 @@ interface Tile extends Point {
 interface Player extends Point {
   name: string,
   gold: number,
+  concede: boolean,
 }
 
 interface State {
@@ -43,6 +44,7 @@ interface Board {
   selectAsset: (assetType: AssetType) => [boolean, State],
   next: () => [boolean, State],
   actionOnTile: (tile: Point) => [boolean, State],
+  concede: () => [boolean, State],
 }
 
 const getReduxDevToolsEnhancer = () => {
@@ -108,6 +110,7 @@ export default (config: { width: number, height: number, players: number }): Boa
     getState: store.getState,
     selectAsset: decorate(selectAsset),
     next: decorate(next),
+    concede: decorate(concede),
     actionOnTile,
   }
 }

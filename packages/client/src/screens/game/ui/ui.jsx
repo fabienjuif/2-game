@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useLayoutEffect, useState } from 'react'
 import cn from 'classnames'
-import { getUnitCost } from '@2-game/engine'
+import { getUnitCost, getUnitBalance } from '@2-game/engine'
 import BoardContext from '../board'
 import './ui.css'
 
@@ -19,6 +19,7 @@ const AssetButton = ({ children }) => {
   if (!player) return null
 
   const cost = getUnitCost(children, { tiles }, { name: turn })
+  const balance = getUnitBalance(children)
   const disabled = (
     (currentPlayer && currentPlayer !== turn)
     || cost > player.gold
@@ -30,7 +31,7 @@ const AssetButton = ({ children }) => {
       className={cn({ selected: selectedAsset === children })}
       disabled={disabled}
     >
-      {children} [{cost}/+10]
+      {children} [{cost}/{balance >= 0 ? '+' : ''}{balance}]
     </button>
   )
 }
@@ -43,6 +44,7 @@ const UI = () => {
     balances,
     next,
     setNewAsset,
+    concede,
   } = useContext(BoardContext)
 
   const [disabled, setDisabled] = useState(true)
@@ -115,11 +117,19 @@ const UI = () => {
         <AssetButton>king</AssetButton>
 
         <button
+          onClick={() => concede()}
+          className="concede"
+          disabled={disabled}
+        >
+          😵Concede
+        </button>
+
+        <button
           onClick={() => next()}
           className="next"
           disabled={disabled}
         >
-          {turn === 'player1' ? 'To player 2' : 'Next turn'}
+          Next turn
         </button>
       </div>
     </div>
