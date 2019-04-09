@@ -83,6 +83,7 @@ const Room = ({ id }) => {
               <button
                 className="start"
                 onClick={start}
+                disabled={(room.players || []).length < 2}
               >
                 Start
               </button>

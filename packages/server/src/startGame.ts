@@ -8,6 +8,7 @@ export default (context: Context) => (playerId: string, roomId: string) => {
   if (!players.has(playerId)) return
   const oldRoom = rooms.get(roomId) as Room
   if (oldRoom.status === 'STARTED') return
+  if (oldRoom.players.length < 2) return
 
   const player = {
     ...players.get(playerId),

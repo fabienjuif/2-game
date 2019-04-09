@@ -4,7 +4,7 @@ import SocketContext from '../../server'
 import './rooms.css'
 
 const Rooms = () => {
-  const { playerId, send, register } = useContext(SocketContext)
+  const { send, register } = useContext(SocketContext)
   const [rooms, setRooms] = useState([])
   const [players, setPlayers] = useState({})
 
