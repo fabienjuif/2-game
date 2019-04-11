@@ -58,6 +58,7 @@ const getTiles = (payload: GenerateActionPayload) => (players: Player[]): Tile[]
         empty: player ? false : Math.random() <= Math.max(0.10, 1 / (Math.min(y, Math.abs(y - height)) + Math.min(x, Math.abs(x - width)) + 1)),
         player: player ? player.name : undefined,
         played: false,
+        zone: player ? `${player.name}-0` : undefined,
       })
     }
   }
@@ -71,6 +72,7 @@ const getTiles = (payload: GenerateActionPayload) => (players: Player[]): Tile[]
     return {
       ...tile,
       player: player ? player.name : undefined,
+      zone: player ? `${player.name}-0` : undefined,
     }
   }))
 

@@ -17,6 +17,7 @@ interface Tile extends Point {
   unit: UnitType | undefined,
   gold: number,
   played: boolean,
+  zone: string | undefined,
 }
 
 interface Player extends Point {
