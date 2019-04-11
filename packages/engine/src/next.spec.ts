@@ -17,6 +17,7 @@ const createTile = (x: number, y: number): Tile => ({
   unit: undefined,
   player: undefined,
   played: false,
+  zone: undefined,
 })
 
 const createTiles = (width: number, height: number): Tile[][] => {

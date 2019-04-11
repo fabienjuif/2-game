@@ -1,3 +1,5 @@
+import processZones from './processZones'
+
 const setAvailable = (state: State): State => ({
   ...state,
   tiles: state.tiles.map(line => line.map(tile => ({ ...tile, available: true })))
@@ -7,7 +9,7 @@ export default (state: State, payload: Point): State => {
   if (state.selectedUnit === undefined) return setAvailable(state)
   if (!state.tiles[payload.y][payload.x].available) return setAvailable({ ...state, selectedUnit: undefined })
 
-  return {
+  const newState = {
     ...state,
     tiles: state.tiles.map(line => line.map((tile) => {
       if (
@@ -54,4 +56,6 @@ export default (state: State, payload: Point): State => {
     })),
     selectedUnit: undefined,
   }
+
+  return processZones(newState, payload) // TODO: update test with this
 }
