@@ -1,5 +1,5 @@
 {
-  "name": "@2-game/engine",
+  "name": "@2-game/astar",
   "version": "0.1.0",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -13,7 +13,6 @@
     "test": "jest"
   },
   "dependencies": {
-    "@2-game/astar": "^0.1.0",
     "@2-game/utils": "^0.1.0",
     "redux": "^4.0.1"
   },

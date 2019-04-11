@@ -12,8 +12,6 @@ const useOnline = (width, height) => {
     })
   }, [])
 
-  console.log('effect', state)
-
   return {
     state,
     setNewAsset: engine.selectAsset,

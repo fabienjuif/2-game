@@ -1,3 +1,4 @@
+import { getShortestPath } from '@2-game/astar'
 import availabilities from './availabilities'
 
 const markAvailable = (state: State): State => ({
@@ -38,15 +39,24 @@ export default (state: State, payload: Point): State => {
   )
 
   // override availabilities so a unit can't move further than 4 units
-  // TODO: should be A* not Pythagore
+
   // TODO: test
   return {
     ...stateWithAvailabilities,
     tiles: stateWithAvailabilities.tiles.map(line => line.map((tile) => {
       if (!tile.available) return tile
+
+      // - a star
+      const path = getShortestPath(
+        stateWithAvailabilities.tiles,
+        { x, y },
+        tile,
+        ({ x, y }) => (state.turn === stateWithAvailabilities.tiles[y][x].player ? 1 : Infinity)
+      )
+
       return {
         ...tile,
-        available: Math.sqrt((tile.x - x)**2 + (tile.y - y)**2) < 5,
+        available: path.length > 0 && path.length < 5,
       }
     }))
   }
