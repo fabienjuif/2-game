@@ -12,6 +12,7 @@ build:
 	@mkdir -p app/node_modules/@2-game
 	@cp -R ./packages/utils app/node_modules/@2-game/utils
 	@cp -R ./packages/engine app/node_modules/@2-game/engine
+	@cp -R ./packages/astar app/node_modules/@2-game/astar
 
 start: build
 	@node app
