@@ -38,7 +38,7 @@ export default (state: State, unitType: UnitType): State => {
         ...tile,
         available: (
           base(tile, ['tree', 'villager', 'soldier'])
-          && (tile.player === state.turn || tile.unit === undefined)
+          && (tile.player === state.turn || tile.unit === undefined || tile.unit === 'tree')
           && !isOneOfEnemyUnitsAround(state.tiles)(tile.x, tile.y, state.turn, ['villager', 'soldier', 'king'])
         ),
       }))),

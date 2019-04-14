@@ -1,5 +1,5 @@
 import { random } from '@2-game/utils'
-import { getEmptyTilesAround } from './utils'
+import { getEmptyTilesAround, getUnitBalance } from './utils'
 
 const getNextPlayerIndex = (state: State, playerName: String): number => {
   let nextPlayerIndex = state.players.findIndex(({ name }) => playerName === name) + 1
@@ -63,6 +63,7 @@ export default (state: State): State => {
     return {
       ...tile,
       unit: 'tree' as UnitType,
+      gold: getUnitBalance('tree') + 1,
     }
   }))
 
