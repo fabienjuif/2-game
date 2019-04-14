@@ -40,9 +40,7 @@ export default (state = initState, action: Action): State => {
     case 'SELECT_ASSET': return selectAsset(state, action.payload)
     case 'DROP_ASSET': {
       if (!state.selectedAsset) return state
-      let newState = selectAsset(state, state.selectedAsset)
-      newState = dropAsset(newState, action.payload)
-      return selectAsset(newState, state.selectedAsset)
+      return dropAsset(selectAsset(state, state.selectedAsset), action.payload)
     }
     case 'SELECT_UNIT': return selectUnit(state, action.payload)
     case 'MOVE_UNIT': return moveUnit(state, action.payload)

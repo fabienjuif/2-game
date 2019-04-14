@@ -1,5 +1,6 @@
 import { getUnitCost, getUnitBalance } from './utils'
 import processZones from './processZones'
+import getNewUnit from './getNewUnit'
 
 const unselect = (state: State): State => ({
   ...state,
@@ -28,6 +29,8 @@ export default (state: State, payload: Point): State => {
 
       shouldProcessZones = (tile.player !== state.turn)
 
+      const unit = getNewUnit(tile.unit, state.selectedAsset as UnitType)
+
       return {
         ...tile,
         played: (
@@ -35,9 +38,9 @@ export default (state: State, payload: Point): State => {
           || tile.unit !== undefined
         ),
         available: false,
-        unit: state.selectedAsset,
+        unit: unit,
         player: state.turn,
-        gold: getUnitBalance(state.selectedAsset as UnitType) + 1,
+        gold: getUnitBalance(unit) + 1,
       }
     }))
   }
@@ -45,7 +48,7 @@ export default (state: State, payload: Point): State => {
   if (shouldProcessZones) newState = processZones(newState, payload)
 
   return {
-    ...newState,
+    ...unselect(newState),
     players: state.players.map((player) => {
       if (!droped) return player
       if (player.name !== state.turn) return player

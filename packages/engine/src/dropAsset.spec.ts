@@ -9,6 +9,7 @@ const createTile = (x: number, y: number): Tile => ({
   unit: undefined,
   player: undefined,
   played: false,
+  zone: 'player-0',
 })
 
 const createTiles = (width: number, height: number): Tile[][] => {
@@ -35,6 +36,7 @@ describe('dropAsset', () => {
         gold: 1000,
         x: 0,
         y: 0,
+        concede: false,
       }],
       selectedAsset: 'king',
       selectedUnit: undefined,
@@ -44,11 +46,12 @@ describe('dropAsset', () => {
     state.tiles[2][2].available = true
 
     const { tiles, selectedAsset } = dropAsset(state, { x: 2, y: 2 })
-    expect(selectedAsset).toEqual('king')
-    expect(tiles[2][2].available).toBe(false)
-    expect(tiles[2][2].unit).toBe('king')
-    expect(tiles[2][2].player).toBe('player1')
-    expect(tiles[2][2].gold).toBe(-39)
+    expect(selectedAsset).toEqual(undefined)
+    expect(tiles[2][2]).toMatchObject({
+      unit: 'king',
+      player: 'player1',
+      gold: -39,
+    })
 
     expect(tiles.reduce(
       (acc, line) => acc + line.reduce(
@@ -67,6 +70,7 @@ describe('dropAsset', () => {
         gold: 1000,
         x: 0,
         y: 0,
+        concede: false,
       }],
       selectedAsset: 'king',
       selectedUnit: undefined,
@@ -74,10 +78,11 @@ describe('dropAsset', () => {
     }
 
     const { tiles } = dropAsset(state, { x: 2, y: 2 })
-    expect(tiles[2][2].available).toBe(false)
-    expect(tiles[2][2].unit).toBe(undefined)
-    expect(tiles[2][2].player).toBe(undefined)
-    expect(tiles[2][2].gold).toBe(1)
+    expect(tiles[2][2]).toMatchObject({
+      unit: undefined,
+      player: undefined,
+      gold: 1,
+    })
 
     expect(tiles.reduce(
       (acc, line) => acc + line.reduce(
@@ -96,6 +101,7 @@ describe('dropAsset', () => {
         gold: 21,
         x: 0,
         y: 0,
+        concede: false,
       }],
       selectedAsset: 'villager',
       selectedUnit: undefined,
@@ -116,6 +122,7 @@ describe('dropAsset', () => {
         gold: 21,
         x: 0,
         y: 0,
+        concede: false,
       }],
       selectedAsset: undefined,
       selectedUnit: undefined,
@@ -135,6 +142,7 @@ describe('dropAsset', () => {
         gold: 1000,
         x: 0,
         y: 0,
+        concede: false,
       }],
       selectedAsset: 'soldier',
       selectedUnit: undefined,
@@ -147,7 +155,6 @@ describe('dropAsset', () => {
 
     const { tiles } = dropAsset(state, { x: 2, y: 2 })
     expect(tiles[2][2]).toMatchObject({
-      available: false,
       played: true,
       unit: 'soldier',
     })
@@ -161,6 +168,7 @@ describe('dropAsset', () => {
         gold: 1000,
         x: 0,
         y: 0,
+        concede: false,
       }],
       selectedAsset: 'soldier',
       selectedUnit: undefined,
@@ -173,7 +181,6 @@ describe('dropAsset', () => {
 
     const { tiles } = dropAsset(state, { x: 2, y: 2 })
     expect(tiles[2][2]).toMatchObject({
-      available: false,
       played: true,
       unit: 'soldier',
     })
@@ -187,6 +194,7 @@ describe('dropAsset', () => {
         gold: 1000,
         x: 0,
         y: 0,
+        concede: false,
       }],
       selectedAsset: 'soldier',
       selectedUnit: undefined,
@@ -199,7 +207,6 @@ describe('dropAsset', () => {
 
     const { tiles } = dropAsset(state, { x: 2, y: 2 })
     expect(tiles[2][2]).toMatchObject({
-      available: false,
       played: false,
       unit: 'soldier',
     })
@@ -213,6 +220,7 @@ describe('dropAsset', () => {
         gold: 1000,
         x: 0,
         y: 0,
+        concede: false,
       }],
       selectedAsset: 'house',
       selectedUnit: undefined,
@@ -232,25 +240,22 @@ describe('dropAsset', () => {
     // first house (==10)
     state = dropAsset(state, { x: 2, y: 2 })
     expect(state.tiles[2][2]).toMatchObject({
-      available: false,
       played: false,
       unit: 'house',
     })
     expect(state.players[0].gold).toEqual(990)
 
     // second house (==12)
-    state = dropAsset(state, { x: 1, y: 2 })
+    state = dropAsset({ ...state, selectedAsset: 'house' }, { x: 1, y: 2 })
     expect(state.tiles[2][1]).toMatchObject({
-      available: false,
       played: false,
       unit: 'house',
     })
     expect(state.players[0].gold).toEqual(978)
 
     // third house (==14)
-    state = dropAsset(state, { x: 2, y: 1 })
+    state = dropAsset({ ...state, selectedAsset: 'house' }, { x: 2, y: 1 })
     expect(state.tiles[1][2]).toMatchObject({
-      available: false,
       played: false,
       unit: 'house',
     })

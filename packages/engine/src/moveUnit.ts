@@ -1,4 +1,6 @@
 import processZones from './processZones'
+import getNewUnit from './getNewUnit'
+import { getUnitBalance } from './utils'
 
 const setAvailable = (state: State): State => ({
   ...state,
@@ -40,17 +42,18 @@ export default (state: State, payload: Point): State => {
 
       // target
       const {
-        unit,
-        gold,
+        unit: previousUnit,
         player,
       } = state.tiles[state.selectedUnit.y][state.selectedUnit.x]
+
+      const unit = getNewUnit(tile.unit, previousUnit as UnitType)
 
       return {
         ...tile,
         played: true,
         available: true,
         unit,
-        gold,
+        gold: getUnitBalance(unit) + 1,
         player,
       }
     })),

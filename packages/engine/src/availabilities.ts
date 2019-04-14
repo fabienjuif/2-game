@@ -1,12 +1,12 @@
 import { isSamePlayerAround, isOneOfEnemyUnitsAround, isOneOfAlliedUnitsAround } from './utils'
 
 export default (state: State, unitType: UnitType): State => {
-  const base = (tile: Tile) => (
+  const base = (tile: Tile, evoluateTypes?: UnitType[]) => (
     isSamePlayerAround(state.tiles)(tile.x, tile.y, state.turn)
     && (
       tile.player !== state.turn
       || tile.unit === undefined
-      || tile.unit === 'tree'
+      || !!(evoluateTypes && evoluateTypes.includes(tile.unit))
     )
   )
 
@@ -37,8 +37,8 @@ export default (state: State, unitType: UnitType): State => {
       tiles: state.tiles.map(line => line.map(tile => ({
         ...tile,
         available: (
-            base(tile)
-            && (tile.unit === undefined || tile.unit === 'tree')
+          base(tile, ['tree', 'villager', 'soldier'])
+          && (tile.player === state.turn || tile.unit === undefined)
           && !isOneOfEnemyUnitsAround(state.tiles)(tile.x, tile.y, state.turn, ['villager', 'soldier', 'king'])
         ),
       }))),
@@ -54,8 +54,7 @@ export default (state: State, unitType: UnitType): State => {
       tiles: state.tiles.map(line => line.map(tile => ({
         ...tile,
         available: (
-          base(tile)
-          && (tile.unit === undefined || !['soldier', 'king'].includes(tile.unit))
+          base(tile, ['tree', 'villager'])
           && !isOneOfEnemyUnitsAround(state.tiles)(tile.x, tile.y, state.turn, ['soldier', 'king'])
         ),
       }))),
@@ -67,7 +66,7 @@ export default (state: State, unitType: UnitType): State => {
       ...state,
       tiles: state.tiles.map(line => line.map(tile => ({
         ...tile,
-        available: base(tile),
+        available: base(tile, ['tree'])
       }))),
     }
   }
