@@ -83,7 +83,7 @@ ws.on('connection', (socket: any) => {
 
     // one of this types doesn't need sync
     // these are game types
-    if (['MOUSE', 'SET_NEWASSET', 'ACTION', 'NEXT'].includes(type)) return
+    if (['MOUSE', 'SET_NEWASSET', 'ACTION', 'NEXT', 'CONCEDE'].includes(type)) return
 
     // what ever the client ask, we try to adjust on its state and send him what it could need
     const player = context.players.get(id)

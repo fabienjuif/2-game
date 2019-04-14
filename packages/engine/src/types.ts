@@ -23,6 +23,7 @@ interface Tile extends Point {
 interface Player extends Point {
   name: string,
   gold: number,
+  concede: boolean,
 }
 
 interface State {

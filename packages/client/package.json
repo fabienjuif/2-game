@@ -12,8 +12,7 @@
     "react": "^16.8.4",
     "react-dom": "^16.8.4",
     "react-scripts": "^2.1.8",
-    "hookrouter": "^1.0.3-beta",
-    "engine.io-client": "^3.3.2"
+    "hookrouter": "^1.0.3-beta"
   },
   "scripts": {
     "start": "BROWSER=none react-scripts start",

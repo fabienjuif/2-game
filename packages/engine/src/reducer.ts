@@ -4,6 +4,7 @@ import dropAsset from './dropAsset'
 import next from './next'
 import selectUnit from './selectUnit'
 import moveUnit from './moveUnit'
+import concede from './concede'
 
 import {
   GenerateAction,
@@ -12,6 +13,7 @@ import {
   NextAction,
   SelectUnitAction,
   MoveUnitAction,
+  ConcedeAction,
 } from './actions'
 
 type Action = (
@@ -21,6 +23,7 @@ type Action = (
   | NextAction
   | SelectUnitAction
   | MoveUnitAction
+  | ConcedeAction
 )
 
 const initState: State = {
@@ -44,6 +47,7 @@ export default (state = initState, action: Action): State => {
     case 'SELECT_UNIT': return selectUnit(state, action.payload)
     case 'MOVE_UNIT': return moveUnit(state, action.payload)
     case 'NEXT': return next(state)
+    case 'CONCEDE': return concede(state)
     default: return state
   }
 }

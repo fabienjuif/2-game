@@ -38,3 +38,8 @@ export interface MoveUnitAction extends Action {
   payload: Point,
 }
 export const moveUnit = (tile: Point): MoveUnitAction => ({ type: 'MOVE_UNIT', payload: tile })
+
+export interface ConcedeAction extends Action {
+  type: 'CONCEDE',
+}
+export const concede = (): ConcedeAction => ({ type: 'CONCEDE' })

@@ -10,6 +10,7 @@ const getPlayers = (payload : GenerateActionPayload): Player[] => {
     gold: 10 + (10 * index),
     x: random(0, width),
     y: random(0, height),
+    concede: false,
   }))
 
   const positions = new Set()

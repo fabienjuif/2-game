@@ -1,10 +1,21 @@
 import { random } from '@2-game/utils'
 import { getEmptyTilesAround } from './utils'
 
-export default (state: State): State => {
-  let nextPlayerIndex = state.players.findIndex(({ name }) => name === state.turn) + 1
+const getNextPlayerIndex = (state: State, playerName: String): number => {
+  let nextPlayerIndex = state.players.findIndex(({ name }) => playerName === name) + 1
   if (state.players.length === nextPlayerIndex) nextPlayerIndex = 0
 
+  // loop
+  if (state.turn === state.players[nextPlayerIndex].name) return nextPlayerIndex
+
+  // concede?
+  const nextPlayer = state.players[nextPlayerIndex]
+  if (nextPlayer.concede) return getNextPlayerIndex(state, nextPlayer.name)
+
+  return nextPlayerIndex
+}
+
+export default (state: State): State => {
   // remove graves
   // mark all tiles as available
   // mark all tiles as not played
@@ -60,7 +71,7 @@ export default (state: State): State => {
     tiles,
     selectedAsset: undefined,
     selectedUnit: undefined,
-    turn: state.players[nextPlayerIndex].name,
+    turn: state.players[getNextPlayerIndex(state, state.turn)].name,
     players: state.players.map((player) => {
       if (player.name != state.turn) return player
       return {

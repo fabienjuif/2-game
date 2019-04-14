@@ -29,6 +29,7 @@ export default (context: Context) => (player: Player, room: Room, board: any /* 
 
     room.date = new Date()
 
+    if (type === 'CONCEDE') return board.concede()
     if (type === 'NEXT') return board.next()
     if (type === 'SET_NEWASSET') return board.selectAsset(payload)
     if (type === 'ACTION') return board.actionOnTile(payload)

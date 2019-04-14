@@ -2,7 +2,7 @@ import { useRef, useState, useEffect } from 'react'
 import gameEngine from '@2-game/engine'
 
 const useOnline = (width, height) => {
-  const { current: engine } = useRef(gameEngine({ width, height, players: 2 }))
+  const { current: engine } = useRef(gameEngine({ width, height, players: 3 }))
   const [state, setState] = useState(engine.getState())
 
   useEffect(() => {
@@ -17,6 +17,7 @@ const useOnline = (width, height) => {
     setNewAsset: engine.selectAsset,
     actionOnTile: engine.actionOnTile,
     next: engine.next,
+    concede: engine.concede,
   }
 }
 
