@@ -13,7 +13,8 @@
 </div>
 
 ## 🤔  What is it?
-This is a clone of [Antiyoy](https://github.com/yiotro/Antiyoy) which is a clone of [Slay](https://www.microsoft.com/en-us/p/slay/9nnq0xvqwljg?activetab=pivot:overviewtab) with multiplayer support, written in JS.
+
+A [Slay](https://www.microsoft.com/en-us/p/slay/9nnq0xvqwljg?activetab=pivot:overviewtab) inspired game with online multiplayer support.
 
 ## 🎮  Try it?!
 Do you want to test the game online?
