@@ -29,7 +29,11 @@ export default (state: State, payload: Point): State => {
 
       shouldProcessZones = (tile.player !== state.turn)
 
-      const unit = getNewUnit(tile.unit, state.selectedAsset as UnitType)
+      const unit = (
+        tile.player === state.turn ?
+          getNewUnit(tile.unit, state.selectedAsset as UnitType)
+          : state.selectedAsset
+      ) as UnitType
 
       return {
         ...tile,

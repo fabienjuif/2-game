@@ -46,7 +46,11 @@ export default (state: State, payload: Point): State => {
         player,
       } = state.tiles[state.selectedUnit.y][state.selectedUnit.x]
 
-      const unit = getNewUnit(tile.unit, previousUnit as UnitType)
+      const unit = (
+        state.turn === tile.player ?
+          getNewUnit(tile.unit, previousUnit as UnitType)
+        : previousUnit
+      ) as UnitType
 
       return {
         ...tile,
