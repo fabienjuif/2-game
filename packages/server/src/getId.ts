@@ -15,7 +15,7 @@ export default (context: Context, socket: any) => async () => {
   players.set(id, player)
 
   // send id to the player
-  player.socket.write(JSON.stringify({ type: 'SET_ID', payload: id }))
+  player.socket.send({ type: 'SET_ID', payload: id })
 
   return id
 }

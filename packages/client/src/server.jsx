@@ -19,7 +19,9 @@ const ServerProvider = ({ children }) => {
       return
     }
 
-    console.log(`▷  ${action.type.padEnd(15, ' ')} [${new Date().toLocaleTimeString()}]`, action.payload)
+    if (action.type !== 'PONG') {
+      console.log(`▷  ${action.type.padEnd(15, ' ')} [${new Date().toLocaleTimeString()}]`, action.payload)
+    }
 
     socket.current.send(JSON.stringify(action))
   }
@@ -61,7 +63,13 @@ const ServerProvider = ({ children }) => {
         socket.current.onmessage = (e) => {
           const action = JSON.parse(e.data)
 
-          console.log(`◀︎  ${action.type.padEnd(15, ' ')} [${new Date().toLocaleTimeString()}]`, action.payload)
+          if (action.type !== 'PING') {
+            console.log(`◀︎  ${action.type.padEnd(15, ' ')} [${new Date().toLocaleTimeString()}]`, action.payload)
+          }
+
+          if (action.type === 'PING') {
+            send({ type: 'PONG' })
+          }
 
           if (action.type === 'SET_ID') {
             window.sessionStorage.setItem('id', action.payload)

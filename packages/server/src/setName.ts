@@ -13,6 +13,6 @@ export default (context: Context) => async (playerId: string, name: string) => {
     if (!['ROOMS', 'ROOM'].includes(curr.status)) return
     if (curr.status === 'ROOM' && curr.roomId !== player.roomId) return
 
-    curr.socket.write(JSON.stringify({ type: 'SET_NAME', payload: { id: playerId, name } }))
+    curr.socket.send({ type: 'SET_NAME', payload: { id: playerId, name } })
   })
 }

@@ -1,13 +1,22 @@
 type PlayerStatus = 'CONNECTION' | 'ROOMS' | 'ROOM' | 'PLAY'
 type RoomStatus = 'OPEN' | 'STARTED'
 
+interface Socket {
+  id: string,
+  on: (...args: any[]) => any,
+  send: (message: object | any[]) => void,
+  close: () => void,
+  isConnected: () => boolean,
+}
+
 interface Player {
   id: string,
   name: string,
   status: PlayerStatus,
   roomId: string | undefined,
   player: string | undefined, // player name from game (player1, player2, etc)
-  socket: any, // TODO: retrieve socket type (from SockJS)
+  socket: Socket,
+  disconnected: Date,
 }
 
 interface Room {

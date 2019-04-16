@@ -5,6 +5,7 @@ const http = require('http')
 const Koa = require('koa')
 const serve = require('koa-static')
 
+import createSocket from './createSocket'
 import getId from './getId'
 import createRoom from './createRoom'
 import joinRoom from './joinRoom'
@@ -44,18 +45,31 @@ const sendMessageToRoom = (playerId: string, message: string) => {
 
 // TODO: handle socket disconnection (memory leak atm)
 
-ws.on('connection', (socket: any) => {
+ws.on('connection', (sockSocket: any) => {
   let id: string
+
+  const onClose = () => {
+    let player = context.players.get(id)
+    if (!player) return
+
+    player.disconnected = new Date()
+
+    // TODO: removing player timeout
+  }
+
+  const socket = createSocket(sockSocket, onClose)
 
   socket.on('data', async (message: string) => {
     const { type, payload } = JSON.parse(message)
     let reconnection = false
 
+    if (type === 'PONG') return
+
     // login
     if (type === 'SET_ID') {
       const oldPlayer = context.players.get(payload)
       if (!oldPlayer) {
-        socket.write(JSON.stringify({ type: 'NOTFOUND_ID' }))
+        socket.send({ type: 'NOTFOUND_ID' })
         return
       }
 
@@ -67,7 +81,7 @@ ws.on('connection', (socket: any) => {
       }
       context.players.set(id, player)
 
-      socket.write(JSON.stringify({ type: 'SET_ID', payload }))
+      socket.send({ type: 'SET_ID', payload })
     }
     if (type === 'GET_ID') {
       id = await getId(context, socket)()
@@ -98,16 +112,16 @@ ws.on('connection', (socket: any) => {
     if (room) {
       if (board) {
         if (reconnection) attachGame(context)(player, room, board)
-        player.socket.write(JSON.stringify({ type: 'START_GAME', payload: room.id }))
-        player.socket.write(JSON.stringify({ type: 'SET_PLAYER', payload: player.player }))
+        player.socket.send({ type: 'START_GAME', payload: room.id })
+        player.socket.send({ type: 'SET_PLAYER', payload: player.player })
 
         return
       }
-      player.socket.write(JSON.stringify(setRoom(context)(room)))
-      socket.write(JSON.stringify({ type: 'SET_NAMES', payload: filterMapPlayer(currPlayer => currPlayer.status === 'ROOM' && player.roomId === room.id) }))
+      player.socket.send(setRoom(context)(room))
+      socket.send({ type: 'SET_NAMES', payload: filterMapPlayer(currPlayer => currPlayer.status === 'ROOM' && player.roomId === room.id) })
     } else {
-      socket.write(JSON.stringify({ type: 'SET_ROOMS', payload: Array.from(context.rooms.values()).filter(room => room.status === 'OPEN') }))
-      socket.write(JSON.stringify({ type: 'SET_NAMES', payload: filterMapPlayer(currPlayer => currPlayer.status !== 'PLAY') }))
+      socket.send({ type: 'SET_ROOMS', payload: Array.from(context.rooms.values()).filter(room => room.status === 'OPEN') })
+      socket.send({ type: 'SET_NAMES', payload: filterMapPlayer(currPlayer => currPlayer.status !== 'PLAY') })
     }
   })
 })

@@ -2,14 +2,14 @@ import leaveRoom from './leaveRoom'
 import setRoom from './setRoom'
 
 const sendRoom = (context: Context) => (player: Player, room: Room) => {
-  player.socket.write(JSON.stringify(setRoom(context)(room)))
+  player.socket.send(setRoom(context)(room))
   // TODO: this code is duplicated with the one in index.ts
-  player.socket.write(JSON.stringify({
+  player.socket.send({
     type: 'SET_NAMES',
     payload: Array.from(context.players.values())
       .filter(currPlayer => currPlayer.roomId === player.roomId)
       .map(({ id, name }) => ({ id, name }))
-  }))
+  })
 }
 
 export default (context: Context) => (playerId: string, roomId: string) => {
@@ -19,7 +19,7 @@ export default (context: Context) => (playerId: string, roomId: string) => {
   const oldPlayer = players.get(playerId) as Player
 
   if (!rooms.has(roomId)) {
-    oldPlayer.socket.write(JSON.stringify({ type: 'ROOM_NOTFOUND', payload: roomId }))
+    oldPlayer.socket.send({ type: 'ROOM_NOTFOUND', payload: roomId })
     return
   }
 
