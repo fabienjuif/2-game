@@ -17,6 +17,7 @@ interface Player {
   player: string | undefined, // player name from game (player1, player2, etc)
   socket: Socket,
   disconnected: Date,
+  removedAt: Date,
 }
 
 interface Room {

@@ -50,11 +50,17 @@ ws.on('connection', (sockSocket: any) => {
 
   const onClose = () => {
     let player = context.players.get(id)
+    console.log('ici')
     if (!player) return
 
+    console.log(`Player (${player.name})[${id}] is disconnected, waiting for him to reconnect...`)
     player.disconnected = new Date()
+    player.removedAt = new Date(Date.now() + 30000 /* 30sec */)
 
-    // TODO: removing player timeout
+    setTimeout(() => {
+      console.log(`Player (${(player as Player).name})[${id}] is disconnected for 30sec, removing it...`)
+      context.players.delete(id);
+    }, 30000)
   }
 
   const socket = createSocket(sockSocket, onClose)
