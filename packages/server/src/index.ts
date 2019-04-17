@@ -54,12 +54,12 @@ ws.on('connection', (sockSocket: any) => {
 
     console.log(`Player (${player.name})[${id}] is disconnected, waiting for him to reconnect...`)
     player.disconnected = new Date()
-    player.removedAt = new Date(Date.now() + 30000 /* 30sec */)
+    player.removedAt = new Date(Date.now(), 1200000 /* 20 min */) // TODO: once we can properly reconnect + 30000 /* 30sec */)
 
     setTimeout(() => {
-      console.log(`Player (${(player as Player).name})[${id}] is disconnected for 30sec, removing it...`)
+      console.log(`Player (${(player as Player).name})[${id}] is disconnected for 20min, removing it...`)
       context.players.delete(id);
-    }, 30000)
+    }, 1200000)// TODO: once we can properly reconnect 30000)
   }
 
   const socket = createSocket(sockSocket, onClose)

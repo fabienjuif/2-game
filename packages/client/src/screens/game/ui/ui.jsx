@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useLayoutEffect, useState } from 'react'
+import React, { useRef, useContext, useEffect, useLayoutEffect, useState } from 'react'
 import cn from 'classnames'
 import { getUnitCost, getUnitBalance } from '@2-game/engine'
 import BoardContext from '../board'
@@ -49,6 +49,8 @@ const UI = () => {
 
   const [disabled, setDisabled] = useState(true)
   const [sizes, setSizes] = useState({})
+  const [time, setTime] = useState()
+  const interval = useRef()
 
   useEffect(() => {
     const listener = ({ keyCode, repeat }) => {
@@ -66,6 +68,16 @@ const UI = () => {
       document.removeEventListener('keydown', listener)
     }
   }, [setNewAsset, next])
+
+  useLayoutEffect(() => {
+    setTime(10)
+    const start = Date.now()
+    if (interval.current) clearInterval(interval.current)
+    interval.current = setInterval(
+      () => setTime(Math.ceil(10 - (Date.now() - start) / 1000)),
+      500,
+    )
+  }, [turn])
 
   useLayoutEffect(() => {
     setDisabled(currentPlayer && currentPlayer !== turn)
@@ -89,7 +101,7 @@ const UI = () => {
   return (
     <div className="ui" style={sizes}>
       <div className="infos">
-        <h3>{`${turn} turn!`}</h3>
+        <h3>{`${turn} turn!`} {`(${time} secs)`}</h3>
 
         <div className="balances">
           {players.map(({ name, gold }) => (

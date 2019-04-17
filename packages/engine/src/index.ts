@@ -105,11 +105,28 @@ export default (config: { width: number, height: number, players: number }): Boa
     return decorate(selectUnit)(tile)
   }
 
+  let nextTimeout: NodeJS.Timeout | undefined
+  const nextWithTimeout = (trigger: boolean) => (...args: any[]) => {
+    if (nextTimeout) {
+      clearTimeout(nextTimeout)
+      nextTimeout = undefined
+    }
+
+    nextTimeout = setTimeout(
+      () => nextWithTimeout(true)(...args),
+      10000 /* 10sec */
+    )
+
+    if (trigger) return decorate(next)(...args)
+    return [false, store.getState()] as [boolean, State]
+  }
+  nextWithTimeout(false)()
+
   return {
     subscribe: store.subscribe,
     getState: store.getState,
     selectAsset: decorate(selectAsset),
-    next: decorate(next),
+    next: nextWithTimeout(true),
     concede: decorate(concede),
     actionOnTile,
   }

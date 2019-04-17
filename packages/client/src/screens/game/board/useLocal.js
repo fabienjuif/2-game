@@ -1,14 +1,18 @@
-import { useRef, useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import gameEngine from '@2-game/engine'
 
-const useOnline = (width, height) => {
-  const { current: engine } = useRef(gameEngine({ width, height, players: 3 }))
-  const [state, setState] = useState(engine.getState())
+const useLocal = (width, height) => {
+  const [engine, setEngine] = useState({})
+  const [state, setState] = useState({ tiles: [], players: [] })
 
   useEffect(() => {
-    engine.subscribe(() => {
-      if (state === engine.getState()) return
-      setState(engine.getState())
+    const instance = gameEngine({ width, height, players: 3 })
+    setEngine(instance)
+    setState(instance.getState())
+
+    instance.subscribe(() => {
+      if (state === instance.getState()) return
+      setState(instance.getState())
     })
   }, [])
 
@@ -21,4 +25,4 @@ const useOnline = (width, height) => {
   }
 }
 
-export default useOnline
+export default useLocal
