@@ -114,7 +114,7 @@ export default (config: { width: number, height: number, players: number }): Boa
 
     nextTimeout = setTimeout(
       () => nextWithTimeout(true)(...args),
-      10000 /* 10sec */
+      20000 /* 10sec */
     )
 
     if (trigger) return decorate(next)(...args)
