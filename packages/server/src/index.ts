@@ -50,7 +50,6 @@ ws.on('connection', (sockSocket: any) => {
 
   const onClose = () => {
     let player = context.players.get(id)
-    console.log('ici')
     if (!player) return
 
     console.log(`Player (${player.name})[${id}] is disconnected, waiting for him to reconnect...`)
