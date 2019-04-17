@@ -1,14 +1,14 @@
 const createBus = require('events')
 
 export default (context: Context) => (player: Player, room: Room, board: any /* TODO: Board from engine */) => {
-  player.socket.write(JSON.stringify({ type: 'START_GAME', payload: room.id }))
+  player.socket.send({ type: 'START_GAME', payload: room.id })
 
-  player.socket.write(JSON.stringify({ type: 'SET_PLAYER', payload: player.player }))
+  player.socket.send({ type: 'SET_PLAYER', payload: player.player })
 
   let state: any // TODO: import State from engine!!
   const sendState = () => {
     const newState = board.getState()
-    if (newState !== state) player.socket.write(JSON.stringify({ type: 'SYNC', payload: newState }))
+    if (newState !== state) player.socket.send({ type: 'SYNC', payload: newState })
     state = newState
   }
   board.subscribe(sendState)
@@ -20,7 +20,7 @@ export default (context: Context) => (player: Player, room: Room, board: any /* 
   room.bus.on('MOUSE', (payload: any /* TODO: type */) => {
     if (payload.currentPlayer === player.player) return
 
-    player.socket.write(JSON.stringify({ type: 'MOUSE', payload }))
+    player.socket.send({ type: 'MOUSE', payload })
   })
 
   // TODO: disconnect at the end of the game

@@ -1,7 +1,5 @@
 const uuid = require('uuid/v4')
 
-import joinRoom from './joinRoom'
-
 export default (context: Context) => (playerId: string) => {
   const { rooms, players } = context
 
@@ -23,5 +21,5 @@ export default (context: Context) => (playerId: string) => {
 
   rooms.set(room.id, room)
 
-  player.socket.write(JSON.stringify({ type: 'JOIN_ROOM', payload: room.id }))
+  player.socket.send({ type: 'JOIN_ROOM', payload: room.id })
 }
