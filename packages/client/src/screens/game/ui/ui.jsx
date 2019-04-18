@@ -70,11 +70,11 @@ const UI = () => {
   }, [setNewAsset, next])
 
   useLayoutEffect(() => {
-    setTime(20)
+    setTime(30)
     const start = Date.now()
     if (interval.current) clearInterval(interval.current)
     interval.current = setInterval(
-      () => setTime(Math.ceil(20 - (Date.now() - start) / 1000)),
+      () => setTime(Math.ceil(30 - (Date.now() - start) / 1000)),
       500,
     )
   }, [turn])
