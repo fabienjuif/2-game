@@ -25,6 +25,9 @@ export default (context: Context) => (player: Player, room: Room, board: any /* 
 
   // TODO: disconnect at the end of the game
   player.socket.on('data', (message: string) => {
+    // this is not this player turn
+    if (board.getState().turn !== player.player) return
+
     const { type, payload } = JSON.parse(message)
 
     room.date = new Date()
